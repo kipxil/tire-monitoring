@@ -17,6 +17,30 @@ const Login = ({ onLogin }) => {
         }
     };
 
+    // //Login from backend
+    // const handleLogin = async (e) => {
+    //   e.preventDefault();
+
+    //   try {
+    //     const response = await fetch('http://localhost:5000/login', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ username, password }),
+    //   });
+
+    //   const result = await response.json();
+
+    //   if (response.ok && result.success) {
+    //     onLogin(); // login berhasil
+    //   } else {
+    //     alert('Username atau password salah');
+    //   }
+    //   } catch (error) {
+    //   console.error('Login error:', error);
+    //   alert('Terjadi kesalahan saat login');
+    //   }
+    // };
+
     return (
     <div className="flex h-screen w-full">
       {/* Left Side - Form */}
