@@ -7,6 +7,7 @@ import Reports from './Report';
 import Users from './User';
 import Settings from './Setting';
 import AddTyre from "./AddTyre";
+import UpdateTyre from "./UpdTyre";
 
 
 const DashboardLayout = ( {onLogout} ) => {
@@ -17,12 +18,17 @@ const DashboardLayout = ( {onLogout} ) => {
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/minings" element={<Minings />} />
-          <Route path="/locations" element={<Locations />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/settings" element={<Settings />} />
+          {/* {role === "admin" && (
+            <> */}
+              <Route path="/minings" element={<Minings />} />
+              <Route path="/locations" element={<Locations />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/settings" element={<Settings />} />
+            {/* </>
+          )} */}
           <Route path="/addtyres" element={<AddTyre />} />
+          <Route path="/updtyres" element={<UpdateTyre />} />
         </Routes>
       </div>
     </div>

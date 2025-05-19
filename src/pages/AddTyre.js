@@ -1,18 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const AddTyre = () => {
-  const [installationStatus, setInstallationStatus] = useState("tidak");
+  const [serialNumber, setSerialNumber] = useState("");
+  const [tyreSizeId, setTyreSizeId] = useState("");
+  const [installationStatus, setInstallationStatus] = useState(false);
+  const [tread1, setTread1] = useState("");
+  const [tread2, setTread2] = useState("");
+  const [unitId, setUnitId] = useState("");
+  const [positionUnit, setPositionUnit] = useState("");
+  const [manPower, setManPower] = useState("");
+  const [dateTimeInstall, setDateTimeInstall] = useState("");
+  const [hmUnit, setHmunit] =useState("");
+  const [removedPurposeId, setremovedPurposeId] = useState("");
+  const [merk, setMerk] = useState("");
+  const [dateTimeRemove, setDateTimeRemove] = useState("");
+  const [removeReasonId, setRemoveReasonId] = useState("");
+  const [siteId, setSiteId] = useState("");
+  const [location, setLocation] = useState("");
 
-  // TODO: Tambahkan state untuk input lain jika dibutuhkan
-  const handleSubmit = () => {
-    const dataBan = {
-      nomorSeri: "", // Tambahkan nilai dari input terkait
-      ukuran: "",
-      status: installationStatus,
+  const [tyreSizes, setTyreSizes] = useState([]);
+  const [removePurposes, setRemovePurposes] = useState([]);
+  const [airConditions, setAirConditions] = useState([]);
+  const [removeReasons, setRemoveReasons] = useState([]);
+  const [unitIdDrop, setUnitIdDrop] = useState([]);
+  const [siteDrop, setSiteDrop] = useState([]);
+
+  // Fetch dropdown data saat component mount
+  useEffect(() => {
+    const fetchDropdownData = async () => {
+      try {
+        const response = await fetch("http://192.168.245.160:8080/dropdown"); // ganti sesuai endpoint
+        const data = await response.json();
+
+        // Set state dari response API
+        setTyreSizes(data.tyreSize || []);
+        setRemovePurposes(data.removePurpose || []);
+        setAirConditions(data.airCondition || []);
+        setRemoveReasons(data.removeReason || []);
+        setUnitIdDrop(data.unit || []);
+        setSiteDrop(data.site || []);
+      } catch (error) {
+        console.error("Gagal fetch data dropdown:", error);
+      }
     };
 
-    console.log("Data Ban Tersimpan:", dataBan);
-    alert("Data Ban berhasil disimpan (simulasi)");
+    fetchDropdownData();
+  }, []);
+
+  // TODO: Tambahkan state untuk input lain jika dibutuhkan
+  const handleSubmit = async () => {
+    const isoDateTimeInstall = dateTimeInstall//+":00Z"; // konversi ke ISO string
+    const isoDateTimeRemove = dateTimeRemove//+":00Z";
+    const dataBan = {
+      serialNumber: serialNumber, // Tambahkan nilai dari input terkait
+      tyreSizeId: parseInt(tyreSizeId),
+      isInstalled: Boolean(installationStatus),
+      merk: merk,
+      manPower: manPower,
+      tread1: parseInt(tread1),
+      tread2: parseInt(tread2),
+      unitId: parseInt(unitId),
+      positionTyre: parseInt(positionUnit),
+      hmUnit: parseInt(hmUnit),
+      removedPurposeId: parseInt(removedPurposeId),
+      dateTimeInstall:  isoDateTimeInstall,
+      dateTimeRemove: isoDateTimeRemove,
+      siteId: parseInt(siteId),
+      removeReasonId: removeReasonId,
+      location: location,
+    };
+
+    try {
+      console.log(dataBan);
+      const response = await fetch('http://192.168.245.160:8080/tyre', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataBan),
+      });
+      const result = await response.json();
+      alert(result)
+      // Debug: tampilkan data user dari server
+      console.log("Response: ", result);
+    } catch (error) {
+      console.error("Error: ", error);
+      alert("Gagal menghubungi server.");
+    }
   };
 
   return (
@@ -43,15 +117,28 @@ const AddTyre = () => {
             <label className="block font-medium mb-1">
               Nomor Seri Ban <span className="text-red-500">*</span>
             </label>
-            <input type="text" className="w-full p-2 border rounded-md" />
+            <input
+              type="text"
+              className="w-full p-2 border rounded-md"
+              value={serialNumber}
+              onChange={(e) => setSerialNumber(e.target.value)}
+            />
           </div>
           <div>
             <label className="block font-medium mb-1">
               Ukuran Ban <span className="text-red-500">*</span>
             </label>
-            <select className="w-full p-2 border rounded-md">
-              <option>-- Pilih Ukuran Ban --</option>
-              <option>Ukuran Test</option>
+            <select
+              className="w-full p-2 border rounded-md"
+              value={tyreSizeId}
+              onChange={(e) => setTyreSizeId(e.target.value)}
+            >
+              <option value="">-- Pilih Ukuran Ban --</option>
+              {tyreSizes.map((size) => (
+                <option key={size.id} value={size.id}>
+                  {size.size}
+                </option>
+              ))}
             </select>
           </div>
           <div className="col-span-2">
@@ -63,9 +150,9 @@ const AddTyre = () => {
                 <input
                   type="radio"
                   name="instalasi"
-                  value="terpasang"
-                  checked={installationStatus === "terpasang"}
-                  onChange={() => setInstallationStatus("terpasang")}
+                  value="true"
+                  checked={installationStatus === true}
+                  onChange={() => setInstallationStatus(true)}
                   className="mr-2"
                 />
                 Terpasang
@@ -75,9 +162,9 @@ const AddTyre = () => {
                 <input
                   type="radio"
                   name="instalasi"
-                  value="tidak"
-                  checked={installationStatus === "tidak"}
-                  onChange={() => setInstallationStatus("tidak")}
+                  value="false"
+                  checked={installationStatus === false}
+                  onChange={() => setInstallationStatus(false)}
                   className="mr-2"
                 />
                 Tidak Terpasang
@@ -91,20 +178,44 @@ const AddTyre = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block font-medium mb-1">Merk Ban</label>
-            <input type="text" className="w-full p-2 border rounded-md" />
+            <input
+              type="text"
+              className="w-full p-2 border rounded-md"
+              value={merk}
+              onChange={(e) => setMerk(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">Petugas Pemasang</label>
+            <input
+              type="text"
+              className="w-full p-2 border rounded-md"
+              value={manPower}
+              onChange={(e) => setManPower(e.target.value)}
+            />
           </div>
           <div>
             <label className="block font-medium mb-1">Kedalaman Telapak 1 (mm)</label>
-            <input type="number" className="w-full p-2 border rounded-md" />
+            <input
+              type="number"
+              className="w-full p-2 border rounded-md"
+              value={tread1}
+              onChange={(e) => setTread1(e.target.value)}
+            />
           </div>
           <div>
             <label className="block font-medium mb-1">Kedalaman Telapak 2 (mm)</label>
-            <input type="number" className="w-full p-2 border rounded-md" />
+            <input
+            type="number"
+            className="w-full p-2 border rounded-md"
+            value={tread2}
+            onChange={(e) => setTread2(e.target.value)}
+          />
           </div>
         </div>
 
         {/* === Kondisional berdasarkan status instalasi === */}
-        {installationStatus === "terpasang" ? (
+        {installationStatus ? (
           <>
             <h2 className="text-lg font-semibold my-6 border-b pb-2 text-red-600">
               Informasi Pemasangan Ban <span className="text-sm text-red-500">(Wajib diisi)</span>
@@ -114,31 +225,73 @@ const AddTyre = () => {
                 <label className="block font-medium mb-1">
                   Unit Kendaraan <span className="text-red-500">*</span>
                 </label>
-                <select className="w-full p-2 border rounded-md">
-                  <option>-- Pilih Unit Kendaraan --</option>
+                <select className="w-full p-2 border rounded-md" value={unitId} onChange={(e) => setUnitId(e.target.value)}>
+                  <option value="">-- Pilih Unit Kendaraan --</option>
+                  {unitIdDrop.map((udrop) => (
+                    <option key={udrop.id} value={udrop.id}>
+                      {udrop.nomorUnit}
+                    </option>
+                  ))}
+
                 </select>
               </div>
               <div>
                 <label className="block font-medium mb-1">
-                  Posisi pada Unit <span className="text-red-500">*</span>
+                  Site Unit<span className="text-red-500">*</span>
                 </label>
-                <select className="w-full p-2 border rounded-md">
-                  <option>-- Pilih Posisi --</option>
+                <select className="w-full p-2 border rounded-md" value={siteId} onChange={(e) => setSiteId(e.target.value)}>
+                  <option value="">-- Pilih Unit Kendaraan --</option>
+                  {siteDrop.map((site) => (
+                    <option key={site.id} value={site.id}>
+                      {site.name}
+                    </option>
+                  ))}
+
+                </select>
+              </div>
+              <div>
+                <label className="block font-medium mb-1">
+                  Lokasi<span className="text-red-500">*</span>
+                </label>
+                  <input
+                    type="text"
+                    className="w-full p-2 border rounded-md"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">
+                  Posisi ban pada Unit <span className="text-red-500">*</span>
+                </label>
+                <select className="w-full p-2 border rounded-md" value={positionUnit} onChange={(e) => setPositionUnit(e.target.value)}>
+                  <option value="">-- Pilih Posisi --</option>
+                  <option value="1">TYRE 1</option>
+                  <option value="2">TYRE 2</option>
+                  <option value="3">TYRE 3</option>
+                  <option value="4">TYRE 4</option>
+                  <option value="5">TYRE 5</option>
+                  <option value="6">TYRE 6</option>
                 </select>
               </div>
               <div>
                 <label className="block font-medium mb-1">Tanggal & Waktu Pemasangan</label>
-                <input type="datetime-local" className="w-full p-2 border rounded-md" />
+                <input type="datetime-local" className="w-full p-2 border rounded-md" value={dateTimeInstall} onChange={(e) => setDateTimeInstall(e.target.value)} />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">HM Unit</label>
+                <input type="number" className="w-full p-2 border rounded-md" value={hmUnit} onChange={(e) => setHmunit(e.target.value)} />
               </div>
               <div>
                 <label className="block font-medium mb-1">Kondisi Angin</label>
                 <select className="w-full p-2 border rounded-md">
                   <option>-- Pilih Kondisi --</option>
+                  {airConditions.map((cond) => (
+                    <option key={cond.id} value={cond.id}>
+                      {cond.name}
+                    </option>
+                  ))}
                 </select>
-              </div>
-              <div>
-                <label className="block font-medium mb-1">Petugas Pemasang</label>
-                <input type="text" className="w-full p-2 border rounded-md" />
               </div>
               <div>
                 <label className="block font-medium mb-1">Tekanan (PSI)</label>
@@ -154,13 +307,31 @@ const AddTyre = () => {
                 <label className="block font-medium mb-1">
                   Tujuan Pelepasan <span className="text-red-500">*</span>
                 </label>
-                <select className="w-full p-2 border rounded-md">
-                  <option>-- Pilih Tujuan Pelepasan --</option>
+                <select className="w-full p-2 border rounded-md" value={removedPurposeId} onChange={(e) => setremovedPurposeId(e.target.value)}>
+                  <option value="">-- Pilih Tujuan Pelepasan --</option>
+                  {removePurposes.map((purpose) => (
+                    <option key={purpose.id} value={purpose.id}>
+                      {purpose.name}
+                    </option>
+                  ))}
                 </select>
               </div>
-              <div className="col-span-2">
-                <label className="block font-medium mb-1">Alasan Pelepasan</label>
-                <textarea className="w-full p-2 border rounded-md" rows="3" />
+              <div>
+                <label className="block font-medium mb-1">Tanggal & Waktu Pelepasan</label>
+                <input type="datetime-local" className="w-full p-2 border rounded-md" value={dateTimeRemove} onChange={(e) => setDateTimeRemove(e.target.value)} />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">
+                  Alasan Pelepasan <span className="text-red-500">*</span>
+                </label>
+                <select className="w-full p-2 border rounded-md"  value={removeReasonId} onChange={(e) => setRemoveReasonId(e.target.value)}>
+                  <option value="">-- Pilih Alasan Pelepasan --</option>
+                  {removeReasons.map((remreas) => (
+                    <option key={remreas.id} value={remreas.id}>
+                      {remreas.description}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </>

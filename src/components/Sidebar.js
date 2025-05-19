@@ -93,16 +93,33 @@ const Sidebar = ({ onLogout }) => {
                   <PlusIcon className="w-4 h-4" />
                   Add Tyre
                 </NavLink>
+                <NavLink
+                  to="/updtyres"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
+                      isActive
+                        ? "bg-yellow-400 text-black font-bold border-yellow-400"
+                        : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
+                    }`
+                  }
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  Update Tyre
+                </NavLink>
               </div>
             )}
           </div>
 
           {/* Menu Lain */}
-          <SidebarLink to="/minings" icon={BuildingOffice2Icon} label="Mining Units" />
-          <SidebarLink to="/locations" icon={MapPinIcon} label="Site Locations" />
-          <SidebarLink to="/reports" icon={DocumentTextIcon} label="Reports" />
-          <SidebarLink to="/users" icon={UsersIcon} label="User Management" />
-          <SidebarLink to="/settings" icon={Cog6ToothIcon} label="Settings" />
+          {/* {role === "admin" && (
+            <> */}
+              <SidebarLink to="/minings" icon={BuildingOffice2Icon} label="Mining Units" />
+              <SidebarLink to="/locations" icon={MapPinIcon} label="Site Locations" />
+              <SidebarLink to="/reports" icon={DocumentTextIcon} label="Reports" />
+              <SidebarLink to="/users" icon={UsersIcon} label="User Management" />
+              <SidebarLink to="/settings" icon={Cog6ToothIcon} label="Settings" />
+            {/* </>
+          )} */}
         </nav>
       </div>
 

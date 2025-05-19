@@ -7,9 +7,20 @@ import DashboardLayout from './pages/Dashboard';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [userRole, setUserRole] = useState(null);
 
   const handleLogin = () => setIsLoggedIn(true);
   const handleLogout = () => setIsLoggedIn(false);
+
+  // const handleLogin = (role) => {
+  //   setUserRole(role);
+  //   setIsLoggedIn(true);
+  // };
+
+  // const handleLogout = () => {
+  //   setIsLoggedIn(false);
+  //   setUserRole(null);
+  // };
 
   return (
     <Router>

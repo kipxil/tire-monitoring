@@ -7,22 +7,57 @@ const Login = ({ onLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        // Simulasi login berhasil
-        if (username === "admin" && password === "password") {
-          onLogin();
-        } else {
-            alert('Username atau password salah');
-        }
-    };
+    // const handleLogin = (e) => {
+    //     e.preventDefault();
+    //     // Simulasi login berhasil
+    //     // if (username === "admin" && password === "password") {
+    //     //   onLogin();
+    //     // } else {
+    //     //   alert('Username atau password salah');
+    //     // }
+    //     if (username === "admin" && password === "admin") {
+    //       onLogin("admin");
+    //     } else if (username === "worker" && password === "worker") {
+    //       onLogin("worker");
+    //     } else {
+    //       alert('Username atau password salah');
+    //     }
+    // };
 
-    // //Login from backend
+    const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://192.168.245.160:8080/user');
+      const result = await response.json();
+
+      // Debug: tampilkan data user dari server
+      console.log("Data user dari API:", result.data);
+
+      // Cek apakah ada user yang cocok
+      const user = result.data.find(
+        (u) => u.name === username && u.password === password
+      );
+
+      if (user) {
+        console.log("Login berhasil sebagai:", user.name);
+        onLogin(); // Tidak kirim role — akses semua fitur
+      } else {
+        alert("Username atau password salah");
+      }
+    } catch (error) {
+      console.error("Terjadi kesalahan saat login:", error);
+      alert("Gagal menghubungi server.");
+    }
+  };
+
+
+    //Login from backend
     // const handleLogin = async (e) => {
     //   e.preventDefault();
 
     //   try {
-    //     const response = await fetch('http://localhost:5000/login', {
+    //     const response = await fetch('http://192.168.245.160:8080/user', {
     //     method: 'POST',
     //     headers: { 'Content-Type': 'application/json' },
     //     body: JSON.stringify({ username, password }),
