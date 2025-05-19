@@ -34,6 +34,7 @@ const AddTyre = () => {
       </div>
 
       {/* Form Container */}
+      <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">Add New Tyres</div>
       <div className="bg-white p-6 rounded-lg shadow-md">
         {/* === Informasi Dasar Ban === */}
         <h2 className="text-lg font-semibold mb-4 border-b pb-2">Informasi Dasar Ban</h2>
@@ -169,7 +170,7 @@ const AddTyre = () => {
         <div className="mt-8 flex justify-end">
           <button
             onClick={handleSubmit}
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+            className="bg-yellow-400 text-white px-6 py-2 rounded-md font-semibold hover:bg-yellow-500"
           >
             Simpan Data Ban
           </button>
