@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { apiFetch } from "../services/apiClient";
 
 const AddTyre = () => {
   const [serialNumber, setSerialNumber] = useState("");
@@ -24,13 +25,14 @@ const AddTyre = () => {
   const [removeReasons, setRemoveReasons] = useState([]);
   const [unitIdDrop, setUnitIdDrop] = useState([]);
   const [siteDrop, setSiteDrop] = useState([]);
+  const [availablePositions, setAvailablePositions] = useState([]);
+
 
   // Fetch dropdown data saat component mount
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        const response = await fetch("http://192.168.245.160:8080/dropdown"); // ganti sesuai endpoint
-        const data = await response.json();
+        const data = await apiFetch("/dropdown");
 
         // Set state dari response API
         setTyreSizes(data.tyreSize || []);
@@ -46,6 +48,29 @@ const AddTyre = () => {
 
     fetchDropdownData();
   }, []);
+
+  const handleUnitChange = (e) => {
+    const selectedId = e.target.value;
+    setUnitId(selectedId);
+
+    const selectedUnit = unitIdDrop.find((u) => u.id === parseInt(selectedId));
+    if (selectedUnit) {
+      const usedPositions = selectedUnit.tyre
+        .filter((t) => t.isInstalled)
+        .map((t) => t.positionTyre);
+
+      const allPositions = [1, 2, 3, 4, 5, 6];
+      const available = allPositions.filter((pos) => !usedPositions.includes(pos));
+
+      setAvailablePositions(available);
+      // setLocation(selectedUnit.location || "");
+      // setSiteId(selectedUnit.siteId || "");
+      // setHmunit(selectedUnit.hmUnit || "");
+    } else {
+      setAvailablePositions([]);
+    }
+  };
+
 
   // TODO: Tambahkan state untuk input lain jika dibutuhkan
   const handleSubmit = async () => {
@@ -72,14 +97,18 @@ const AddTyre = () => {
 
     try {
       console.log(dataBan);
-      const response = await fetch('http://192.168.245.160:8080/tyre', {
+      // const response = await fetch('http://192.168.245.160:8080/tyre', {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(dataBan),
+      // });
+      // const result = await response.json();
+      const result = await apiFetch("/tyre", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(dataBan),
       });
-      const result = await response.json();
       alert(result)
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);
@@ -225,7 +254,7 @@ const AddTyre = () => {
                 <label className="block font-medium mb-1">
                   Unit Kendaraan <span className="text-red-500">*</span>
                 </label>
-                <select className="w-full p-2 border rounded-md" value={unitId} onChange={(e) => setUnitId(e.target.value)}>
+                <select className="w-full p-2 border rounded-md" value={unitId} onChange={handleUnitChange}>
                   <option value="">-- Pilih Unit Kendaraan --</option>
                   {unitIdDrop.map((udrop) => (
                     <option key={udrop.id} value={udrop.id}>
@@ -266,12 +295,17 @@ const AddTyre = () => {
                 </label>
                 <select className="w-full p-2 border rounded-md" value={positionUnit} onChange={(e) => setPositionUnit(e.target.value)}>
                   <option value="">-- Pilih Posisi --</option>
-                  <option value="1">TYRE 1</option>
+                  {availablePositions.map((pos) => (
+                    <option key={pos} value={pos}>
+                      {`TYRE ${pos}`}
+                    </option>
+                  ))}
+                  {/* <option value="1">TYRE 1</option>
                   <option value="2">TYRE 2</option>
                   <option value="3">TYRE 3</option>
                   <option value="4">TYRE 4</option>
                   <option value="5">TYRE 5</option>
-                  <option value="6">TYRE 6</option>
+                  <option value="6">TYRE 6</option> */}
                 </select>
               </div>
               <div>

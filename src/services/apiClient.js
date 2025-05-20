@@ -1,0 +1,26 @@
+const BASE_URL = "https://primatyre-prismaexpress-production.up.railway.app";
+const apiKey = "halodek";
+
+export const apiFetch = async (endpoint, options = {}) => {
+  try {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        ...(options.headers || {}
+        ),
+      },
+      ...options,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("API Fetch Error:", error);
+    throw error; // biar bisa ditangani di level pemanggil
+  }
+};

@@ -187,6 +187,7 @@
 
 
 import React, { useState, useEffect } from "react";
+import { apiFetch } from "../services/apiClient";
 
 const UpdateTyre = () => {
   const [tyres, setTyres] = useState([]);
@@ -210,8 +211,9 @@ const UpdateTyre = () => {
   useEffect(() => {
     const fetchTyres = async () => {
       try {
-        const res = await fetch("http://192.168.245.160:8080/tyre"); // Ganti endpoint sesuai
-        const data = await res.json();
+        // const res = await fetch("http://192.168.245.160:8080/tyre"); // Ganti endpoint sesuai
+        // const data = await res.json();
+        const data = await apiFetch("/tyre");
         setTyres(data.data || []);
       } catch (error) {
         console.error("Gagal fetch data ban:", error);
@@ -273,12 +275,16 @@ const UpdateTyre = () => {
   const handleSubmit = async () => {
     try {
       // Kirim seluruh formData ke backend (sesuaikan endpoint dan struktur API)
-      const response = await fetch(`http://192.168.245.160:8080/tyre/${selectedTyreId}`, {
+      // const response = await fetch(`http://192.168.245.160:8080/tyre/${selectedTyreId}`, {
+      //   method: "PUT",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify(formData),
+      // });
+      // const result = await response.json();
+      const result = await apiFetch(`/tyre/${selectedTyreId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      const result = await response.json();
       alert("Data ban berhasil diperbarui!");
       console.log(result);
     } catch (error) {
@@ -306,8 +312,9 @@ const UpdateTyre = () => {
       </div>
 
       {/* Content */}
-      <div className="p-4 max-w-3xl mx-auto bg-white rounded shadow">
-        <h1 className="text-2xl font-bold mb-6">Update Data Ban</h1>
+      <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">Update Tyres</div>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h1 className="text-lg font-bold mb-6">Update Data Ban</h1>
 
         <label className="block mb-2 font-semibold" htmlFor="tyreSelect">
           Pilih Serial Number Ban

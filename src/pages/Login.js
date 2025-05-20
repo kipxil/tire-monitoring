@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import logo from '../assets/bg_tambang.jpg'
 import overlayimg from '../assets/TYRE DEPT FIX.png'
+import { apiFetch } from '../services/apiClient';
 
 const Login = ({ onLogin }) => {
 
@@ -25,56 +26,32 @@ const Login = ({ onLogin }) => {
     // };
 
     const handleLogin = async (e) => {
-    e.preventDefault();
+      e.preventDefault();
 
-    try {
-      const response = await fetch('http://192.168.245.160:8080/user');
-      const result = await response.json();
+      try {
+        const result = await apiFetch("/user");
 
-      // Debug: tampilkan data user dari server
-      console.log("Data user dari API:", result.data);
+        // Debug: tampilkan data user dari server
+        console.log("Data user dari API:", result.data);
 
-      // Cek apakah ada user yang cocok
-      const user = result.data.find(
-        (u) => u.name === username && u.password === password
-      );
+        // Cek apakah ada user yang cocok
+        const user = result.data.find(
+          (u) => u.name === username && u.password === password
+        );
 
-      if (user) {
-        console.log("Login berhasil sebagai:", user.name);
-        onLogin(); // Tidak kirim role — akses semua fitur
-      } else {
-        alert("Username atau password salah");
+        if (user) {
+          console.log("Login berhasil sebagai:", user.name);
+          localStorage.setItem("isLoggedIn", "true");
+          // localStorage.setItem("user", JSON.stringify(user));
+          onLogin(); // Tidak kirim role — akses semua fitur
+        } else {
+          alert("Username atau password salah");
+        }
+      } catch (error) {
+        console.error("Terjadi kesalahan saat login:", error);
+        alert("Gagal menghubungi server.");
       }
-    } catch (error) {
-      console.error("Terjadi kesalahan saat login:", error);
-      alert("Gagal menghubungi server.");
-    }
-  };
-
-
-    //Login from backend
-    // const handleLogin = async (e) => {
-    //   e.preventDefault();
-
-    //   try {
-    //     const response = await fetch('http://192.168.245.160:8080/user', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ username, password }),
-    //   });
-
-    //   const result = await response.json();
-
-    //   if (response.ok && result.success) {
-    //     onLogin(); // login berhasil
-    //   } else {
-    //     alert('Username atau password salah');
-    //   }
-    //   } catch (error) {
-    //   console.error('Login error:', error);
-    //   alert('Terjadi kesalahan saat login');
-    //   }
-    // };
+    };
 
     return (
     <div className="flex h-screen w-full">
