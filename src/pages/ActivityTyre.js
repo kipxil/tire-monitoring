@@ -192,6 +192,7 @@ import { apiFetch } from "../services/apiClient";
 const UpdateTyre = () => {
   const [tyres, setTyres] = useState([]);
   const [selectedTyreId, setSelectedTyreId] = useState("");
+  const [units, setUnits] = useState([]);
   const [formData, setFormData] = useState({
     serialNumber: "",
     isInstalled: false,
@@ -248,6 +249,20 @@ const UpdateTyre = () => {
     }
   }, [selectedTyreId, tyres]);
 
+  useEffect(() => {
+    const fetchDropdownData = async () => {
+      try {
+        const data = await apiFetch("/dropdown"); // Ganti sesuai endpoint
+        setUnits(data.unit || []);
+      } catch (error) {
+        console.error("Gagal fetch data dropdown:", error);
+      }
+    };
+
+    fetchDropdownData();
+  }, []);
+
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -273,6 +288,7 @@ const UpdateTyre = () => {
   };
 
   const handleSubmit = async () => {
+      console.log("Payload yang dikirim:", formData);
     try {
       // Kirim seluruh formData ke backend (sesuaikan endpoint dan struktur API)
       // const response = await fetch(`http://192.168.245.160:8080/tyre/${selectedTyreId}`, {
@@ -396,14 +412,27 @@ const UpdateTyre = () => {
               <>
                 <div className="mb-4">
                   <label className="block mb-1 font-semibold">Unit Kendaraan</label>
-                  <input
+                  {/* <input
                     name="installedUnitId"
                     type="text"
                     value={formData.installedUnitId}
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
                     placeholder="ID Unit Kendaraan"
-                  />
+                  /> */}
+                  <select
+                    name="installedUnitId"
+                    value={formData.installedUnitId}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                  >
+                    <option value="">-- Pilih Unit --</option>
+                    {units.map((unit) => (
+                      <option key={unit.id} value={unit.id}>
+                        {unit.nomorUnit}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="mb-4">
                   <label className="block mb-1 font-semibold">Tanggal & Waktu Pemasangan</label>

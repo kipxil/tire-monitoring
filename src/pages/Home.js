@@ -387,7 +387,7 @@ const Home = () => {
                           <td className="px-4 py-2 border text-center">
                             <PencilSquareIcon
                               className="w-6 h-6 text-blue-500 cursor-pointer mx-auto"
-                              onClick={() => navigate(`/updtyres`)}
+                              onClick={() => navigate(`/actvtyres`)}
                               title="Update Data Ban"
                             />
                           </td>

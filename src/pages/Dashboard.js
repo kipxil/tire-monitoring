@@ -2,12 +2,12 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Home from './Home';
 import Minings from './Mining';
-import Locations from './Location';
+import Inspect from './Inspect';
 import Reports from './Report';
 import Users from './User';
 import Settings from './Setting';
 import AddTyre from "./AddTyre";
-import UpdateTyre from "./UpdTyre";
+import UpdateTyre from "./ActivityTyre";
 
 
 const DashboardLayout = ( {onLogout} ) => {
@@ -21,14 +21,14 @@ const DashboardLayout = ( {onLogout} ) => {
           {/* {role === "admin" && (
             <> */}
               <Route path="/minings" element={<Minings />} />
-              <Route path="/locations" element={<Locations />} />
+              <Route path="/inspecttyres" element={<Inspect />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/users" element={<Users />} />
               <Route path="/settings" element={<Settings />} />
             {/* </>
           )} */}
           <Route path="/addtyres" element={<AddTyre />} />
-          <Route path="/updtyres" element={<UpdateTyre />} />
+          <Route path="/actvtyres" element={<UpdateTyre />} />
         </Routes>
       </div>
     </div>

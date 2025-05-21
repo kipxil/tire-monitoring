@@ -99,7 +99,7 @@ const Sidebar = ({ onLogout }) => {
                   Add Tyre
                 </NavLink>
                 <NavLink
-                  to="/updtyres"
+                  to="/actvtyres"
                   className={({ isActive }) =>
                     `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
                       isActive
@@ -109,10 +109,10 @@ const Sidebar = ({ onLogout }) => {
                   }
                 >
                   <DocumentTextIcon className="w-4 h-4" />
-                  Update Tyre
+                  Activity Tyre
                 </NavLink>
                 <NavLink
-                  to="/locations"
+                  to="/inspecttyres"
                   className={({ isActive }) =>
                     `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
                       isActive
@@ -122,7 +122,7 @@ const Sidebar = ({ onLogout }) => {
                   }
                 >
                   <XCircleIcon className="w-4 h-4" />
-                  Delete Tyre
+                  Inspect Tyre
                 </NavLink>
               </div>
             )}
