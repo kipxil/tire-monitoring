@@ -131,7 +131,9 @@ const Inspect = () => {
               <option value="">-- Pilih Ban --</option>
               {tyres
                 .filter(
-                  (entry) => entry.isReady === null || entry.isReady === false
+                  (entry) =>
+                    entry.isReady === null ||
+                    (entry.isReady === false && entry.tyre.isScrap === false)
                 ) // ✅ hanya tampilkan ban yang isReady === false
                 .map((entry) => (
                   <option key={entry.id} value={entry.tyre.stockTyre.id}>
