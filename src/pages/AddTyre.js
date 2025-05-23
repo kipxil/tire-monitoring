@@ -2,31 +2,27 @@ import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
 
 const AddTyre = () => {
-  const [serialNumber, setSerialNumber] = useState("");
-  const [tyreSizeId, setTyreSizeId] = useState("");
-  const [installationStatus, setInstallationStatus] = useState(false);
-  const [tread1, setTread1] = useState("");
-  const [tread2, setTread2] = useState("");
-  const [unitId, setUnitId] = useState("");
-  const [positionUnit, setPositionUnit] = useState("");
-  const [manPower, setManPower] = useState("");
-  const [dateTimeInstall, setDateTimeInstall] = useState("");
-  const [hmUnit, setHmunit] =useState("");
-  const [removedPurposeId, setremovedPurposeId] = useState("");
   const [merk, setMerk] = useState("");
-  const [dateTimeRemove, setDateTimeRemove] = useState("");
-  const [removeReasonId, setRemoveReasonId] = useState("");
-  const [siteId, setSiteId] = useState("");
-  const [location, setLocation] = useState("");
+  const [typeBan, setTypeBan] = useState("");
+  const [patternBan, setPatternBan] = useState("");
+  const [otd, setOtd] = useState("");
+  const [otd2, setOtd2] = useState("");
+  const [hargaBan, setHargaBan] = useState("");
+  const [serialNumber, setSerialNumber] = useState("");
+  const [ukuranBan, setUkuranBan] = useState("");
 
-  const [tyreSizes, setTyreSizes] = useState([]);
-  const [removePurposes, setRemovePurposes] = useState([]);
-  const [airConditions, setAirConditions] = useState([]);
-  const [removeReasons, setRemoveReasons] = useState([]);
-  const [unitIdDrop, setUnitIdDrop] = useState([]);
-  const [siteDrop, setSiteDrop] = useState([]);
-  const [availablePositions, setAvailablePositions] = useState([]);
+  //dropdown
+  const [merkList, setMerkList] = useState([]);
+  const [ukuranList, setUkuranList] = useState([]);
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const capitalizeFirst = (text) => {
+    if (!text) return "";
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  };
+
+  const username = capitalizeFirst(user?.name);
 
   // Fetch dropdown data saat component mount
   useEffect(() => {
@@ -35,12 +31,8 @@ const AddTyre = () => {
         const data = await apiFetch("/dropdown");
 
         // Set state dari response API
-        setTyreSizes(data.tyreSize || []);
-        setRemovePurposes(data.removePurpose || []);
-        setAirConditions(data.airCondition || []);
-        setRemoveReasons(data.removeReason || []);
-        setUnitIdDrop(data.unit || []);
-        setSiteDrop(data.site || []);
+        setMerkList(data.merk || []);
+        setUkuranList(data.tyreSize || []);
       } catch (error) {
         console.error("Gagal fetch data dropdown:", error);
       }
@@ -49,72 +41,53 @@ const AddTyre = () => {
     fetchDropdownData();
   }, []);
 
-  const handleUnitChange = (e) => {
-    const selectedId = e.target.value;
-    setUnitId(selectedId);
+  // const handleUnitChange = (e) => {
+  //   const selectedId = e.target.value;
+  //   setUnitId(selectedId);
 
-    const selectedUnit = unitIdDrop.find((u) => u.id === parseInt(selectedId));
-    if (selectedUnit) {
-      const usedPositions = selectedUnit.tyre
-        .filter((t) => t.isInstalled)
-        .map((t) => t.positionTyre);
+  //   const selectedUnit = unitIdDrop.find((u) => u.id === parseInt(selectedId));
+  //   if (selectedUnit) {
+  //     const usedPositions = selectedUnit.tyre
+  //       .filter((t) => t.isInstalled)
+  //       .map((t) => t.positionTyre);
 
-      const allPositions = [1, 2, 3, 4, 5, 6];
-      const available = allPositions.filter((pos) => !usedPositions.includes(pos));
+  //     const allPositions = [1, 2, 3, 4, 5, 6];
+  //     const available = allPositions.filter((pos) => !usedPositions.includes(pos));
 
-      setAvailablePositions(available);
-      // setLocation(selectedUnit.location || "");
-      // setSiteId(selectedUnit.siteId || "");
-      // setHmunit(selectedUnit.hmUnit || "");
-    } else {
-      setAvailablePositions([]);
-    }
-  };
-
+  //     setAvailablePositions(available);
+  //     // setLocation(selectedUnit.location || "");
+  //     // setSiteId(selectedUnit.siteId || "");
+  //     // setHmunit(selectedUnit.hmUnit || "");
+  //   } else {
+  //     setAvailablePositions([]);
+  //   }
+  // };
 
   // TODO: Tambahkan state untuk input lain jika dibutuhkan
   const handleSubmit = async () => {
-    const isoDateTimeInstall = dateTimeInstall//+":00Z"; // konversi ke ISO string
-    const isoDateTimeRemove = dateTimeRemove//+":00Z";
     const dataBan = {
-      serialNumber: serialNumber, // Tambahkan nilai dari input terkait
-      tyreSizeId: parseInt(tyreSizeId),
-      isInstalled: Boolean(installationStatus),
-      merk: merk,
-      manPower: manPower,
-      tread1: parseInt(tread1),
-      tread2: parseInt(tread2),
-      unitId: parseInt(unitId),
-      positionTyre: parseInt(positionUnit),
-      hmUnit: parseInt(hmUnit),
-      removedPurposeId: parseInt(removedPurposeId),
-      dateTimeInstall:  isoDateTimeInstall,
-      dateTimeRemove: isoDateTimeRemove,
-      siteId: parseInt(siteId),
-      removeReasonId: removeReasonId,
-      location: location,
+      merkId: parseInt(merk),
+      serialNumber: serialNumber,
+      type: typeBan,
+      pattern: patternBan,
+      otd1: parseInt(otd),
+      otd2: parseInt(otd2),
+      price: parseInt(hargaBan),
+      tyreSizeId: parseInt(ukuranBan),
     };
 
     try {
       console.log(dataBan);
-      // const response = await fetch('http://192.168.245.160:8080/tyre', {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(dataBan),
-      // });
-      // const result = await response.json();
       const result = await apiFetch("/tyre", {
         method: "POST",
         body: JSON.stringify(dataBan),
       });
-      alert(result)
+      alert(result);
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);
     } catch (error) {
       console.error("Error: ", error);
-      alert("Gagal menghubungi server.");
+      alert("Gagal menghubungi server." + error.message);
     }
   };
 
@@ -127,7 +100,7 @@ const AddTyre = () => {
           <h1 className="text-3xl font-bold text-[#1a1f36]">Add Tyres</h1>
         </div>
         <div className="flex items-center gap-4 mt-3">
-          <p className="text-lg font-semibold">Hello, Admin</p>
+          <p className="text-lg font-semibold">Hello, {username}</p>
           <img
             src="https://i.pravatar.cc/40"
             alt="User Avatar"
@@ -137,14 +110,89 @@ const AddTyre = () => {
       </div>
 
       {/* Form Container */}
-      <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">Add New Tyres</div>
+      <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">
+        Add New Tyres
+      </div>
       <div className="bg-white p-6 rounded-lg shadow-md">
         {/* === Informasi Dasar Ban === */}
-        <h2 className="text-lg font-semibold mb-4 border-b pb-2">Informasi Dasar Ban</h2>
+        {/* <h2 className="text-lg font-semibold mb-4 border-b pb-2">Informasi Dasar Ban</h2> */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block font-medium mb-1">
-              Nomor Seri Ban <span className="text-red-500">*</span>
+              Merk Ban <span className="text-red-500">*</span>
+            </label>
+            <select
+              className="w-full p-2 border rounded-md"
+              value={merk}
+              onChange={(e) => setMerk(e.target.value)}
+            >
+              <option value="">-- Pilih Merk --</option>
+              {merkList.map((merk) => (
+                <option key={merk.id} value={merk.id}>
+                  {merk.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              Type Ban <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              className="w-full p-2 border rounded-md"
+              value={typeBan}
+              onChange={(e) => setTypeBan(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              Pattern Ban <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              className="w-full p-2 border rounded-md"
+              value={patternBan}
+              onChange={(e) => setPatternBan(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              OTD 1 (Original Tread) <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              className="w-full p-2 border rounded-md"
+              value={otd}
+              onChange={(e) => setOtd(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              OTD 2 (Original Tread) <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              className="w-full p-2 border rounded-md"
+              value={otd2}
+              onChange={(e) => setOtd2(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              Harga Ban <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              value={hargaBan}
+              onChange={(e) => setHargaBan(e.target.value)}
+              className="w-full p-2 border rounded-md"
+              placeholder="Contoh: 150000"
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              Serial Number Ban <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -159,18 +207,18 @@ const AddTyre = () => {
             </label>
             <select
               className="w-full p-2 border rounded-md"
-              value={tyreSizeId}
-              onChange={(e) => setTyreSizeId(e.target.value)}
+              value={ukuranBan}
+              onChange={(e) => setUkuranBan(e.target.value)}
             >
               <option value="">-- Pilih Ukuran Ban --</option>
-              {tyreSizes.map((size) => (
-                <option key={size.id} value={size.id}>
-                  {size.size}
+              {ukuranList.map((ukuran) => (
+                <option key={ukuran.id} value={ukuran.id}>
+                  {ukuran.size}
                 </option>
               ))}
             </select>
           </div>
-          <div className="col-span-2">
+          {/* <div className="col-span-2">
             <label className="block font-medium mb-1">
               Status Instalasi <span className="text-red-500">*</span>
             </label>
@@ -199,11 +247,11 @@ const AddTyre = () => {
                 Tidak Terpasang
               </label>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* === Informasi Tambahan Ban === */}
-        <h2 className="text-lg font-semibold my-6 border-b pb-2">Informasi Tambahan Ban (Opsional)</h2>
+        {/* <h2 className="text-lg font-semibold my-6 border-b pb-2">Informasi Tambahan Ban (Opsional)</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block font-medium mb-1">Merk Ban</label>
@@ -241,11 +289,11 @@ const AddTyre = () => {
             onChange={(e) => setTread2(e.target.value)}
           />
           </div>
-        </div>
+        </div> */}
 
         {/* === Kondisional berdasarkan status instalasi === */}
-        {installationStatus ? (
-          <>
+        {/* {installationStatus ? ( */}
+        {/* <>
             <h2 className="text-lg font-semibold my-6 border-b pb-2 text-red-600">
               Informasi Pemasangan Ban <span className="text-sm text-red-500">(Wajib diisi)</span>
             </h2>
@@ -254,7 +302,7 @@ const AddTyre = () => {
                 <label className="block font-medium mb-1">
                   Unit Kendaraan <span className="text-red-500">*</span>
                 </label>
-                <select className="w-full p-2 border rounded-md" value={unitId} onChange={handleUnitChange}>
+                <select className="w-full p-2 border rounded-md" value={unitId}>
                   <option value="">-- Pilih Unit Kendaraan --</option>
                   {unitIdDrop.map((udrop) => (
                     <option key={udrop.id} value={udrop.id}>
@@ -299,14 +347,14 @@ const AddTyre = () => {
                     <option key={pos} value={pos}>
                       {`TYRE ${pos}`}
                     </option>
-                  ))}
-                  {/* <option value="1">TYRE 1</option>
+                  ))} */}
+        {/* <option value="1">TYRE 1</option>
                   <option value="2">TYRE 2</option>
                   <option value="3">TYRE 3</option>
                   <option value="4">TYRE 4</option>
                   <option value="5">TYRE 5</option>
                   <option value="6">TYRE 6</option> */}
-                </select>
+        {/* </select>
               </div>
               <div>
                 <label className="block font-medium mb-1">Tanggal & Waktu Pemasangan</label>
@@ -332,10 +380,10 @@ const AddTyre = () => {
                 <input type="number" className="w-full p-2 border rounded-md" />
               </div>
             </div>
-          </>
-        ) : (
-          <>
-            <h2 className="text-lg font-semibold my-6 border-b pb-2">Informasi Pelepasan Ban</h2>
+          </> */}
+        {/* ) : ( */}
+        <>
+          {/* <h2 className="text-lg font-semibold my-6 border-b pb-2">Informasi Pelepasan Ban</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block font-medium mb-1">
@@ -367,9 +415,9 @@ const AddTyre = () => {
                   ))}
                 </select>
               </div>
-            </div>
-          </>
-        )}
+            </div> */}
+        </>
+        {/* )} */}
 
         {/* Tombol Simpan */}
         <div className="mt-8 flex justify-end">
@@ -377,7 +425,7 @@ const AddTyre = () => {
             onClick={handleSubmit}
             className="bg-yellow-400 text-white px-6 py-2 rounded-md font-semibold hover:bg-yellow-500"
           >
-            Simpan Data Ban
+            Tambah Ban
           </button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-const BASE_URL = "https://primatyre-prismaexpress-production.up.railway.app";
+const BASE_URL = "http://192.168.137.26:8080";
 const apiKey = "halodek";
 
 export const apiFetch = async (endpoint, options = {}) => {
@@ -7,14 +7,17 @@ export const apiFetch = async (endpoint, options = {}) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": apiKey,
-        ...(options.headers || {}
-        ),
+        ...(options.headers || {}),
       },
       ...options,
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      // throw new Error(`HTTP error! status: ${response.status}`);
+      const errorBody = await response.json().catch(() => null);
+      const errorMessage =
+        errorBody?.message || `HTTP error! status: ${response.status}`;
+      throw new Error(errorMessage);
     }
 
     const result = await response.json();

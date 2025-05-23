@@ -1,259 +1,61 @@
-// import React, { useState, useEffect } from "react";
-
-// const UpdateTyre = () => {
-//   const [tyres, setTyres] = useState([]);
-//   const [selectedTyreId, setSelectedTyreId] = useState("");
-//   const [formData, setFormData] = useState({
-//     serialNumber: "",
-//     isInstalled: false,
-//     merk: "",
-//     tread1: "",
-//     tread2: "",
-//     tyreSizeId: "",
-//     removedPurposeId: "",
-//     // tambahkan field lain sesuai kebutuhan
-//   });
-
-//   useEffect(() => {
-//     const fetchTyres = async () => {
-//       try {
-//         const res = await fetch("http://192.168.245.160:8080/tyre"); // ganti endpoint sesuai
-//         const data = await res.json();
-//         setTyres(data.data || []);
-//       } catch (error) {
-//         console.error("Gagal fetch data ban:", error);
-//       }
-//     };
-//     fetchTyres();
-//   }, []);
-
-//   useEffect(() => {
-//     if (!selectedTyreId) return;
-
-//     const tyre = tyres.find((t) => t.id.toString() === selectedTyreId);
-//     if (tyre) {
-//       setFormData({
-//         serialNumber: tyre.serialNumber || "",
-//         isInstalled: tyre.isInstalled || false,
-//         merk: tyre.merk || "",
-//         tread1: tyre.tread1 ?? "",
-//         tread2: tyre.tread2 ?? "",
-//         tyreSizeId: tyre.tyreSize?.id || "",
-//         removedPurposeId: tyre.removedPurpose?.id || "",
-//         // isi field lain sesuai struktur data
-//       });
-//     }
-//   }, [selectedTyreId, tyres]);
-
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: type === "checkbox" ? checked : value,
-//     }));
-//   };
-
-//   const handleSubmit = async () => {
-//     try {
-//       // sesuaikan body dan endpoint API update
-//       const response = await fetch(`http://192.168.245.160:8080/tyre/${selectedTyreId}`, {
-//         method: "PUT",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(formData),
-//       });
-//       const result = await response.json();
-//       alert("Data ban berhasil diperbarui!");
-//       console.log(result);
-//     } catch (error) {
-//       alert("Gagal update data ban.");
-//       console.error(error);
-//     }
-//   };
-
-//   return (
-//     <div className="w-full bg-gray-100 p-2 rounded-md">
-//       {/* Header */}
-//       <div className="flex justify-between items-end mb-6 ml-3">
-//         <div>
-//           <p className="text-sm text-gray-500">Pages / Update Tyres</p>
-//           <h1 className="text-3xl font-bold text-[#1a1f36]">Update Tyres</h1>
-//         </div>
-//         <div className="flex items-center gap-4 mt-3">
-//           <p className="text-lg font-semibold">Hello, Admin</p>
-//           <img
-//             src="https://i.pravatar.cc/40"
-//             alt="User Avatar"
-//             className="w-12 h-12 rounded-full border-2 border-gray-500 shadow-md object-cover"
-//           />
-//         </div>
-//       </div>
-      
-//       {/* Content Utama Dibawah */}
-//       <div className="p-4 max-w-3xl mx-auto bg-white rounded shadow">
-//         <h1 className="text-2xl font-bold mb-6">Update Data Ban</h1>
-
-//         <label className="block mb-2 font-semibold" htmlFor="tyreSelect">
-//             Pilih Serial Number Ban
-//         </label>
-//         <select
-//             id="tyreSelect"
-//             value={selectedTyreId}
-//             onChange={(e) => setSelectedTyreId(e.target.value)}
-//             className="w-full p-2 border rounded mb-6"
-//         >
-//             <option value="">-- Pilih Serial Number --</option>
-//             {tyres.map((tyre) => (
-//             <option key={tyre.id} value={tyre.id}>
-//                 {tyre.serialNumber}
-//             </option>
-//             ))}
-//         </select>
-
-//         {selectedTyreId && (
-//             <>
-//             <div className="mb-4">
-//                 <label className="block mb-1 font-semibold">Nomor Seri Ban</label>
-//                 <input
-//                 name="serialNumber"
-//                 type="text"
-//                 value={formData.serialNumber}
-//                 onChange={handleChange}
-//                 className="w-full p-2 border rounded"
-//                 />
-//             </div>
-
-//             <div className="mb-4">
-//                 <label className="block mb-1 font-semibold">Merk</label>
-//                 <input
-//                 name="merk"
-//                 type="text"
-//                 value={formData.merk}
-//                 onChange={handleChange}
-//                 className="w-full p-2 border rounded"
-//                 />
-//             </div>
-
-//             <div className="mb-4 grid grid-cols-2 gap-4">
-//                 <div>
-//                 <label className="block mb-1 font-semibold">Tread 1</label>
-//                 <input
-//                     name="tread1"
-//                     type="number"
-//                     value={formData.tread1}
-//                     onChange={handleChange}
-//                     className="w-full p-2 border rounded"
-//                 />
-//                 </div>
-//                 <div>
-//                 <label className="block mb-1 font-semibold">Tread 2</label>
-//                 <input
-//                     name="tread2"
-//                     type="number"
-//                     value={formData.tread2}
-//                     onChange={handleChange}
-//                     className="w-full p-2 border rounded"
-//                 />
-//                 </div>
-//             </div>
-
-//             <div className="mb-4">
-//                 <label className="block mb-1 font-semibold">Status Instalasi</label>
-//                 <input
-//                 name="isInstalled"
-//                 type="checkbox"
-//                 checked={formData.isInstalled}
-//                 onChange={handleChange}
-//                 className="mr-2"
-//                 />
-//                 Terpasang
-//             </div>
-
-//             {/* Tambahkan field lain sesuai kebutuhan */}
-
-//             <button
-//                 onClick={handleSubmit}
-//                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-//             >
-//                 Simpan Perubahan
-//             </button>
-//             </>
-//         )}
-//         </div>
-//     </div>
-//   );
-// };
-// export default UpdateTyre;
-
-
-
-import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
+import React, { useState, useEffect } from "react";
 
 const UpdateTyre = () => {
-  const [tyres, setTyres] = useState([]);
-  const [selectedTyreId, setSelectedTyreId] = useState("");
-  const [units, setUnits] = useState([]);
-  const [formData, setFormData] = useState({
-    serialNumber: "",
-    isInstalled: false,
-    merk: "",
-    tread1: "",
-    tread2: "",
-    tyreSizeId: "",
-    removedPurposeId: "",
-    installedUnitId: "",
-    positionUnit: "",
-    dateTimeInstall: "",
-    dateTimeRemove: "",
-    hmUnit: "",
-    // Tambahkan field lain sesuai kebutuhan
-  });
+  const [noUnit, setNoUnit] = useState("");
+  const [lokasi, setLokasi] = useState("");
+  const [Hm, setHm] = useState("");
+  const [Km, setKm] = useState("");
+  const [treadLepas1, setTreadLepas1] = useState("");
+  const [treadLepas2, setTreadLepas2] = useState("");
+  const [serialNumberLepas, setSerialNumberLepas] = useState("");
+  const [alasanLepas, setAlasanLepas] = useState("");
+  const [tujuanLepas, setTujuanLepas] = useState("");
+  const [serialNumberPasang, setSerialNumberPasang] = useState("");
+  const [manPower, setManPower] = useState("");
+  const [treadPasang1, setTreadPasang1] = useState("");
+  const [treadPasang2, setTreadPasang2] = useState("");
+  const [airCondition, setAirCondition] = useState("");
+  const [psi, setPsi] = useState("");
+  const [dateStart, setDateStart] = useState("");
+  const [dateEnd, setDateEnd] = useState("");
 
-  useEffect(() => {
-    const fetchTyres = async () => {
-      try {
-        // const res = await fetch("http://192.168.245.160:8080/tyre"); // Ganti endpoint sesuai
-        // const data = await res.json();
-        const data = await apiFetch("/tyre");
-        setTyres(data.data || []);
-      } catch (error) {
-        console.error("Gagal fetch data ban:", error);
-      }
-    };
-    fetchTyres();
-  }, []);
+  const [unitList, setunitList] = useState([]);
+  const [serialNumberLepasList, setSerialNumberLepasList] = useState([]);
+  const [serialNumberLepasMaster, setSerialNumberLepasMaster] = useState([]);
+  const [alasanLepasList, setAlasanLepasList] = useState([]);
+  const [tujuanLepasList, setTujuanLepasList] = useState([]);
+  const [serialNumberPasangList, setSerialNumberPasangList] = useState([]);
+  const [airConditionList, setAirConditionList] = useState([]);
 
-  useEffect(() => {
-    if (!selectedTyreId) return;
+  const user = JSON.parse(localStorage.getItem("user"));
+  const capitalizeFirst = (text) => {
+    if (!text) return "";
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  };
 
-    const tyre = tyres.find((t) => t.id.toString() === selectedTyreId);
-    if (tyre) {
-      // Cari aktivitas install dan remove terbaru
-      const installActivity = tyre.activities.find((a) => a.dateTimeInstall !== null) || {};
-      const removeActivity = tyre.activities.find((a) => a.dateTimeRemove !== null) || {};
-
-      setFormData({
-        serialNumber: tyre.serialNumber || "",
-        isInstalled: tyre.isInstalled || false,
-        merk: tyre.merk || "",
-        tread1: tyre.tread1 ?? "",
-        tread2: tyre.tread2 ?? "",
-        tyreSizeId: tyre.tyreSize?.id || "",
-        removedPurposeId: tyre.removedPurpose?.id || "",
-        installedUnitId: tyre.installedUnit?.id || "",
-        positionUnit: "", // Bisa diisi jika ada data posisi di API
-        dateTimeInstall: installActivity.dateTimeInstall ? installActivity.dateTimeInstall.substring(0, 16) : "",
-        dateTimeRemove: removeActivity.dateTimeRemove ? removeActivity.dateTimeRemove.substring(0, 16) : "",
-        hmUnit: installActivity.hmAtActivity || "",
-      });
-    }
-  }, [selectedTyreId, tyres]);
+  const username = capitalizeFirst(user?.name);
 
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        const data = await apiFetch("/dropdown"); // Ganti sesuai endpoint
-        setUnits(data.unit || []);
+        const data = await apiFetch("/dropdown");
+
+        const banReady = (data.tyre || []).filter(
+          (ready) => !ready.isReady && !ready.isScrap && ready.isInstalled
+        );
+
+        const banNotReady = (data.tyre || []).filter(
+          (ready) => ready.isReady && !ready.isScrap && !ready.isInstalled
+        );
+
+        setunitList(data.unit || []);
+        setSerialNumberLepasList(banReady);
+        setSerialNumberLepasMaster(banReady);
+        setAlasanLepasList(data.removeReason || []);
+        setTujuanLepasList(data.removePurpose || []);
+        setSerialNumberPasangList(banNotReady);
+        setAirConditionList(data.airCondition || []);
       } catch (error) {
         console.error("Gagal fetch data dropdown:", error);
       }
@@ -262,50 +64,49 @@ const UpdateTyre = () => {
     fetchDropdownData();
   }, []);
 
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-
-    // Kalau isInstalled berubah, clear field kondisional jika perlu
-    if (name === "isInstalled") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: checked,
-        // reset data kondisional saat status berubah (opsional)
-        installedUnitId: checked ? prev.installedUnitId : "",
-        positionUnit: checked ? prev.positionUnit : "",
-        dateTimeInstall: checked ? prev.dateTimeInstall : "",
-        dateTimeRemove: checked ? prev.dateTimeRemove : "",
-        hmUnit: checked ? prev.hmUnit : "",
-        removedPurposeId: checked ? "" : prev.removedPurposeId, // misal kalau sudah dilepas harus pilih tujuan pelepasan
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    }
-  };
+  useEffect(() => {
+    if (!noUnit) return;
+    const filtered = serialNumberLepasMaster.filter(
+      (ban) => ban.installedUnitId?.toString() === noUnit
+    );
+    setSerialNumberLepasList(filtered);
+  }, [noUnit, serialNumberLepasMaster]);
 
   const handleSubmit = async () => {
-      console.log("Payload yang dikirim:", formData);
+    const dataActivity = {
+      unitId: parseInt(noUnit),
+      hmAtActivity: parseInt(Hm),
+      kmAtActivity: parseInt(Km),
+      location: lokasi,
+      removedTyreId: parseInt(serialNumberLepas),
+      removeReasonId: alasanLepas,
+      removePurposeId: parseInt(tujuanLepas),
+      installedTyreId: parseInt(serialNumberPasang),
+      airConditionId: parseInt(airCondition),
+      airPressure: parseInt(psi),
+      manpower: manPower,
+      dateTimeWork: dateStart,
+      dateTimeDone: dateEnd,
+      tread1Remove: parseInt(treadLepas1),
+      tread2Remove: parseInt(treadLepas2),
+      tread1Install: parseInt(treadPasang1),
+      tread2Install: parseInt(treadPasang2),
+    };
+
     try {
-      // Kirim seluruh formData ke backend (sesuaikan endpoint dan struktur API)
-      // const response = await fetch(`http://192.168.245.160:8080/tyre/${selectedTyreId}`, {
-      //   method: "PUT",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(formData),
-      // });
-      // const result = await response.json();
-      const result = await apiFetch(`/tyre/${selectedTyreId}`, {
-        method: "PUT",
-        body: JSON.stringify(formData),
+      console.log(dataActivity);
+      const result = await apiFetch("/activity", {
+        method: "POST",
+        body: JSON.stringify(dataActivity),
       });
-      alert("Data ban berhasil diperbarui!");
-      console.log(result);
+      alert("activity berhasil.");
+      // navigate("/home");
+      // window.location.reload();
+      // fetchDropdownData();
+      console.log("Response: ", result);
     } catch (error) {
-      alert("Gagal update data ban.");
-      console.error(error);
+      console.error("Error: ", error);
+      alert("Gagal menghubungi server: " + error.message);
     }
   };
 
@@ -314,11 +115,11 @@ const UpdateTyre = () => {
       {/* Header */}
       <div className="flex justify-between items-end mb-6 ml-3">
         <div>
-          <p className="text-sm text-gray-500">Pages / Update Tyres</p>
-          <h1 className="text-3xl font-bold text-[#1a1f36]">Update Tyres</h1>
+          <p className="text-sm text-gray-500">Pages / Activity Tyres</p>
+          <h1 className="text-3xl font-bold text-[#1a1f36]">Activity Tyres</h1>
         </div>
         <div className="flex items-center gap-4 mt-3">
-          <p className="text-lg font-semibold">Hello, Admin</p>
+          <p className="text-lg font-semibold">Hello, {username}</p>
           <img
             src="https://i.pravatar.cc/40"
             alt="User Avatar"
@@ -328,168 +129,258 @@ const UpdateTyre = () => {
       </div>
 
       {/* Content */}
-      <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">Update Tyres</div>
+      <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">
+        Activity Tyres
+      </div>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-lg font-bold mb-6">Update Data Ban</h1>
-
-        <label className="block mb-2 font-semibold" htmlFor="tyreSelect">
-          Pilih Serial Number Ban
-        </label>
-        <select
-          id="tyreSelect"
-          value={selectedTyreId}
-          onChange={(e) => setSelectedTyreId(e.target.value)}
-          className="w-full p-2 border rounded mb-6"
-        >
-          <option value="">-- Pilih Serial Number --</option>
-          {tyres.map((tyre) => (
-            <option key={tyre.id} value={tyre.id}>
-              {tyre.serialNumber}
-            </option>
-          ))}
-        </select>
-
-        {selectedTyreId && (
-          <>
-            <div className="mb-4">
-              <label className="block mb-1 font-semibold">Nomor Seri Ban</label>
-              <input
-                name="serialNumber"
-                type="text"
-                value={formData.serialNumber}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block mb-1 font-semibold">Merk</label>
-              <input
-                name="merk"
-                type="text"
-                value={formData.merk}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              />
-            </div>
-
-            <div className="mb-4 grid grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-1 font-semibold">Tread 1</label>
-                <input
-                  name="tread1"
-                  type="number"
-                  value={formData.tread1}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold">Tread 2</label>
-                <input
-                  name="tread2"
-                  type="number"
-                  value={formData.tread2}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-            </div>
-
-            <div className="mb-4 flex items-center">
-              <input
-                name="isInstalled"
-                type="checkbox"
-                checked={formData.isInstalled}
-                onChange={handleChange}
-                className="mr-2"
-              />
-              <label className="font-semibold">Terpasang</label>
-            </div>
-
-            {/* Kondisional: jika terpasang, tampilkan data instalasi */}
-            {formData.isInstalled ? (
-              <>
-                <div className="mb-4">
-                  <label className="block mb-1 font-semibold">Unit Kendaraan</label>
-                  {/* <input
-                    name="installedUnitId"
-                    type="text"
-                    value={formData.installedUnitId}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                    placeholder="ID Unit Kendaraan"
-                  /> */}
-                  <select
-                    name="installedUnitId"
-                    value={formData.installedUnitId}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                  >
-                    <option value="">-- Pilih Unit --</option>
-                    {units.map((unit) => (
-                      <option key={unit.id} value={unit.id}>
-                        {unit.nomorUnit}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="block mb-1 font-semibold">Tanggal & Waktu Pemasangan</label>
-                  <input
-                    name="dateTimeInstall"
-                    type="datetime-local"
-                    value={formData.dateTimeInstall}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block mb-1 font-semibold">HM Unit</label>
-                  <input
-                    name="hmUnit"
-                    type="number"
-                    value={formData.hmUnit}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                  />
-                </div>
-              </>
-            ) : (
-              /* Jika tidak terpasang, tampilkan data pelepasan */
-              <>
-                <div className="mb-4">
-                  <label className="block mb-1 font-semibold">Tanggal & Waktu Pelepasan</label>
-                  <input
-                    name="dateTimeRemove"
-                    type="datetime-local"
-                    value={formData.dateTimeRemove}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block mb-1 font-semibold">Tujuan Pelepasan</label>
-                  <input
-                    name="removedPurposeId"
-                    type="text"
-                    value={formData.removedPurposeId}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                    placeholder="ID Tujuan Pelepasan"
-                  />
-                </div>
-              </>
-            )}
-
-            <button
-              onClick={handleSubmit}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        {/* contoh penggunaan */}
+        {/* <div>
+            <label className="block font-medium mb-1">
+              Type Ban <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              className="w-full p-2 border rounded-md"
+              value={typeBan}
+              onChange={(e) => setTypeBan(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              Ukuran Ban <span className="text-red-500">*</span>
+            </label>
+            <select
+              className="w-full p-2 border rounded-md"
+              value={ukuranBan}
+              onChange={(e) => setUkuranBan(e.target.value)}
             >
-              Simpan Perubahan
-            </button>
-          </>
-        )}
+              <option value="">-- Pilih Ukuran Ban --</option>
+              {ukuranList.map((ukuran) => (
+                <option key={ukuran.id} value={ukuran.id}>
+                  {ukuran.size}
+                </option>
+              ))}
+            </select>
+          </div> */}
+
+        {/* Form Pelepasan */}
+        <div className="space-y-4 pt-1">
+          <h2 className="text-lg font-bold text-red-600">Pelepasan Ban</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-medium mb-1">
+                Unit <span className="text-red-500">*</span>
+              </label>
+              <select
+                className="w-full p-2 border rounded-md"
+                value={noUnit}
+                onChange={(e) => setNoUnit(e.target.value)}
+              >
+                <option value="">-- Pilih Unit --</option>
+                {unitList.map((unit) => (
+                  <option key={unit.id} value={unit.id}>
+                    {unit.nomorUnit}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Lokasi</label>
+              <input
+                type="text"
+                className="w-full p-2 border rounded-md"
+                value={lokasi}
+                onChange={(e) => setLokasi(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">HM</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-md"
+                value={Hm}
+                onChange={(e) => setHm(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">KM</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-md"
+                value={Km}
+                onChange={(e) => setKm(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Thread 1</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-md"
+                value={treadLepas1}
+                onChange={(e) => setTreadLepas1(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Thread 2</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-md"
+                value={treadLepas2}
+                onChange={(e) => setTreadLepas2(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Ban yang dilepas</label>
+              <select
+                className="w-full p-2 border rounded-md"
+                value={serialNumberLepas}
+                onChange={(e) => setSerialNumberLepas(e.target.value)}
+              >
+                <option value="">-- Pilih Ban --</option>
+                {serialNumberLepasList.map((lepas) => (
+                  <option key={lepas.stockTyre.id} value={lepas.stockTyre.id}>
+                    {lepas.stockTyre.serialNumber}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Alasan Dilepas</label>
+              <select
+                className="w-full p-2 border rounded-md"
+                value={alasanLepas}
+                onChange={(e) => setAlasanLepas(e.target.value)}
+              >
+                <option value="">-- Pilih Alasan --</option>
+                {alasanLepasList.map((banl) => (
+                  <option key={banl.id} value={banl.id}>
+                    {banl.description}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Tujuan Pelepasan</label>
+              <select
+                className="w-full p-2 border rounded-md"
+                value={tujuanLepas}
+                onChange={(e) => setTujuanLepas(e.target.value)}
+              >
+                <option value="">-- Pilih Tujuan --</option>
+                {tujuanLepasList.map((tlepas) => (
+                  <option key={tlepas.id} value={tlepas.id}>
+                    {tlepas.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Form Pemasangan */}
+        <div className="space-y-4 pt-5">
+          <h2 className="text-lg font-bold text-blue-600">Pemasangan Ban</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-medium mb-1">
+                Ban yang dipasang
+              </label>
+              <select
+                className="w-full p-2 border rounded-md"
+                value={serialNumberPasang}
+                onChange={(e) => setSerialNumberPasang(e.target.value)}
+              >
+                <option value="">-- Pilih Ban --</option>
+                {serialNumberPasangList.map((pasang) => (
+                  <option key={pasang.stockTyre.id} value={pasang.stockTyre.id}>
+                    {pasang.stockTyre.serialNumber}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Man Power</label>
+              <input
+                type="text"
+                className="w-full p-2 border rounded-md"
+                value={manPower}
+                onChange={(e) => setManPower(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Thread 1</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-md"
+                value={treadPasang1}
+                onChange={(e) => setTreadPasang1(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Thread 2</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-md"
+                value={treadPasang2}
+                onChange={(e) => setTreadPasang2(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Air Condition</label>
+              <select
+                className="w-full p-2 border rounded-md"
+                value={airCondition}
+                onChange={(e) => setAirCondition(e.target.value)}
+              >
+                <option>-- Pilih Kondisi --</option>
+                {airConditionList.map((ac) => (
+                  <option key={ac.id} value={ac.id}>
+                    {ac.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block font-medium mb-1">PSI</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-md"
+                value={psi}
+                onChange={(e) => setPsi(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">
+                Tanggal Pengerjaan
+              </label>
+              <input
+                type="datetime-local"
+                className="w-full p-2 border rounded-md"
+                value={dateStart}
+                onChange={(e) => setDateStart(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Tanggal Selesai</label>
+              <input
+                type="datetime-local"
+                className="w-full p-2 border rounded-md"
+                value={dateEnd}
+                onChange={(e) => setDateEnd(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Tombol Simpan */}
+        <div className="mt-8 flex justify-end">
+          <button
+            onClick={handleSubmit}
+            className="bg-yellow-400 text-white px-6 py-2 rounded-md font-semibold hover:bg-yellow-500"
+          >
+            Tambah Unit
+          </button>
+        </div>
       </div>
     </div>
   );

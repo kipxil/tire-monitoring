@@ -4,6 +4,14 @@ const User = () => {
   const [selectedRole, setSelectedRole] = useState("Admin");
 
   const handleRoleChange = (role) => setSelectedRole(role);
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const capitalizeFirst = (text) => {
+    if (!text) return "";
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  };
+
+  const username = capitalizeFirst(user?.name);
 
   return (
     <div className="w-full bg-gray-100 p-2 rounded-md shadow-none">
@@ -17,7 +25,7 @@ const User = () => {
 
         {/* Right Icons */}
         <div className="flex items-center space-x-4 mt-3">
-          <p className="text-lg mr-2 font-semibold">Hello, Admin</p>
+          <p className="text-lg mr-2 font-semibold">Hello, {username}</p>
 
           {/* Avatar */}
           <img
@@ -30,7 +38,7 @@ const User = () => {
 
       {/* Content bawah header */}
       {/* Statistik */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
           <p className="text-sm text-gray-600">Total Users</p>
           <div className="flex items-center justify-between mt-2">
@@ -52,23 +60,51 @@ const User = () => {
             <span className="text-blue-500 text-xl">➕</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Form & Table */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Form Create User */}
         <div className="bg-white rounded-lg shadow">
-          <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">Create New User Account</div>
+          <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">
+            Create New User Account
+          </div>
           <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input className="w-full p-2 border border-gray-300 rounded-md" type="text" placeholder="Enter user's full name" />
-            <input className="w-full p-2 border border-gray-300 rounded-md" type="text" placeholder="Create a username" />
-            <input className="w-full p-2 border border-gray-300 rounded-md" type="email" placeholder="user@tyreprima.com" />
-            <input className="w-full p-2 border border-gray-300 rounded-md" type="text" placeholder="+62 8xx-xxxx-xxxx" />
-            <input className="w-full p-2 border border-gray-300 rounded-md" type="password" placeholder="Password" />
-            <input className="w-full p-2 border border-gray-300 rounded-md" type="password" placeholder="Confirm Password" />
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md"
+              type="text"
+              placeholder="Enter user's full name"
+            />
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md"
+              type="text"
+              placeholder="Create a username"
+            />
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md"
+              type="email"
+              placeholder="user@tyreprima.com"
+            />
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md"
+              type="text"
+              placeholder="+62 8xx-xxxx-xxxx"
+            />
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md"
+              type="password"
+              placeholder="Password"
+            />
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md"
+              type="password"
+              placeholder="Confirm Password"
+            />
 
             <div className="col-span-2">
-              <label className="block mb-1 text-sm font-medium">User Role</label>
+              <label className="block mb-1 text-sm font-medium">
+                User Role
+              </label>
               <div className="flex gap-4">
                 {["Admin", "Reviewer", "Worker"].map((role) => (
                   <button
@@ -100,19 +136,53 @@ const User = () => {
 
         {/* User Account List */}
         <div className="bg-white rounded-lg shadow">
-          <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">User Accounts</div>
+          <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">
+            User Accounts
+          </div>
           <div className="p-4 divide-y text-sm">
             {[
-              { name: "Ahmad Fadli", role: "ADMIN", status: "green", color: "bg-green-600" },
-              { name: "Budi Santoso", role: "REVIEWER", status: "green", color: "bg-orange-400" },
-              { name: "Citra Lestari", role: "WORKER", status: "green", color: "bg-blue-500" },
-              { name: "Deni Kurniawan", role: "WORKER", status: "orange", color: "bg-purple-500" },
-              { name: "Eka Pratiwi", role: "REVIEWER", status: "orange", color: "bg-orange-400" },
-              { name: "Faisal Akbar", role: "WORKER", status: "red", color: "bg-blue-500" },
+              {
+                name: "Ahmad Fadli",
+                role: "ADMIN",
+                status: "green",
+                color: "bg-green-600",
+              },
+              {
+                name: "Budi Santoso",
+                role: "REVIEWER",
+                status: "green",
+                color: "bg-orange-400",
+              },
+              {
+                name: "Citra Lestari",
+                role: "WORKER",
+                status: "green",
+                color: "bg-blue-500",
+              },
+              {
+                name: "Deni Kurniawan",
+                role: "WORKER",
+                status: "orange",
+                color: "bg-purple-500",
+              },
+              {
+                name: "Eka Pratiwi",
+                role: "REVIEWER",
+                status: "orange",
+                color: "bg-orange-400",
+              },
+              {
+                name: "Faisal Akbar",
+                role: "WORKER",
+                status: "red",
+                color: "bg-blue-500",
+              },
             ].map((user, i) => (
               <div key={i} className="flex items-center justify-between py-2">
                 <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 text-white text-sm rounded-full flex items-center justify-center ${user.color}`}>
+                  <div
+                    className={`w-8 h-8 text-white text-sm rounded-full flex items-center justify-center ${user.color}`}
+                  >
                     {user.name[0]}
                   </div>
                   <div>{user.name}</div>
@@ -149,7 +219,9 @@ const User = () => {
               <button
                 key={pg}
                 className={`w-8 h-8 rounded-full ${
-                  pg === 2 ? "bg-[#0F2741] text-white" : "bg-gray-200 text-gray-700"
+                  pg === 2
+                    ? "bg-[#0F2741] text-white"
+                    : "bg-gray-200 text-gray-700"
                 }`}
               >
                 {pg}

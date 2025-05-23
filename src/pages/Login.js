@@ -1,65 +1,68 @@
-import React, { useState } from 'react';
-import logo from '../assets/bg_tambang.jpg'
-import overlayimg from '../assets/TYRE DEPT FIX.png'
-import { apiFetch } from '../services/apiClient';
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import logo from "../assets/bg_tambang.jpg";
+import overlayimg from "../assets/TYRE DEPT FIX.png";
+import { apiFetch } from "../services/apiClient";
 
 const Login = ({ onLogin }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+  // const handleLogin = (e) => {
+  //   e.preventDefault();
+  //   // Simulasi login berhasil
+  //   // if (username === "admin" && password === "password") {
+  //   //   onLogin();
+  //   // } else {
+  //   //   alert('Username atau password salah');
+  //   // }
+  //   if (username === "admin" && password === "admin") {
+  //     onLogin("admin");
+  //   } else if (username === "worker" && password === "worker") {
+  //     onLogin("worker");
+  //   } else {
+  //     alert("Username atau password salah");
+  //   }
+  // };
 
-    // const handleLogin = (e) => {
-    //     e.preventDefault();
-    //     // Simulasi login berhasil
-    //     // if (username === "admin" && password === "password") {
-    //     //   onLogin();
-    //     // } else {
-    //     //   alert('Username atau password salah');
-    //     // }
-    //     if (username === "admin" && password === "admin") {
-    //       onLogin("admin");
-    //     } else if (username === "worker" && password === "worker") {
-    //       onLogin("worker");
-    //     } else {
-    //       alert('Username atau password salah');
-    //     }
-    // };
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-    const handleLogin = async (e) => {
-      e.preventDefault();
+    try {
+      const result = await apiFetch("/user");
 
-      try {
-        const result = await apiFetch("/user");
+      // Debug: tampilkan data user dari server
+      console.log("Data user dari API:", result.data);
 
-        // Debug: tampilkan data user dari server
-        console.log("Data user dari API:", result.data);
+      // Cek apakah ada user yang cocok
+      const user = result.data.find(
+        (u) => u.name === username && u.password === password
+      );
 
-        // Cek apakah ada user yang cocok
-        const user = result.data.find(
-          (u) => u.name === username && u.password === password
-        );
-
-        if (user) {
-          console.log("Login berhasil sebagai:", user.name);
-          localStorage.setItem("isLoggedIn", "true");
-          // localStorage.setItem("user", JSON.stringify(user));
-          onLogin(); // Tidak kirim role — akses semua fitur
-        } else {
-          alert("Username atau password salah");
-        }
-      } catch (error) {
-        console.error("Terjadi kesalahan saat login:", error);
-        alert("Gagal menghubungi server.");
+      if (user) {
+        console.log("Login berhasil sebagai:", user.name);
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("user", JSON.stringify(user));
+        onLogin(); // Tidak kirim role — akses semua fitur
+      } else {
+        // alert("Username atau password salah");
+        toast.error("Login gagal. Periksa Kembali username dan password!");
       }
-    };
+    } catch (error) {
+      console.error("Terjadi kesalahan saat login:", error);
+      alert("Gagal menghubungi server.");
+    }
+  };
 
-    return (
-    <div className="flex h-screen w-full">
+  return (
+    <div className="flex flex-col md:flex-row h-screen w-full">
       {/* Left Side - Form */}
-      <div className="w-full md:w-1/2 flex-grow flex items-center justify-center px-6">
+      <div className="w-full md:w-1/2 min-h-screen flex-grow flex items-center justify-center px-6 py-8">
         <div className="max-w-md w-full space-y-6">
           <h2 className="text-3xl font-bold">Sign In</h2>
-          <p className="text-sm text-gray-500">Enter your username and password to sign in!</p>
+          <p className="text-sm text-gray-500">
+            Enter your username and password to sign in!
+          </p>
 
           <form className="space-y-4" onSubmit={handleLogin}>
             <div>
@@ -97,10 +100,13 @@ const Login = ({ onLogin }) => {
       </div>
 
       {/* Right Side - Background */}
-      <div className="hidden md:block md:w-[44%] bg-cover bg-center text-white relative rounded-bl-[200px] overflow-hidden" style={{ backgroundImage: `url(${logo})` }}>
+      <div
+        className="md:block md:w-[44%] bg-cover bg-center text-white relative rounded-bl-[200px] overflow-hidden"
+        style={{ backgroundImage: `url(${logo})` }}
+      >
         <img
           src={overlayimg}
-          alt='Overlay'
+          alt="Overlay"
           className="absolute top-[43%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[75%] z-10"
         />
       </div>

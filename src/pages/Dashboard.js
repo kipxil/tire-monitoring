@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Home from './Home';
-import Minings from './Mining';
+import AddUnit from './AddUnit';
 import Inspect from './Inspect';
 import Reports from './Report';
 import Users from './User';
@@ -20,7 +20,7 @@ const DashboardLayout = ( {onLogout} ) => {
           <Route path="/home" element={<Home />} />
           {/* {role === "admin" && (
             <> */}
-              <Route path="/minings" element={<Minings />} />
+              <Route path="/addunit" element={<AddUnit />} />
               <Route path="/inspecttyres" element={<Inspect />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/users" element={<Users />} />

@@ -51,15 +51,18 @@ const Sidebar = ({ onLogout }) => {
 
   return (
     <div className="bg-[#0F2741] text-white h-screen w-[290px] flex flex-col px-4 py-6 justify-between">
-      
       {/* Top - Logo & Menu */}
       <div>
         {/* Logo */}
         <div className="mb-8 text-center">
           <div className="text-yellow-400 font-bold text-xl leading-tight">
-            TYRE<br />PRIMA JAYA
+            TYRE
+            <br />
+            PRIMA JAYA
           </div>
-          <p className="text-xs text-gray-300">WE WILL SAVE OUR TYRE TOGETHER</p>
+          <p className="text-xs text-gray-300">
+            WE WILL SAVE OUR TYRE TOGETHER
+          </p>
         </div>
 
         {/* Menu Utama */}
@@ -127,7 +130,7 @@ const Sidebar = ({ onLogout }) => {
               </div>
             )}
           </div>
-          
+
           {/* Units Management */}
           <div className="flex flex-col">
             <button
@@ -148,7 +151,7 @@ const Sidebar = ({ onLogout }) => {
             {isUnitDropdownOpen && (
               <div className="ml-2 mt-2 flex flex-col gap-2">
                 <NavLink
-                  to="/minings"
+                  to="/addunit"
                   className={({ isActive }) =>
                     `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
                       isActive
@@ -160,7 +163,7 @@ const Sidebar = ({ onLogout }) => {
                   <PlusIcon className="w-4 h-4" />
                   Add Units
                 </NavLink>
-                <NavLink
+                {/* <NavLink
                   to="/reports"
                   className={({ isActive }) =>
                     `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
@@ -172,7 +175,7 @@ const Sidebar = ({ onLogout }) => {
                 >
                   <DocumentTextIcon className="w-4 h-4" />
                   Update Units
-                </NavLink>
+                </NavLink> */}
               </div>
             )}
           </div>
