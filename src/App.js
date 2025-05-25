@@ -8,13 +8,9 @@ import DashboardLayout from "./pages/Dashboard";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const [userRole, setUserRole] = useState(null);
-
-  // const handleLogin = () => setIsLoggedIn(true);
-  // const handleLogout = () => setIsLoggedIn(false);
 
   useEffect(() => {
-    const storedLogin = localStorage.getItem("isLoggedIn");
+    const storedLogin = sessionStorage.getItem("isLoggedIn");
     if (storedLogin === "true") {
       setIsLoggedIn(true);
     }
@@ -23,24 +19,14 @@ function App() {
   // Handler login: simpan status ke state dan localStorage
   const handleLogin = () => {
     setIsLoggedIn(true);
-    localStorage.setItem("isLoggedIn", "true");
+    sessionStorage.setItem("isLoggedIn", "true");
   };
 
   // Handler logout: reset state dan hapus dari localStorage
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("isLoggedIn");
   };
-
-  // const handleLogin = (role) => {
-  //   setUserRole(role);
-  //   setIsLoggedIn(true);
-  // };
-
-  // const handleLogout = () => {
-  //   setIsLoggedIn(false);
-  //   setUserRole(null);
-  // };
 
   return (
     <>

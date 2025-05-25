@@ -52,7 +52,11 @@ const Home = () => {
         avgTreadDepth: `${data.tyre.tread1}/${data.tyre.tread2}`,
       };
 
-      const activityHistory = data.activities.map((act) => {
+      const sortedActivities = [...data.activities].sort(
+        (a, b) => new Date(b.dateTimeDone) - new Date(a.dateTimeDone)
+      );
+
+      const activityHistory = sortedActivities.map((act) => {
         const type =
           act.installedTyreId === data.tyre.id ? "Installation" : "Removal";
 
@@ -150,8 +154,8 @@ const Home = () => {
     if (tyre.isScrap)
       return { label: "Scrap", className: "bg-gray-300 text-gray-800" };
     if (tyre.isInstalled)
-      return { label: "Terpasang", className: "bg-green-200 text-green-700" };
-    return { label: "Terlepas", className: "bg-red-200 text-red-700" };
+      return { label: "Installed", className: "bg-green-200 text-green-700" };
+    return { label: "Removed", className: "bg-red-200 text-red-700" };
   };
 
   // Pagination logic untuk data ban
@@ -203,7 +207,7 @@ const Home = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {/* Total Unit */}
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
-          <p className="text-sm text-gray-500">Total Unit</p>
+          <p className="text-sm text-gray-500">Unit Total</p>
           <div className="flex items-center justify-between mt-2">
             <span className="text-lg font-bold text-gray-700">
               {summary.totalUnit}
@@ -216,7 +220,7 @@ const Home = () => {
 
         {/* Total Ban */}
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-yellow-500">
-          <p className="text-sm text-gray-500">Total Ban</p>
+          <p className="text-sm text-gray-500">Tyre Total</p>
           <div className="flex items-center justify-between mt-2">
             <span className="text-lg font-bold text-gray-700">
               {summary.totalTyre}
@@ -229,7 +233,7 @@ const Home = () => {
 
         {/* Ban Terpasang */}
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
-          <p className="text-sm text-gray-500">Ban Terpasang</p>
+          <p className="text-sm text-gray-500">Installed Tyre</p>
           <div className="flex items-center justify-between mt-2">
             <span className="text-lg font-bold text-gray-700">
               {summary.installedTyre}
@@ -242,7 +246,7 @@ const Home = () => {
 
         {/* Ban Terlepas */}
         <div className="bg-white p-4 rounded-lg shadow border-l-4 border-orange-500">
-          <p className="text-sm text-gray-500">Ban Terlepas</p>
+          <p className="text-sm text-gray-500">Removed Tyre</p>
           <div className="flex items-center justify-between mt-2">
             <span className="text-lg font-bold text-gray-700">
               {summary.removedTyre}
@@ -270,7 +274,7 @@ const Home = () => {
               }}
             />
             <span className="text-xl ml-2 text-gray-700 font-bold">
-              Data Ban
+              Tyre Data
             </span>
           </label>
 
@@ -287,7 +291,7 @@ const Home = () => {
               }}
             />
             <span className="text-xl ml-2 text-gray-700 font-bold">
-              Data Unit
+              Unit Data
             </span>
           </label>
         </div>
@@ -296,7 +300,7 @@ const Home = () => {
         {selectedView === "ban" ? (
           <>
             <h2 className="text-xl font-semibold mb-4 border-b pb-2">
-              Data Ban
+              Tyre Data
             </h2>
             <div className="overflow-x-auto">
               <table className="min-w-full table-auto text-sm text-left border">
@@ -321,12 +325,15 @@ const Home = () => {
                         <tr
                           key={tyre.id}
                           className="even:bg-gray-50"
-                          onClick={() => handleTyreClick(tyre.id)} //setSelectedTyre(tyre.id)
+                          // onClick={() => handleTyreClick(tyre.id)} //setSelectedTyre(tyre.id)
                         >
                           <td className="px-4 py-2 border">
                             {indexOfFirstTyre + index + 1}
                           </td>
-                          <td className="px-4 py-2 border">
+                          <td
+                            className="px-4 py-2 border"
+                            onClick={() => handleTyreClick(tyre.id)}
+                          >
                             {tyre.stockTyre.serialNumber}
                           </td>
                           <td className="px-4 py-2 border">
@@ -336,13 +343,13 @@ const Home = () => {
                               {label}
                             </span>
                           </td>
-                          <td className="px-4 py-2 border">{hm} jam</td>
-                          <td className="px-4 py-2 border">{km} jam</td>
+                          <td className="px-4 py-2 border">{hm} hours</td>
+                          <td className="px-4 py-2 border">{km} hours</td>
                           <td className="px-4 py-2 border text-center">
                             <PencilSquareIcon
                               className="w-6 h-6 text-blue-500 cursor-pointer mx-auto"
                               onClick={() => navigate(`/actvtyres`)}
-                              title="Update Data Ban"
+                              title="Update Tyre"
                             />
                           </td>
                         </tr>
@@ -354,7 +361,7 @@ const Home = () => {
                         colSpan="6"
                         className="text-center px-4 py-3 text-gray-500"
                       >
-                        Tidak ada data ban.
+                        No tire data.
                       </td>
                     </tr>
                   )}
@@ -400,18 +407,18 @@ const Home = () => {
         ) : (
           <>
             <h2 className="text-xl font-semibold mb-4 border-b pb-2">
-              Data Unit
+              Unit Data
             </h2>
             <div className="overflow-x-auto">
               <table className="min-w-full table-auto text-sm text-left border">
                 <thead className="bg-[#0F2741] text-white">
                   <tr>
                     <th className="px-4 py-2 border">No</th>
-                    <th className="px-4 py-2 border">Nomor Unit</th>
+                    <th className="px-4 py-2 border">Unit Number</th>
                     <th className="px-4 py-2 border">HM Unit</th>
                     <th className="px-4 py-2 border">KM (Kilo Meter)</th>
                     <th className="px-4 py-2 border">Site</th>
-                    <th className="px-4 py-2 border">Update</th>
+                    {/* <th className="px-4 py-2 border">Update</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -422,18 +429,20 @@ const Home = () => {
                           {indexOfFirstUnit + index + 1}
                         </td>
                         <td className="px-4 py-2 border">{unit.nomorUnit}</td>
-                        <td className="px-4 py-2 border">{unit.hmUnit} jam</td>
-                        <td className="px-4 py-2 border">{unit.kmUnit} jam</td>
+                        <td className="px-4 py-2 border">
+                          {unit.hmUnit} hours
+                        </td>
+                        <td className="px-4 py-2 border">{unit.kmUnit} KM</td>
                         <td className="px-4 py-2 border">
                           {unit.site?.name || "-"}
                         </td>
-                        <td className="px-4 py-2 border text-center">
+                        {/* <td className="px-4 py-2 border text-center">
                           <PencilSquareIcon
                             className="w-6 h-6 text-blue-500 cursor-pointer mx-auto"
                             onClick={() => navigate(`/update-tyre/${unit.id}`)}
                             title="Update Data Unit"
                           />
-                        </td>
+                        </td> */}
                       </tr>
                     ))
                   ) : (
@@ -442,7 +451,7 @@ const Home = () => {
                         colSpan="6"
                         className="text-center px-4 py-3 text-gray-500"
                       >
-                        Tidak ada data unit.
+                        No data unit.
                       </td>
                     </tr>
                   )}

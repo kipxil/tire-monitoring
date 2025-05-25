@@ -41,8 +41,8 @@ const Login = ({ onLogin }) => {
 
       if (user) {
         console.log("Login berhasil sebagai:", user.name);
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("user", JSON.stringify(user));
         onLogin(); // Tidak kirim role — akses semua fitur
       } else {
         // alert("Username atau password salah");

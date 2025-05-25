@@ -10,7 +10,7 @@ const Setting = () => {
 
   // Initialize data from API response
   useEffect(() => {
-    fetch("http://192.168.137.26:8080/dropdown")
+    fetch("https://primatyre-prismaexpress-production.up.railway.app/dropdown")
       .then((res) => res.json())
       .then((data) => setData(data))
       .catch((err) => console.error("Failed to fetch dropdown data:", err));
@@ -29,7 +29,7 @@ const Setting = () => {
   const handleCreate = () => {
     setIsCreating(true);
     const fields = typeConfig[selectedType].fields;
-    const newFormData = { id: "" };
+    const newFormData = {};
     fields.forEach((field) => {
       newFormData[field] = "";
     });
@@ -42,15 +42,25 @@ const Setting = () => {
   };
 
   const handleSave = () => {
+    const isEmpty = Object.values(formData).some(
+      (val) => val === null || val.trim?.() === ""
+    );
+    if (isEmpty) {
+      alert("All fields must be filled in.");
+      return;
+    }
     if (isCreating) {
-      fetch("http://localhost:8080/dropdown", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: selectedType,
-          data: formData,
-        }),
-      })
+      console.log("Posting to:", selectedType);
+      console.log("Payload:", formData);
+
+      fetch(
+        `https://primatyre-prismaexpress-production.up.railway.app/dropdown/${selectedType}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      )
         .then((res) => res.json())
         .then((newItem) => {
           setData((prev) => ({
@@ -62,7 +72,7 @@ const Setting = () => {
       setIsCreating(false);
     } else {
       fetch(
-        `http://192.168.137.26:8080/dropdown/${selectedType}/${editingItem}`,
+        `https://primatyre-prismaexpress-production.up.railway.app/dropdown/${selectedType}/${editingItem}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -85,9 +95,12 @@ const Setting = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
-      fetch(`http://192.168.137.26:8080/dropdown/${selectedType}/${id}`, {
-        method: "DELETE",
-      })
+      fetch(
+        `https://primatyre-prismaexpress-production.up.railway.app/dropdown/${selectedType}/${id}`,
+        {
+          method: "DELETE",
+        }
+      )
         .then(() => {
           setData((prev) => ({
             ...prev,
@@ -294,7 +307,7 @@ const Setting = () => {
       </div>
 
       {/* API Console */}
-      {/* <div className="mt-6 p-4 bg-gray-100 rounded-lg">
+      <div className="mt-6 p-4 bg-gray-100 rounded-lg">
         <h3 className="text-sm font-medium text-gray-700 mb-2">
           API Calls Log:
         </h3>
@@ -306,7 +319,7 @@ const Setting = () => {
           <p>• PUT /{selectedType}/:id - Update existing item</p>
           <p>• DELETE /{selectedType}/:id - Delete item</p>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

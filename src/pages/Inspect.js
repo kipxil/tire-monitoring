@@ -5,7 +5,6 @@ const Inspect = () => {
   const [kejadian, setKejadian] = useState("");
   const [analisa, setAnalisa] = useState("");
   const [dateTime, setDateTime] = useState("");
-  // const [statusReady, setStatusReady] = useState("");
   const [tujuanLepas, setTujuanLepas] = useState("");
   const [selectedTyreId, setSelectedTyreId] = useState("");
 
@@ -121,14 +120,14 @@ const Inspect = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block font-medium mb-1">
-              Serial Number Ban <span className="text-red-500">*</span>
+              Serial Number <span className="text-red-500">*</span>
             </label>
             <select
               className="w-full p-2 border rounded-md"
               value={selectedTyreId}
               onChange={(e) => setSelectedTyreId(e.target.value)}
             >
-              <option value="">-- Pilih Ban --</option>
+              <option value="">-- Select Tyre --</option>
               {tyres
                 .filter(
                   (entry) =>
@@ -143,7 +142,7 @@ const Inspect = () => {
             </select>
           </div>
           <div>
-            <label className="block font-medium mb-1">Posisi Ban</label>
+            <label className="block font-medium mb-1">Tyre Position</label>
             <input
               type="text"
               className="w-full p-2 border rounded-md"
@@ -173,7 +172,7 @@ const Inspect = () => {
             />
           </div>
           <div>
-            <label className="block font-medium mb-1">HM Ban</label>
+            <label className="block font-medium mb-1">HM Tyre</label>
             <input
               type="number"
               className="w-full p-2 border rounded-md"
@@ -183,7 +182,7 @@ const Inspect = () => {
             />
           </div>
           <div>
-            <label className="block font-medium mb-1">Nomor Unit</label>
+            <label className="block font-medium mb-1">Unit Number</label>
             <select
               className="w-full p-2 border rounded-md"
               value={formData.installedUnitId}
@@ -199,7 +198,7 @@ const Inspect = () => {
             </select>
           </div>
           <div>
-            <label className="block font-medium mb-1">Tanggal Pengerjaan</label>
+            <label className="block font-medium mb-1">Time Inspection</label>
             <input
               type="datetime-local"
               className="w-full p-2 border rounded-md"
@@ -208,9 +207,7 @@ const Inspect = () => {
             />
           </div>
           <div>
-            <label className="block font-medium mb-1">
-              Ban Siap Digunakan?
-            </label>
+            <label className="block font-medium mb-1">Tyre Ready to Use?</label>
             <select
               className="w-full p-2 border rounded-md"
               value={isReady === null ? "" : isReady.toString()}
@@ -221,9 +218,9 @@ const Inspect = () => {
                 else setIsReady(null);
               }}
             >
-              <option value="">-- Pilih Unit --</option>
-              <option value="true">YA</option>
-              <option value="false">TIDAK</option>
+              <option value="">-- Select Answer --</option>
+              <option value="true">YES</option>
+              <option value="false">NO</option>
               {/* {unitList.map((unit) => (
                   <option key={unit.id} value={unit.id}>
                     {unit.nomorUnit}
@@ -236,14 +233,14 @@ const Inspect = () => {
           {isReady === false && (
             <div className="mt-4">
               <label className="block font-medium mb-1">
-                Tujuan Pelepasan <span className="text-red-500">*</span>
+                Remove Purpose <span className="text-red-500">*</span>
               </label>
               <select
                 className="w-full p-2 border rounded-md"
                 value={tujuanLepas}
                 onChange={(e) => setTujuanLepas(e.target.value)}
               >
-                <option value="">-- Pilih Ukuran Ban --</option>
+                <option value="">-- Select Purpose --</option>
                 {removePurposeList.map((remove) => (
                   <option key={remove.id} value={remove.id}>
                     {remove.name}
@@ -253,7 +250,7 @@ const Inspect = () => {
             </div>
           )}
           <div>
-            <label className="block font-medium mb-1">Ringkasan Kejadian</label>
+            <label className="block font-medium mb-1">Summary Incident</label>
             <input
               type="text"
               className="w-full p-2 border rounded-md"
@@ -262,7 +259,7 @@ const Inspect = () => {
             />
           </div>
           <div>
-            <label className="block font-medium mb-1">Analisa</label>
+            <label className="block font-medium mb-1">Analysys</label>
             <input
               type="text"
               className="w-full p-2 border rounded-md"
@@ -277,7 +274,7 @@ const Inspect = () => {
             onClick={handleSubmit}
             className="bg-yellow-400 text-white px-6 py-2 rounded-md font-semibold hover:bg-yellow-500"
           >
-            Tambah Unit
+            Add Inspection
           </button>
         </div>
       </div>

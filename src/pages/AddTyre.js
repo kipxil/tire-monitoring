@@ -41,28 +41,6 @@ const AddTyre = () => {
     fetchDropdownData();
   }, []);
 
-  // const handleUnitChange = (e) => {
-  //   const selectedId = e.target.value;
-  //   setUnitId(selectedId);
-
-  //   const selectedUnit = unitIdDrop.find((u) => u.id === parseInt(selectedId));
-  //   if (selectedUnit) {
-  //     const usedPositions = selectedUnit.tyre
-  //       .filter((t) => t.isInstalled)
-  //       .map((t) => t.positionTyre);
-
-  //     const allPositions = [1, 2, 3, 4, 5, 6];
-  //     const available = allPositions.filter((pos) => !usedPositions.includes(pos));
-
-  //     setAvailablePositions(available);
-  //     // setLocation(selectedUnit.location || "");
-  //     // setSiteId(selectedUnit.siteId || "");
-  //     // setHmunit(selectedUnit.hmUnit || "");
-  //   } else {
-  //     setAvailablePositions([]);
-  //   }
-  // };
-
   // TODO: Tambahkan state untuk input lain jika dibutuhkan
   const handleSubmit = async () => {
     const dataBan = {
@@ -119,25 +97,18 @@ const AddTyre = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block font-medium mb-1">
-              Merk Ban <span className="text-red-500">*</span>
+              Serial Number <span className="text-red-500">*</span>
             </label>
-            <select
+            <input
+              type="text"
               className="w-full p-2 border rounded-md"
-              value={merk}
-              onChange={(e) => setMerk(e.target.value)}
-            >
-              <option value="">-- Pilih Merk --</option>
-              {merkList.map((merk) => (
-                <option key={merk.id} value={merk.id}>
-                  {merk.name}
-                </option>
-              ))}
-            </select>
+              value={serialNumber}
+              onChange={(e) => setSerialNumber(e.target.value)}
+              required
+            />
           </div>
           <div>
-            <label className="block font-medium mb-1">
-              Type Ban <span className="text-red-500">*</span>
-            </label>
+            <label className="block font-medium mb-1">Tyre Type</label>
             <input
               type="text"
               className="w-full p-2 border rounded-md"
@@ -147,8 +118,23 @@ const AddTyre = () => {
           </div>
           <div>
             <label className="block font-medium mb-1">
-              Pattern Ban <span className="text-red-500">*</span>
+              Merk <span className="text-red-500">*</span>
             </label>
+            <select
+              className="w-full p-2 border rounded-md"
+              value={merk}
+              onChange={(e) => setMerk(e.target.value)}
+            >
+              <option value="">-- Select Merk --</option>
+              {merkList.map((merk) => (
+                <option key={merk.id} value={merk.id}>
+                  {merk.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block font-medium mb-1">Tyre Pattern</label>
             <input
               type="text"
               className="w-full p-2 border rounded-md"
@@ -158,7 +144,7 @@ const AddTyre = () => {
           </div>
           <div>
             <label className="block font-medium mb-1">
-              OTD 1 (Original Tread) <span className="text-red-500">*</span>
+              OTD 1 (Original Tread)
             </label>
             <input
               type="number"
@@ -169,7 +155,7 @@ const AddTyre = () => {
           </div>
           <div>
             <label className="block font-medium mb-1">
-              OTD 2 (Original Tread) <span className="text-red-500">*</span>
+              OTD 2 (Original Tread)
             </label>
             <input
               type="number"
@@ -179,9 +165,7 @@ const AddTyre = () => {
             />
           </div>
           <div>
-            <label className="block font-medium mb-1">
-              Harga Ban <span className="text-red-500">*</span>
-            </label>
+            <label className="block font-medium mb-1">Tyre Price</label>
             <input
               type="number"
               value={hargaBan}
@@ -192,25 +176,14 @@ const AddTyre = () => {
           </div>
           <div>
             <label className="block font-medium mb-1">
-              Serial Number Ban <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md"
-              value={serialNumber}
-              onChange={(e) => setSerialNumber(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block font-medium mb-1">
-              Ukuran Ban <span className="text-red-500">*</span>
+              Tyre Size <span className="text-red-500">*</span>
             </label>
             <select
               className="w-full p-2 border rounded-md"
               value={ukuranBan}
               onChange={(e) => setUkuranBan(e.target.value)}
             >
-              <option value="">-- Pilih Ukuran Ban --</option>
+              <option value="">-- Select Tyre Size --</option>
               {ukuranList.map((ukuran) => (
                 <option key={ukuran.id} value={ukuran.id}>
                   {ukuran.size}
@@ -218,206 +191,7 @@ const AddTyre = () => {
               ))}
             </select>
           </div>
-          {/* <div className="col-span-2">
-            <label className="block font-medium mb-1">
-              Status Instalasi <span className="text-red-500">*</span>
-            </label>
-            <div className="flex gap-4 mt-1">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="instalasi"
-                  value="true"
-                  checked={installationStatus === true}
-                  onChange={() => setInstallationStatus(true)}
-                  className="mr-2"
-                />
-                Terpasang
-                <span className="text-sm text-gray-500 ml-1">(Wajib isi unit kendaraan dan posisi)</span>
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="instalasi"
-                  value="false"
-                  checked={installationStatus === false}
-                  onChange={() => setInstallationStatus(false)}
-                  className="mr-2"
-                />
-                Tidak Terpasang
-              </label>
-            </div>
-          </div> */}
         </div>
-
-        {/* === Informasi Tambahan Ban === */}
-        {/* <h2 className="text-lg font-semibold my-6 border-b pb-2">Informasi Tambahan Ban (Opsional)</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block font-medium mb-1">Merk Ban</label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md"
-              value={merk}
-              onChange={(e) => setMerk(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block font-medium mb-1">Petugas Pemasang</label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md"
-              value={manPower}
-              onChange={(e) => setManPower(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block font-medium mb-1">Kedalaman Telapak 1 (mm)</label>
-            <input
-              type="number"
-              className="w-full p-2 border rounded-md"
-              value={tread1}
-              onChange={(e) => setTread1(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block font-medium mb-1">Kedalaman Telapak 2 (mm)</label>
-            <input
-            type="number"
-            className="w-full p-2 border rounded-md"
-            value={tread2}
-            onChange={(e) => setTread2(e.target.value)}
-          />
-          </div>
-        </div> */}
-
-        {/* === Kondisional berdasarkan status instalasi === */}
-        {/* {installationStatus ? ( */}
-        {/* <>
-            <h2 className="text-lg font-semibold my-6 border-b pb-2 text-red-600">
-              Informasi Pemasangan Ban <span className="text-sm text-red-500">(Wajib diisi)</span>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium mb-1">
-                  Unit Kendaraan <span className="text-red-500">*</span>
-                </label>
-                <select className="w-full p-2 border rounded-md" value={unitId}>
-                  <option value="">-- Pilih Unit Kendaraan --</option>
-                  {unitIdDrop.map((udrop) => (
-                    <option key={udrop.id} value={udrop.id}>
-                      {udrop.nomorUnit}
-                    </option>
-                  ))}
-
-                </select>
-              </div>
-              <div>
-                <label className="block font-medium mb-1">
-                  Site Unit<span className="text-red-500">*</span>
-                </label>
-                <select className="w-full p-2 border rounded-md" value={siteId} onChange={(e) => setSiteId(e.target.value)}>
-                  <option value="">-- Pilih Unit Kendaraan --</option>
-                  {siteDrop.map((site) => (
-                    <option key={site.id} value={site.id}>
-                      {site.name}
-                    </option>
-                  ))}
-
-                </select>
-              </div>
-              <div>
-                <label className="block font-medium mb-1">
-                  Lokasi<span className="text-red-500">*</span>
-                </label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border rounded-md"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-              </div>
-              <div>
-                <label className="block font-medium mb-1">
-                  Posisi ban pada Unit <span className="text-red-500">*</span>
-                </label>
-                <select className="w-full p-2 border rounded-md" value={positionUnit} onChange={(e) => setPositionUnit(e.target.value)}>
-                  <option value="">-- Pilih Posisi --</option>
-                  {availablePositions.map((pos) => (
-                    <option key={pos} value={pos}>
-                      {`TYRE ${pos}`}
-                    </option>
-                  ))} */}
-        {/* <option value="1">TYRE 1</option>
-                  <option value="2">TYRE 2</option>
-                  <option value="3">TYRE 3</option>
-                  <option value="4">TYRE 4</option>
-                  <option value="5">TYRE 5</option>
-                  <option value="6">TYRE 6</option> */}
-        {/* </select>
-              </div>
-              <div>
-                <label className="block font-medium mb-1">Tanggal & Waktu Pemasangan</label>
-                <input type="datetime-local" className="w-full p-2 border rounded-md" value={dateTimeInstall} onChange={(e) => setDateTimeInstall(e.target.value)} />
-              </div>
-              <div>
-                <label className="block font-medium mb-1">HM Unit</label>
-                <input type="number" className="w-full p-2 border rounded-md" value={hmUnit} onChange={(e) => setHmunit(e.target.value)} />
-              </div>
-              <div>
-                <label className="block font-medium mb-1">Kondisi Angin</label>
-                <select className="w-full p-2 border rounded-md">
-                  <option>-- Pilih Kondisi --</option>
-                  {airConditions.map((cond) => (
-                    <option key={cond.id} value={cond.id}>
-                      {cond.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block font-medium mb-1">Tekanan (PSI)</label>
-                <input type="number" className="w-full p-2 border rounded-md" />
-              </div>
-            </div>
-          </> */}
-        {/* ) : ( */}
-        <>
-          {/* <h2 className="text-lg font-semibold my-6 border-b pb-2">Informasi Pelepasan Ban</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium mb-1">
-                  Tujuan Pelepasan <span className="text-red-500">*</span>
-                </label>
-                <select className="w-full p-2 border rounded-md" value={removedPurposeId} onChange={(e) => setremovedPurposeId(e.target.value)}>
-                  <option value="">-- Pilih Tujuan Pelepasan --</option>
-                  {removePurposes.map((purpose) => (
-                    <option key={purpose.id} value={purpose.id}>
-                      {purpose.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block font-medium mb-1">Tanggal & Waktu Pelepasan</label>
-                <input type="datetime-local" className="w-full p-2 border rounded-md" value={dateTimeRemove} onChange={(e) => setDateTimeRemove(e.target.value)} />
-              </div>
-              <div>
-                <label className="block font-medium mb-1">
-                  Alasan Pelepasan <span className="text-red-500">*</span>
-                </label>
-                <select className="w-full p-2 border rounded-md"  value={removeReasonId} onChange={(e) => setRemoveReasonId(e.target.value)}>
-                  <option value="">-- Pilih Alasan Pelepasan --</option>
-                  {removeReasons.map((remreas) => (
-                    <option key={remreas.id} value={remreas.id}>
-                      {remreas.description}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div> */}
-        </>
-        {/* )} */}
 
         {/* Tombol Simpan */}
         <div className="mt-8 flex justify-end">
@@ -425,7 +199,7 @@ const AddTyre = () => {
             onClick={handleSubmit}
             className="bg-yellow-400 text-white px-6 py-2 rounded-md font-semibold hover:bg-yellow-500"
           >
-            Tambah Ban
+            Add Tyre
           </button>
         </div>
       </div>

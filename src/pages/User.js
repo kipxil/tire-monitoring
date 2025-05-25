@@ -104,14 +104,14 @@ const User = () => {
 
             <div>
               <label className="block font-medium mb-1">
-                Pilih Role <span className="text-red-500">*</span>
+                User Role <span className="text-red-500">*</span>
               </label>
               <select
                 className="w-full p-2 border rounded-md"
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value)}
               >
-                <option value="">-- Pilih Role --</option>
+                <option value="">-- Select Role --</option>
                 <option value="1">Administrator</option>
                 <option value="2">TCM</option>
                 <option value="3">TIS</option>
@@ -124,7 +124,7 @@ const User = () => {
                   onClick={handleSubmit}
                   className="bg-yellow-400 text-white px-6 py-2 rounded-md font-semibold hover:bg-yellow-500"
                 >
-                  Tambah Ban
+                  Add User
                 </button>
               </div>
               {/* <button className="px-6 py-2 border border-[#0F2741] rounded-md text-[#0F2741] hover:bg-gray-100">
@@ -134,85 +134,6 @@ const User = () => {
           </div>
         </div>
 
-        {/* User Account List */}
-        {/* <div className="bg-white rounded-lg shadow">
-          <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">
-            User Accounts
-          </div>
-          <div className="p-4 divide-y text-sm">
-            {[
-              {
-                name: "Ahmad Fadli",
-                role: "ADMIN",
-                status: "green",
-                color: "bg-green-600",
-              },
-              {
-                name: "Budi Santoso",
-                role: "REVIEWER",
-                status: "green",
-                color: "bg-orange-400",
-              },
-              {
-                name: "Citra Lestari",
-                role: "WORKER",
-                status: "green",
-                color: "bg-blue-500",
-              },
-              {
-                name: "Deni Kurniawan",
-                role: "WORKER",
-                status: "orange",
-                color: "bg-purple-500",
-              },
-              {
-                name: "Eka Pratiwi",
-                role: "REVIEWER",
-                status: "orange",
-                color: "bg-orange-400",
-              },
-              {
-                name: "Faisal Akbar",
-                role: "WORKER",
-                status: "red",
-                color: "bg-blue-500",
-              },
-            ].map((user, i) => (
-              <div key={i} className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-8 h-8 text-white text-sm rounded-full flex items-center justify-center ${user.color}`}
-                  >
-                    {user.name[0]}
-                  </div>
-                  <div>{user.name}</div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-bold ${
-                      user.role === "ADMIN"
-                        ? "bg-black text-white"
-                        : user.role === "REVIEWER"
-                        ? "bg-orange-400 text-white"
-                        : "bg-blue-500 text-white"
-                    }`}
-                  >
-                    {user.role}
-                  </span>
-                  <div
-                    className={`w-3 h-3 rounded-full ${
-                      user.status === "green"
-                        ? "bg-green-500"
-                        : user.status === "orange"
-                        ? "bg-orange-400"
-                        : "bg-red-500"
-                    }`}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div> */}
         <div className="bg-white rounded-lg shadow">
           <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">
             User Accounts

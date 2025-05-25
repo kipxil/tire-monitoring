@@ -26,8 +26,8 @@ const Sidebar = ({ onLogout }) => {
 
   // Fungsi logout
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    // localStorage.removeItem("user");
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("user");
     onLogout();
     navigate("/"); // Redirect ke login
   };

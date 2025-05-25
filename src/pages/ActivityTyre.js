@@ -133,39 +133,9 @@ const UpdateTyre = () => {
         Activity Tyres
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md">
-        {/* contoh penggunaan */}
-        {/* <div>
-            <label className="block font-medium mb-1">
-              Type Ban <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md"
-              value={typeBan}
-              onChange={(e) => setTypeBan(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block font-medium mb-1">
-              Ukuran Ban <span className="text-red-500">*</span>
-            </label>
-            <select
-              className="w-full p-2 border rounded-md"
-              value={ukuranBan}
-              onChange={(e) => setUkuranBan(e.target.value)}
-            >
-              <option value="">-- Pilih Ukuran Ban --</option>
-              {ukuranList.map((ukuran) => (
-                <option key={ukuran.id} value={ukuran.id}>
-                  {ukuran.size}
-                </option>
-              ))}
-            </select>
-          </div> */}
-
         {/* Form Pelepasan */}
         <div className="space-y-4 pt-1">
-          <h2 className="text-lg font-bold text-red-600">Pelepasan Ban</h2>
+          <h2 className="text-lg font-bold text-red-600">Remove Tyre</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block font-medium mb-1">
@@ -176,7 +146,7 @@ const UpdateTyre = () => {
                 value={noUnit}
                 onChange={(e) => setNoUnit(e.target.value)}
               >
-                <option value="">-- Pilih Unit --</option>
+                <option value="">-- Select Unit --</option>
                 {unitList.map((unit) => (
                   <option key={unit.id} value={unit.id}>
                     {unit.nomorUnit}
@@ -185,7 +155,7 @@ const UpdateTyre = () => {
               </select>
             </div>
             <div>
-              <label className="block font-medium mb-1">Lokasi</label>
+              <label className="block font-medium mb-1">Location</label>
               <input
                 type="text"
                 className="w-full p-2 border rounded-md"
@@ -212,7 +182,7 @@ const UpdateTyre = () => {
               />
             </div>
             <div>
-              <label className="block font-medium mb-1">Thread 1</label>
+              <label className="block font-medium mb-1">Tread 1</label>
               <input
                 type="number"
                 className="w-full p-2 border rounded-md"
@@ -221,7 +191,7 @@ const UpdateTyre = () => {
               />
             </div>
             <div>
-              <label className="block font-medium mb-1">Thread 2</label>
+              <label className="block font-medium mb-1">Tread 2</label>
               <input
                 type="number"
                 className="w-full p-2 border rounded-md"
@@ -230,13 +200,15 @@ const UpdateTyre = () => {
               />
             </div>
             <div>
-              <label className="block font-medium mb-1">Ban yang dilepas</label>
+              <label className="block font-medium mb-1">
+                Removed Tyre <span className="text-red-500">*</span>
+              </label>
               <select
                 className="w-full p-2 border rounded-md"
                 value={serialNumberLepas}
                 onChange={(e) => setSerialNumberLepas(e.target.value)}
               >
-                <option value="">-- Pilih Ban --</option>
+                <option value="">-- Select Tyre --</option>
                 {serialNumberLepasList.map((lepas) => (
                   <option key={lepas.stockTyre.id} value={lepas.stockTyre.id}>
                     {lepas.stockTyre.serialNumber}
@@ -245,13 +217,15 @@ const UpdateTyre = () => {
               </select>
             </div>
             <div>
-              <label className="block font-medium mb-1">Alasan Dilepas</label>
+              <label className="block font-medium mb-1">
+                Remove reason <span className="text-red-500">*</span>
+              </label>
               <select
                 className="w-full p-2 border rounded-md"
                 value={alasanLepas}
                 onChange={(e) => setAlasanLepas(e.target.value)}
               >
-                <option value="">-- Pilih Alasan --</option>
+                <option value="">-- Select Reason --</option>
                 {alasanLepasList.map((banl) => (
                   <option key={banl.id} value={banl.id}>
                     {banl.description}
@@ -260,13 +234,15 @@ const UpdateTyre = () => {
               </select>
             </div>
             <div>
-              <label className="block font-medium mb-1">Tujuan Pelepasan</label>
+              <label className="block font-medium mb-1">
+                Remove Purpose <span className="text-red-500">*</span>
+              </label>
               <select
                 className="w-full p-2 border rounded-md"
                 value={tujuanLepas}
                 onChange={(e) => setTujuanLepas(e.target.value)}
               >
-                <option value="">-- Pilih Tujuan --</option>
+                <option value="">-- Select Purpose --</option>
                 {tujuanLepasList.map((tlepas) => (
                   <option key={tlepas.id} value={tlepas.id}>
                     {tlepas.name}
@@ -279,18 +255,18 @@ const UpdateTyre = () => {
 
         {/* Form Pemasangan */}
         <div className="space-y-4 pt-5">
-          <h2 className="text-lg font-bold text-blue-600">Pemasangan Ban</h2>
+          <h2 className="text-lg font-bold text-blue-600">Install Tyre</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block font-medium mb-1">
-                Ban yang dipasang
+                Install Tyre <span className="text-red-500">*</span>
               </label>
               <select
                 className="w-full p-2 border rounded-md"
                 value={serialNumberPasang}
                 onChange={(e) => setSerialNumberPasang(e.target.value)}
               >
-                <option value="">-- Pilih Ban --</option>
+                <option value="">-- Select Tyre --</option>
                 {serialNumberPasangList.map((pasang) => (
                   <option key={pasang.stockTyre.id} value={pasang.stockTyre.id}>
                     {pasang.stockTyre.serialNumber}
@@ -308,7 +284,7 @@ const UpdateTyre = () => {
               />
             </div>
             <div>
-              <label className="block font-medium mb-1">Thread 1</label>
+              <label className="block font-medium mb-1">Tread 1</label>
               <input
                 type="number"
                 className="w-full p-2 border rounded-md"
@@ -317,7 +293,7 @@ const UpdateTyre = () => {
               />
             </div>
             <div>
-              <label className="block font-medium mb-1">Thread 2</label>
+              <label className="block font-medium mb-1">Tread 2</label>
               <input
                 type="number"
                 className="w-full p-2 border rounded-md"
@@ -332,7 +308,7 @@ const UpdateTyre = () => {
                 value={airCondition}
                 onChange={(e) => setAirCondition(e.target.value)}
               >
-                <option>-- Pilih Kondisi --</option>
+                <option>-- Select Condition --</option>
                 {airConditionList.map((ac) => (
                   <option key={ac.id} value={ac.id}>
                     {ac.name}
@@ -341,7 +317,7 @@ const UpdateTyre = () => {
               </select>
             </div>
             <div>
-              <label className="block font-medium mb-1">PSI</label>
+              <label className="block font-medium mb-1">Pressure (PSI)</label>
               <input
                 type="number"
                 className="w-full p-2 border rounded-md"
@@ -351,7 +327,8 @@ const UpdateTyre = () => {
             </div>
             <div>
               <label className="block font-medium mb-1">
-                Tanggal Pengerjaan
+                Time Installation (Start){" "}
+                <span className="text-red-500">*</span>
               </label>
               <input
                 type="datetime-local"
@@ -361,7 +338,10 @@ const UpdateTyre = () => {
               />
             </div>
             <div>
-              <label className="block font-medium mb-1">Tanggal Selesai</label>
+              <label className="block font-medium mb-1">
+                Time Installation (Finish){" "}
+                <span className="text-red-500">*</span>
+              </label>
               <input
                 type="datetime-local"
                 className="w-full p-2 border rounded-md"
@@ -378,7 +358,7 @@ const UpdateTyre = () => {
             onClick={handleSubmit}
             className="bg-yellow-400 text-white px-6 py-2 rounded-md font-semibold hover:bg-yellow-500"
           >
-            Tambah Unit
+            Add Activity
           </button>
         </div>
       </div>
