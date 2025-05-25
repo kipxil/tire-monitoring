@@ -18,6 +18,7 @@ const Sidebar = ({ onLogout }) => {
   const [isTyreDropdownOpen, setIsTyreDropdownOpen] = useState(false);
   const [isUnitDropdownOpen, setIsUnitDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // 👈 untuk mobile
 
   // Fungsi toggle dropdown
   const toggleTyreDropdown = () => setIsTyreDropdownOpen(!isTyreDropdownOpen);
@@ -43,6 +44,7 @@ const Sidebar = ({ onLogout }) => {
             : "bg-[#173353] text-white hover:bg-[#1c406b]"
         }`
       }
+      onClick={() => setIsMobileMenuOpen(false)} // Tutup sidebar saat klik di mobile
     >
       <Icon className="w-5 h-5" />
       <span className="text-sm">{label}</span>
@@ -50,196 +52,333 @@ const Sidebar = ({ onLogout }) => {
   );
 
   return (
-    <div className="bg-[#0F2741] text-white h-screen w-[290px] flex flex-col px-4 py-6 justify-between">
-      {/* Top - Logo & Menu */}
-      <div>
-        {/* Logo */}
-        <div className="mb-8 text-center">
-          <div className="text-yellow-400 font-bold text-xl leading-tight">
-            TYRE
-            <br />
-            PRIMA JAYA
+    <>
+      {/* Hamburger button - tampil hanya di mobile */}
+      <button
+        className="md:hidden fixed top-4 left-4 z-50 bg-[#0F2741] p-2 rounded"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      >
+        {isMobileMenuOpen ? (
+          <XMarkIcon className="w-6 h-6 text-white" />
+        ) : (
+          <Bars3Icon className="w-6 h-6 text-white" />
+        )}
+      </button>
+
+      {/* Sidebar (Mobile & Desktop) */}
+      <div
+        className={`bg-[#0F2741] text-white fixed md:static top-0 left-0 h-full w-[260px] z-40 px-4 py-6 flex flex-col justify-between transform transition-transform duration-300
+        ${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0`}
+      >
+        {/* Top Logo */}
+        <div>
+          <div className="mb-8 text-center">
+            <div className="text-yellow-400 font-bold text-xl leading-tight">
+              TYRE
+              <br />
+              PRIMA JAYA
+            </div>
+            <p className="text-xs text-gray-300">
+              WE WILL SAVE OUR TYRE TOGETHER
+            </p>
           </div>
-          <p className="text-xs text-gray-300">
-            WE WILL SAVE OUR TYRE TOGETHER
-          </p>
+
+          {/* Menu Utama */}
+          <nav className="flex flex-col gap-4">
+            <SidebarLink to="/home" icon={Squares2X2Icon} label="Dashboard" />
+
+            {/* Tyre Dropdown */}
+            <div className="flex flex-col">
+              <button
+                onClick={toggleTyreDropdown}
+                className="flex items-center justify-between px-4 py-2 rounded-lg bg-[#173353] hover:bg-[#1c406b] transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <Cog6ToothIcon className="w-5 h-5" />
+                  <span className="text-sm">Tyre Management</span>
+                </div>
+                {isTyreDropdownOpen ? (
+                  <ChevronUpIcon className="w-4 h-4" />
+                ) : (
+                  <ChevronDownIcon className="w-4 h-4" />
+                )}
+              </button>
+              {isTyreDropdownOpen && (
+                <div className="ml-2 mt-2 flex flex-col gap-2">
+                  <SidebarLink
+                    to="/addtyres"
+                    icon={PlusIcon}
+                    label="Add Tyre"
+                  />
+                  <SidebarLink
+                    to="/actvtyres"
+                    icon={DocumentTextIcon}
+                    label="Activity Tyre"
+                  />
+                  <SidebarLink
+                    to="/inspecttyres"
+                    icon={XCircleIcon}
+                    label="Inspect Tyre"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Units Dropdown */}
+            <div className="flex flex-col">
+              <button
+                onClick={toggleUnitDropdown}
+                className="flex items-center justify-between px-4 py-2 rounded-lg bg-[#173353] hover:bg-[#1c406b] transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <BuildingOffice2Icon className="w-5 h-5" />
+                  <span className="text-sm">Units Management</span>
+                </div>
+                {isUnitDropdownOpen ? (
+                  <ChevronUpIcon className="w-4 h-4" />
+                ) : (
+                  <ChevronDownIcon className="w-4 h-4" />
+                )}
+              </button>
+              {isUnitDropdownOpen && (
+                <div className="ml-2 mt-2 flex flex-col gap-2">
+                  <SidebarLink to="/addunit" icon={PlusIcon} label="Add Unit" />
+                </div>
+              )}
+            </div>
+
+            {/* User Dropdown */}
+            <div className="flex flex-col">
+              <button
+                onClick={toggleUserDropdown}
+                className="flex items-center justify-between px-4 py-2 rounded-lg bg-[#173353] hover:bg-[#1c406b] transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <UsersIcon className="w-5 h-5" />
+                  <span className="text-sm">User Management</span>
+                </div>
+                {isUserDropdownOpen ? (
+                  <ChevronUpIcon className="w-4 h-4" />
+                ) : (
+                  <ChevronDownIcon className="w-4 h-4" />
+                )}
+              </button>
+              {isUserDropdownOpen && (
+                <div className="ml-2 mt-2 flex flex-col gap-2">
+                  <SidebarLink to="/users" icon={PlusIcon} label="Add User" />
+                  <SidebarLink
+                    to="/settings"
+                    icon={Cog6ToothIcon}
+                    label="Settings"
+                  />
+                </div>
+              )}
+            </div>
+          </nav>
         </div>
 
-        {/* Menu Utama */}
-        <nav className="flex flex-col gap-4">
-          <SidebarLink to="/home" icon={Squares2X2Icon} label="Dashboard" />
-
-          {/* Tyre Management */}
-          <div className="flex flex-col">
-            <button
-              onClick={toggleTyreDropdown}
-              className="flex items-center justify-between px-4 py-2 rounded-lg bg-[#173353] hover:bg-[#1c406b] transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Cog6ToothIcon className="w-5 h-5" />
-                <span className="text-sm">Tyre Management</span>
-              </div>
-              {isTyreDropdownOpen ? (
-                <ChevronUpIcon className="w-4 h-4" />
-              ) : (
-                <ChevronDownIcon className="w-4 h-4" />
-              )}
-            </button>
-
-            {isTyreDropdownOpen && (
-              <div className="ml-2 mt-2 flex flex-col gap-2">
-                <NavLink
-                  to="/addtyres"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
-                      isActive
-                        ? "bg-yellow-400 text-black font-bold border-yellow-400"
-                        : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
-                    }`
-                  }
-                >
-                  <PlusIcon className="w-4 h-4" />
-                  Add Tyre
-                </NavLink>
-                <NavLink
-                  to="/actvtyres"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
-                      isActive
-                        ? "bg-yellow-400 text-black font-bold border-yellow-400"
-                        : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
-                    }`
-                  }
-                >
-                  <DocumentTextIcon className="w-4 h-4" />
-                  Activity Tyre
-                </NavLink>
-                <NavLink
-                  to="/inspecttyres"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
-                      isActive
-                        ? "bg-yellow-400 text-black font-bold border-yellow-400"
-                        : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
-                    }`
-                  }
-                >
-                  <XCircleIcon className="w-4 h-4" />
-                  Inspect Tyre
-                </NavLink>
-              </div>
-            )}
-          </div>
-
-          {/* Units Management */}
-          <div className="flex flex-col">
-            <button
-              onClick={toggleUnitDropdown}
-              className="flex items-center justify-between px-4 py-2 rounded-lg bg-[#173353] hover:bg-[#1c406b] transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <BuildingOffice2Icon className="w-5 h-5" />
-                <span className="text-sm">Units Management</span>
-              </div>
-              {isUnitDropdownOpen ? (
-                <ChevronUpIcon className="w-4 h-4" />
-              ) : (
-                <ChevronDownIcon className="w-4 h-4" />
-              )}
-            </button>
-
-            {isUnitDropdownOpen && (
-              <div className="ml-2 mt-2 flex flex-col gap-2">
-                <NavLink
-                  to="/addunit"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
-                      isActive
-                        ? "bg-yellow-400 text-black font-bold border-yellow-400"
-                        : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
-                    }`
-                  }
-                >
-                  <PlusIcon className="w-4 h-4" />
-                  Add Units
-                </NavLink>
-                {/* <NavLink
-                  to="/reports"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
-                      isActive
-                        ? "bg-yellow-400 text-black font-bold border-yellow-400"
-                        : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
-                    }`
-                  }
-                >
-                  <DocumentTextIcon className="w-4 h-4" />
-                  Update Units
-                </NavLink> */}
-              </div>
-            )}
-          </div>
-
-          {/* User Management */}
-          <div className="flex flex-col">
-            <button
-              onClick={toggleUserDropdown}
-              className="flex items-center justify-between px-4 py-2 rounded-lg bg-[#173353] hover:bg-[#1c406b] transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <UsersIcon className="w-5 h-5" />
-                <span className="text-sm">User Management</span>
-              </div>
-              {isUserDropdownOpen ? (
-                <ChevronUpIcon className="w-4 h-4" />
-              ) : (
-                <ChevronDownIcon className="w-4 h-4" />
-              )}
-            </button>
-
-            {isUserDropdownOpen && (
-              <div className="ml-2 mt-2 flex flex-col gap-2">
-                <NavLink
-                  to="/users"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
-                      isActive
-                        ? "bg-yellow-400 text-black font-bold border-yellow-400"
-                        : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
-                    }`
-                  }
-                >
-                  <PlusIcon className="w-4 h-4" />
-                  Add User
-                </NavLink>
-                <NavLink
-                  to="/settings"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
-                      isActive
-                        ? "bg-yellow-400 text-black font-bold border-yellow-400"
-                        : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
-                    }`
-                  }
-                >
-                  <Cog6ToothIcon className="w-4 h-4" />
-                  Settings
-                </NavLink>
-              </div>
-            )}
-          </div>
-        </nav>
+        {/* Logout */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-2 rounded-lg bg-[#173353] hover:bg-red-600 text-white transition-colors"
+        >
+          <ArrowLeftOnRectangleIcon className="w-5 h-5" />
+          <span className="text-sm">Logout</span>
+        </button>
       </div>
+    </>
+    //   <div className="bg-[#0F2741] text-white h-screen w-[290px] flex flex-col px-4 py-6 justify-between">
+    //     {/* Top - Logo & Menu */}
+    //     <div>
+    //       {/* Logo */}
+    //       <div className="mb-8 text-center">
+    //         <div className="text-yellow-400 font-bold text-xl leading-tight">
+    //           TYRE
+    //           <br />
+    //           PRIMA JAYA
+    //         </div>
+    //         <p className="text-xs text-gray-300">
+    //           WE WILL SAVE OUR TYRE TOGETHER
+    //         </p>
+    //       </div>
 
-      {/* Bottom - Logout */}
-      <button
-        onClick={handleLogout}
-        className="flex items-center gap-3 px-4 py-2 rounded-lg bg-[#173353] hover:bg-red-600 text-white transition-colors"
-      >
-        <ArrowLeftOnRectangleIcon className="w-5 h-5" />
-        <span className="text-sm">Logout</span>
-      </button>
-    </div>
+    //       {/* Menu Utama */}
+    //       <nav className="flex flex-col gap-4">
+    //         <SidebarLink to="/home" icon={Squares2X2Icon} label="Dashboard" />
+
+    //         {/* Tyre Management */}
+    //         <div className="flex flex-col">
+    //           <button
+    //             onClick={toggleTyreDropdown}
+    //             className="flex items-center justify-between px-4 py-2 rounded-lg bg-[#173353] hover:bg-[#1c406b] transition-colors"
+    //           >
+    //             <div className="flex items-center gap-3">
+    //               <Cog6ToothIcon className="w-5 h-5" />
+    //               <span className="text-sm">Tyre Management</span>
+    //             </div>
+    //             {isTyreDropdownOpen ? (
+    //               <ChevronUpIcon className="w-4 h-4" />
+    //             ) : (
+    //               <ChevronDownIcon className="w-4 h-4" />
+    //             )}
+    //           </button>
+
+    //           {isTyreDropdownOpen && (
+    //             <div className="ml-2 mt-2 flex flex-col gap-2">
+    //               <NavLink
+    //                 to="/addtyres"
+    //                 className={({ isActive }) =>
+    //                   `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
+    //                     isActive
+    //                       ? "bg-yellow-400 text-black font-bold border-yellow-400"
+    //                       : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
+    //                   }`
+    //                 }
+    //               >
+    //                 <PlusIcon className="w-4 h-4" />
+    //                 Add Tyre
+    //               </NavLink>
+    //               <NavLink
+    //                 to="/actvtyres"
+    //                 className={({ isActive }) =>
+    //                   `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
+    //                     isActive
+    //                       ? "bg-yellow-400 text-black font-bold border-yellow-400"
+    //                       : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
+    //                   }`
+    //                 }
+    //               >
+    //                 <DocumentTextIcon className="w-4 h-4" />
+    //                 Activity Tyre
+    //               </NavLink>
+    //               <NavLink
+    //                 to="/inspecttyres"
+    //                 className={({ isActive }) =>
+    //                   `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
+    //                     isActive
+    //                       ? "bg-yellow-400 text-black font-bold border-yellow-400"
+    //                       : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
+    //                   }`
+    //                 }
+    //               >
+    //                 <XCircleIcon className="w-4 h-4" />
+    //                 Inspect Tyre
+    //               </NavLink>
+    //             </div>
+    //           )}
+    //         </div>
+
+    //         {/* Units Management */}
+    //         <div className="flex flex-col">
+    //           <button
+    //             onClick={toggleUnitDropdown}
+    //             className="flex items-center justify-between px-4 py-2 rounded-lg bg-[#173353] hover:bg-[#1c406b] transition-colors"
+    //           >
+    //             <div className="flex items-center gap-3">
+    //               <BuildingOffice2Icon className="w-5 h-5" />
+    //               <span className="text-sm">Units Management</span>
+    //             </div>
+    //             {isUnitDropdownOpen ? (
+    //               <ChevronUpIcon className="w-4 h-4" />
+    //             ) : (
+    //               <ChevronDownIcon className="w-4 h-4" />
+    //             )}
+    //           </button>
+
+    //           {isUnitDropdownOpen && (
+    //             <div className="ml-2 mt-2 flex flex-col gap-2">
+    //               <NavLink
+    //                 to="/addunit"
+    //                 className={({ isActive }) =>
+    //                   `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
+    //                     isActive
+    //                       ? "bg-yellow-400 text-black font-bold border-yellow-400"
+    //                       : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
+    //                   }`
+    //                 }
+    //               >
+    //                 <PlusIcon className="w-4 h-4" />
+    //                 Add Units
+    //               </NavLink>
+    //               {/* <NavLink
+    //                 to="/reports"
+    //                 className={({ isActive }) =>
+    //                   `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
+    //                     isActive
+    //                       ? "bg-yellow-400 text-black font-bold border-yellow-400"
+    //                       : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
+    //                   }`
+    //                 }
+    //               >
+    //                 <DocumentTextIcon className="w-4 h-4" />
+    //                 Update Units
+    //               </NavLink> */}
+    //             </div>
+    //           )}
+    //         </div>
+
+    //         {/* User Management */}
+    //         <div className="flex flex-col">
+    //           <button
+    //             onClick={toggleUserDropdown}
+    //             className="flex items-center justify-between px-4 py-2 rounded-lg bg-[#173353] hover:bg-[#1c406b] transition-colors"
+    //           >
+    //             <div className="flex items-center gap-3">
+    //               <UsersIcon className="w-5 h-5" />
+    //               <span className="text-sm">User Management</span>
+    //             </div>
+    //             {isUserDropdownOpen ? (
+    //               <ChevronUpIcon className="w-4 h-4" />
+    //             ) : (
+    //               <ChevronDownIcon className="w-4 h-4" />
+    //             )}
+    //           </button>
+
+    //           {isUserDropdownOpen && (
+    //             <div className="ml-2 mt-2 flex flex-col gap-2">
+    //               <NavLink
+    //                 to="/users"
+    //                 className={({ isActive }) =>
+    //                   `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
+    //                     isActive
+    //                       ? "bg-yellow-400 text-black font-bold border-yellow-400"
+    //                       : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
+    //                   }`
+    //                 }
+    //               >
+    //                 <PlusIcon className="w-4 h-4" />
+    //                 Add User
+    //               </NavLink>
+    //               <NavLink
+    //                 to="/settings"
+    //                 className={({ isActive }) =>
+    //                   `flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors border ${
+    //                     isActive
+    //                       ? "bg-yellow-400 text-black font-bold border-yellow-400"
+    //                       : "bg-[#173353] text-white hover:bg-[#1c406b] border-[#2f4c73]"
+    //                   }`
+    //                 }
+    //               >
+    //                 <Cog6ToothIcon className="w-4 h-4" />
+    //                 Settings
+    //               </NavLink>
+    //             </div>
+    //           )}
+    //         </div>
+    //       </nav>
+    //     </div>
+
+    //     {/* Bottom - Logout */}
+    //     <button
+    //       onClick={handleLogout}
+    //       className="flex items-center gap-3 px-4 py-2 rounded-lg bg-[#173353] hover:bg-red-600 text-white transition-colors"
+    //     >
+    //       <ArrowLeftOnRectangleIcon className="w-5 h-5" />
+    //       <span className="text-sm">Logout</span>
+    //     </button>
+    //   </div>
   );
 };
 
