@@ -61,7 +61,7 @@ const Login = ({ onLogin }) => {
       <div className="w-full md:w-1/2 min-h-screen flex-grow flex items-center justify-center px-6 py-8">
         <div className="max-w-md w-full space-y-6">
           {/* Mobile Overlay Image */}
-          <div className="block md:hidden justify-center mb-4">
+          <div className="block md:hidden justify-center mb-4 ml-10">
             <img src={overlayimg} alt="Overlay" className="w-3/4 max-w-xs" />
           </div>
           <h2 className="text-3xl font-bold">Sign In</h2>

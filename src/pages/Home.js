@@ -1,9 +1,9 @@
 import {
   TruckIcon,
   CheckCircleIcon,
-  XCircleIcon,
-  UserGroupIcon,
   PencilSquareIcon,
+  ArchiveBoxIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -225,7 +225,7 @@ const Home = () => {
               {summary.totalTyre}
             </span>
             <span className="text-green-500 text-xl">
-              <CheckCircleIcon className="w-10 h-10" />
+              <ArchiveBoxIcon className="w-10 h-10" />
             </span>
           </div>
         </div>
@@ -238,7 +238,7 @@ const Home = () => {
               {summary.installedTyre}
             </span>
             <span className="text-green-500 text-xl">
-              <XCircleIcon className="w-10 h-10" />
+              <CheckCircleIcon className="w-10 h-10" />
             </span>
           </div>
         </div>
@@ -251,7 +251,7 @@ const Home = () => {
               {summary.removedTyre}
             </span>
             <span className="text-green-500 text-xl">
-              <UserGroupIcon className="w-10 h-10" />
+              <TrashIcon className="w-10 h-10" />
             </span>
           </div>
         </div>
