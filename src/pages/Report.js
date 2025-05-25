@@ -20,7 +20,7 @@ const Inspect = () => {
     hmUnit: "",
     // Tambahkan field lain sesuai kebutuhan
   });
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const [isReady, setIsReady] = useState(null);
 
   const capitalizeFirst = (text) => {
