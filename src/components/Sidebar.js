@@ -9,6 +9,8 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   XCircleIcon,
+  Bars3Icon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
