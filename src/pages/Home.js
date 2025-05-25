@@ -37,7 +37,6 @@ const Home = () => {
 
   const handleTyreClick = async (tyreId) => {
     try {
-      // const response = await fetch(`http://localhost:8080/activity/${tyreId}`);
       const data = await apiFetch(`/activity/${tyreId}`);
 
       const tyre = {

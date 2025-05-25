@@ -43,6 +43,7 @@ const Login = ({ onLogin }) => {
         console.log("Login berhasil sebagai:", user.name);
         sessionStorage.setItem("isLoggedIn", "true");
         sessionStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem("roleId", user.roleId);
         onLogin(); // Tidak kirim role — akses semua fitur
       } else {
         // alert("Username atau password salah");
@@ -59,6 +60,10 @@ const Login = ({ onLogin }) => {
       {/* Left Side - Form */}
       <div className="w-full md:w-1/2 min-h-screen flex-grow flex items-center justify-center px-6 py-8">
         <div className="max-w-md w-full space-y-6">
+          {/* Mobile Overlay Image */}
+          <div className="block md:hidden justify-center mb-4">
+            <img src={overlayimg} alt="Overlay" className="w-3/4 max-w-xs" />
+          </div>
           <h2 className="text-3xl font-bold">Sign In</h2>
           <p className="text-sm text-gray-500">
             Enter your username and password to sign in!
