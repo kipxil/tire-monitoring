@@ -28,6 +28,7 @@ const Sidebar = ({ onLogout }) => {
   const handleLogout = () => {
     sessionStorage.removeItem("isLoggedIn");
     sessionStorage.removeItem("user");
+    sessionStorage.removeItem("roleId");
     onLogout();
     navigate("/"); // Redirect ke login
   };
