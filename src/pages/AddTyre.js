@@ -10,6 +10,8 @@ const AddTyre = () => {
   const [hargaBan, setHargaBan] = useState("");
   const [serialNumber, setSerialNumber] = useState("");
   const [ukuranBan, setUkuranBan] = useState("");
+  const [hmBan, setHmBan] = useState("");
+  const [kmBan, setKmBan] = useState("");
 
   //dropdown
   const [merkList, setMerkList] = useState([]);
@@ -51,6 +53,8 @@ const AddTyre = () => {
       otd1: parseInt(otd),
       otd2: parseInt(otd2),
       price: parseInt(hargaBan),
+      hmTyre: parseInt(hmBan),
+      kmTyre: parseInt(kmBan),
       tyreSizeId: parseInt(ukuranBan),
     };
 
@@ -165,13 +169,31 @@ const AddTyre = () => {
             />
           </div>
           <div>
+            <label className="block font-medium mb-1">HM Tyre</label>
+            <input
+              type="number"
+              className="w-full p-2 border rounded-md"
+              value={hmBan}
+              onChange={(e) => setHmBan(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">KM Tyre</label>
+            <input
+              type="number"
+              className="w-full p-2 border rounded-md"
+              value={kmBan}
+              onChange={(e) => setKmBan(e.target.value)}
+            />
+          </div>
+          <div>
             <label className="block font-medium mb-1">Tyre Price</label>
             <input
               type="number"
               value={hargaBan}
               onChange={(e) => setHargaBan(e.target.value)}
               className="w-full p-2 border rounded-md"
-              placeholder="Contoh: 150000"
+              placeholder="Contoh: 1500000"
             />
           </div>
           <div>

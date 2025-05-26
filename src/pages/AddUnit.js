@@ -7,7 +7,6 @@ const AddUnit = () => {
   const [hmunit, setHmUnit] = useState("");
   const [kmUnit, setKmUnit] = useState("");
   const [site, setSite] = useState("");
-  const [lokasi, setLokasi] = useState("");
 
   const [selectedBans, setSelectedBans] = useState(["", "", "", "", "", ""]);
   const [siteList, setSiteList] = useState([]);
@@ -60,7 +59,6 @@ const AddUnit = () => {
       hmUnit: parseInt(hmunit),
       kmUnit: parseInt(kmUnit),
       siteId: parseInt(site),
-      location: lokasi,
       tyreIds: selectedBans.map((id) => parseInt(id)),
     };
 
@@ -158,17 +156,6 @@ const AddUnit = () => {
                 </option>
               ))}
             </select>
-          </div>
-          <div>
-            <label className="block font-medium mb-1">
-              Location <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md"
-              value={lokasi}
-              onChange={(e) => setLokasi(e.target.value)}
-            />
           </div>
         </div>
 

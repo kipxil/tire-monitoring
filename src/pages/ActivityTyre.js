@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 const UpdateTyre = () => {
   const [noUnit, setNoUnit] = useState("");
-  const [lokasi, setLokasi] = useState("");
+  const [lokasiLepas, setLokasiLepas] = useState("");
   const [Hm, setHm] = useState("");
   const [Km, setKm] = useState("");
   const [treadLepas1, setTreadLepas1] = useState("");
@@ -77,7 +77,7 @@ const UpdateTyre = () => {
       unitId: parseInt(noUnit),
       hmAtActivity: parseInt(Hm),
       kmAtActivity: parseInt(Km),
-      location: lokasi,
+      location: lokasiLepas,
       removedTyreId: parseInt(serialNumberLepas),
       removeReasonId: alasanLepas,
       removePurposeId: parseInt(tujuanLepas),
@@ -159,8 +159,8 @@ const UpdateTyre = () => {
               <input
                 type="text"
                 className="w-full p-2 border rounded-md"
-                value={lokasi}
-                onChange={(e) => setLokasi(e.target.value)}
+                value={lokasiLepas}
+                onChange={(e) => setLokasiLepas(e.target.value)}
               />
             </div>
             <div>

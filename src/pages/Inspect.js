@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
 
 const Inspect = () => {
-  const [kejadian, setKejadian] = useState("");
-  const [analisa, setAnalisa] = useState("");
   const [dateTime, setDateTime] = useState("");
   const [tujuanLepas, setTujuanLepas] = useState("");
   const [selectedTyreId, setSelectedTyreId] = useState("");
@@ -69,8 +67,6 @@ const Inspect = () => {
     }
 
     const dataInspect = {
-      incidentNote: kejadian,
-      analysisNote: analisa,
       dateTimeWork: dateTime,
       isReady: Boolean(isReady),
       removePurposeId: parseInt(tujuanLepas),
@@ -249,24 +245,6 @@ const Inspect = () => {
               </select>
             </div>
           )}
-          <div>
-            <label className="block font-medium mb-1">Summary Incident</label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md"
-              value={kejadian}
-              onChange={(e) => setKejadian(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block font-medium mb-1">Analysys</label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded-md"
-              value={analisa}
-              onChange={(e) => setAnalisa(e.target.value)}
-            />
-          </div>
         </div>
         {/* Tombol Simpan */}
         <div className="mt-8 flex justify-end">
