@@ -14,6 +14,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import logo from "../assets/TYRE DEPT FIX.png";
 
 const Sidebar = ({ onLogout }) => {
   const navigate = useNavigate();
@@ -85,7 +86,15 @@ const Sidebar = ({ onLogout }) => {
       >
         {/* Top Logo */}
         <div>
-          <div className="mb-8 text-center">
+          <div className="mb-8 bg-yellow-400 rounded-md p-4 w-full">
+            <div className="text-center">
+              <img src={logo} className="mx-auto" alt="Tyre Prima Jaya" />
+              <p className="text-xs text-black mt-1">
+                WE WILL SAVE OUR TYRE TOGETHER
+              </p>
+            </div>
+          </div>
+          {/* <div className="mb-8 text-center">
             <div className="text-yellow-400 font-bold text-xl leading-tight">
               TYRE
               <br />
@@ -94,7 +103,7 @@ const Sidebar = ({ onLogout }) => {
             <p className="text-xs text-gray-300">
               WE WILL SAVE OUR TYRE TOGETHER
             </p>
-          </div>
+          </div> */}
 
           {/* Menu Utama */}
           <nav className="flex flex-col gap-4">
@@ -128,6 +137,11 @@ const Sidebar = ({ onLogout }) => {
                     icon={DocumentTextIcon}
                     label="Activity Tyre"
                   />
+                  <SidebarLink
+                    to="/edittyre"
+                    icon={PlusIcon}
+                    label="Edit Tyre"
+                  />
                   {roleId === 1 && (
                     <SidebarLink
                       to="/inspecttyres"
@@ -135,6 +149,11 @@ const Sidebar = ({ onLogout }) => {
                       label="Inspect Tyre"
                     />
                   )}
+                  <SidebarLink
+                    to="/inspectaction"
+                    icon={PlusIcon}
+                    label="Inspect Action"
+                  />
                 </div>
               )}
             </div>

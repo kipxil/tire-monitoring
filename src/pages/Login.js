@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import logo from "../assets/bg_tambang.jpg";
-import overlayimg from "../assets/TYRE DEPT FIX.png";
+import overlayimg from "../assets/type-A convert.png";
 import { apiFetch } from "../services/apiClient";
+// import logo from "../assets/TYRE DEPT FIX.png";
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState("");
@@ -78,6 +79,7 @@ const Login = ({ onLogin }) => {
                 placeholder="Username"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 onChange={(e) => setUsername(e.target.value)}
+                required
               />
             </div>
             <div>
@@ -88,6 +90,7 @@ const Login = ({ onLogin }) => {
                 placeholder="Type your password"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </div>
             <button
@@ -112,7 +115,7 @@ const Login = ({ onLogin }) => {
         <img
           src={overlayimg}
           alt="Overlay"
-          className="absolute top-[43%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[75%] z-10"
+          className="absolute top-[10%] left-[85%] transform -translate-x-1/2 -translate-y-1/2 w-[30%] z-10"
         />
       </div>
     </div>

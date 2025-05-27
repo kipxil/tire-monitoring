@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
 
-const AddTyre = () => {
-  const [merk, setMerk] = useState("");
+const EditTyre = () => {
+  const [selectedTyreId, setSelectedTyreId] = useState("");
+  const [serialNumber, setSerialNumber] = useState("");
   const [typeBan, setTypeBan] = useState("");
+  const [merk, setMerk] = useState("");
   const [patternBan, setPatternBan] = useState("");
   const [otd, setOtd] = useState("");
   const [otd2, setOtd2] = useState("");
-  const [hargaBan, setHargaBan] = useState("");
-  const [serialNumber, setSerialNumber] = useState("");
-  const [ukuranBan, setUkuranBan] = useState("");
   const [hmBan, setHmBan] = useState("");
   const [kmBan, setKmBan] = useState("");
+  const [hargaBan, setHargaBan] = useState("");
+  const [ukuranBan, setUkuranBan] = useState("");
 
-  //dropdown
+  const [tyreList, setTyreList] = useState([]);
   const [merkList, setMerkList] = useState([]);
   const [ukuranList, setUkuranList] = useState([]);
 
@@ -26,50 +27,93 @@ const AddTyre = () => {
 
   const username = capitalizeFirst(user?.name);
 
-  // Fetch dropdown data saat component mount
   useEffect(() => {
-    const fetchDropdownData = async () => {
+    const fetchTyres = async () => {
       try {
-        const data = await apiFetch("/dropdown");
+        const response = await apiFetch("/tyre"); // Ganti sesuai endpoint
+        setTyreList(response.data);
 
-        // Set state dari response API
-        setMerkList(data.merk || []);
-        setUkuranList(data.tyreSize || []);
+        const dropdown = await apiFetch("/dropdown");
+        // Generate unique merk list
+        // const merks = [...new Set(dropdown.merk.map((t) => t.name))];
+        const merks = dropdown.merk.map((m) => ({ id: m.id, name: m.name }));
+        setMerkList(merks);
+
+        // Generate unique tyre sizes
+        // const sizes = [...new Set(dropdown.tyreSize.map((t) => t.size))];
+        const sizes = dropdown.tyreSize.map((s) => ({
+          id: s.id,
+          size: s.size,
+        }));
+        setUkuranList(sizes);
       } catch (error) {
-        console.error("Gagal fetch data dropdown:", error);
+        console.error("Gagal mengambil data ban:", error);
       }
     };
 
-    fetchDropdownData();
+    fetchTyres();
   }, []);
 
-  // TODO: Tambahkan state untuk input lain jika dibutuhkan
-  const handleSubmit = async () => {
-    const dataBan = {
-      merkId: parseInt(merk),
-      serialNumber: serialNumber,
-      type: typeBan,
-      pattern: patternBan,
-      otd1: parseInt(otd),
-      otd2: parseInt(otd2),
-      price: parseInt(hargaBan),
-      hmTyre: parseInt(hmBan),
-      kmTyre: parseInt(kmBan),
-      tyreSizeId: parseInt(ukuranBan),
-    };
+  useEffect(() => {
+    if (selectedTyreId) {
+      const selected = tyreList.find(
+        (tyre) => tyre.id === parseInt(selectedTyreId)
+      );
+      if (selected) {
+        setSerialNumber(selected.stockTyre.serialNumber || "");
+        setTypeBan(selected.type || "Tidak Ada");
+        setMerk(selected.stockTyre.merk?.id || "");
+        setPatternBan(selected.pattern || "Tidak Ada");
+        setOtd(selected.tread1 ?? 0);
+        setOtd2(selected.tread2 ?? 0);
+        setHmBan(selected.hmTyre ?? 0);
+        setKmBan(selected.kmTyre ?? 0);
+        setHargaBan(selected.price ?? 0);
+        setUkuranBan(selected.stockTyre.tyreSize?.id || "");
+      }
+    } else {
+      // Kosongkan jika tidak dipilih
+      setSerialNumber("");
+      setTypeBan("");
+      setMerk("");
+      setPatternBan("");
+      setOtd("");
+      setOtd2("");
+      setHmBan("");
+      setKmBan("");
+      setHargaBan("");
+      setUkuranBan("");
+    }
+  }, [selectedTyreId, tyreList]);
 
+  const handleSubmit = async () => {
     try {
-      console.log(dataBan);
-      const result = await apiFetch("/tyre", {
-        method: "POST",
-        body: JSON.stringify(dataBan),
+      const payload = {
+        serialNumber,
+        type: typeBan,
+        pattern: patternBan,
+        tread1: parseFloat(otd),
+        tread2: parseFloat(otd2),
+        hmTyre: parseFloat(hmBan),
+        kmTyre: parseFloat(kmBan),
+        price: parseFloat(hargaBan),
+        // stockTyre: {
+        //   merk: { id: merk },
+        //   tyreSize: { id: ukuranBan },
+        // },
+        merk: merk,
+        tyreSize: ukuranBan,
+      };
+      console.log(payload);
+      await apiFetch(`/tyre/${selectedTyreId}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
       });
-      alert(result);
-      // Debug: tampilkan data user dari server
-      console.log("Response: ", result);
+
+      alert("Data berhasil diperbarui!");
     } catch (error) {
-      console.error("Error: ", error);
-      alert("Gagal menghubungi server." + error.message);
+      console.error("Gagal memperbarui data:", error);
+      alert("Terjadi kesalahan saat menyimpan data.");
     }
   };
 
@@ -78,8 +122,8 @@ const AddTyre = () => {
       {/* Header */}
       <div className="flex justify-between items-end mb-6 ml-3">
         <div>
-          <p className="text-sm text-gray-500">Pages / Add Tyres</p>
-          <h1 className="text-3xl font-bold text-[#1a1f36]">Add Tyres</h1>
+          <p className="text-sm text-gray-500">Pages / Edit Tyres</p>
+          <h1 className="text-3xl font-bold text-[#1a1f36]">Edit Tyres</h1>
         </div>
         <div className="flex items-center gap-4 mt-3">
           <p className="text-lg font-semibold">Hello, {username}</p>
@@ -93,11 +137,33 @@ const AddTyre = () => {
 
       {/* Form Container */}
       <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">
-        Add New Tyres
+        Edit Tyres
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md">
         {/* === Informasi Dasar Ban === */}
         {/* <h2 className="text-lg font-semibold mb-4 border-b pb-2">Informasi Dasar Ban</h2> */}
+        <div className="space-y-4 pb-4">
+          <div>
+            <label className="block font-medium mb-1">
+              Select Tyre <span className="text-red-500">*</span>
+            </label>
+            <select
+              className="w-full p-2 border rounded-md"
+              value={selectedTyreId}
+              onChange={(e) => setSelectedTyreId(e.target.value)}
+            >
+              <option value="">-- Select Tyre --</option>
+              {tyreList.map((tyre) => (
+                <option key={tyre.id} value={tyre.id}>
+                  {tyre.stockTyre.serialNumber}
+                </option>
+              ))}
+            </select>
+          </div>
+          <h2 className="text-blue-600 text-lg font-bold mb-4 border-b pb-2">
+            Edit Tyre
+          </h2>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block font-medium mb-1">
@@ -108,7 +174,6 @@ const AddTyre = () => {
               className="w-full p-2 border rounded-md"
               value={serialNumber}
               onChange={(e) => setSerialNumber(e.target.value)}
-              required
             />
           </div>
           <div>
@@ -130,9 +195,9 @@ const AddTyre = () => {
               onChange={(e) => setMerk(e.target.value)}
             >
               <option value="">-- Select Merk --</option>
-              {merkList.map((merk) => (
-                <option key={merk.id} value={merk.id}>
-                  {merk.name}
+              {merkList.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
                 </option>
               ))}
             </select>
@@ -186,16 +251,6 @@ const AddTyre = () => {
               onChange={(e) => setKmBan(e.target.value)}
             />
           </div>
-          {/* <div>
-            <label className="block font-medium mb-1">Tyre Price</label>
-            <input
-              type="number"
-              value={hargaBan}
-              onChange={(e) => setHargaBan(e.target.value)}
-              className="w-full p-2 border rounded-md"
-              placeholder="Contoh: 1500000"
-            />
-          </div> */}
           <div>
             <label className="block font-medium mb-1">Tyre Price</label>
             <div className="relative">
@@ -221,9 +276,9 @@ const AddTyre = () => {
               onChange={(e) => setUkuranBan(e.target.value)}
             >
               <option value="">-- Select Tyre Size --</option>
-              {ukuranList.map((ukuran) => (
-                <option key={ukuran.id} value={ukuran.id}>
-                  {ukuran.size}
+              {ukuranList.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.size}
                 </option>
               ))}
             </select>
@@ -244,4 +299,4 @@ const AddTyre = () => {
   );
 };
 
-export default AddTyre;
+export default EditTyre;

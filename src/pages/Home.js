@@ -23,7 +23,8 @@ const Home = () => {
   const [tyres, setTyres] = useState([]);
   const [units, setUnits] = useState([]);
   const [selectedView, setSelectedView] = useState("ban"); // "ban" atau "unit"
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageTyre, setCurrentPageTyre] = useState(1);
+  const [currentPageUnit, setCurrentPageUnit] = useState(1);
   const itemsPerPage = 10; // Jumlah data per halaman
   const navigate = useNavigate();
   const user = JSON.parse(sessionStorage.getItem("user"));
@@ -157,31 +158,46 @@ const Home = () => {
     return { label: "Removed", className: "bg-red-200 text-red-700" };
   };
 
+  const filteredTyres = tyres.filter((tyre) => tyre.isInstalled === true);
+
   // Pagination logic untuk data ban
-  const indexOfLastTyre = currentPage * itemsPerPage;
+  const indexOfLastTyre = currentPageTyre * itemsPerPage;
   const indexOfFirstTyre = indexOfLastTyre - itemsPerPage;
   const currentTyres = tyres.slice(indexOfFirstTyre, indexOfLastTyre);
+  const totalPagesTyre = Math.ceil(filteredTyres.length / itemsPerPage);
 
   // Pagination logic untuk data unit
-  const indexOfLastUnit = currentPage * itemsPerPage;
+  const indexOfLastUnit = currentPageUnit * itemsPerPage;
   const indexOfFirstUnit = indexOfLastUnit - itemsPerPage;
   const currentUnits = units.slice(indexOfFirstUnit, indexOfLastUnit);
+  const totalPagesUnit = Math.ceil(units.length / itemsPerPage);
 
   // Jumlah halaman (disesuaikan dengan data)
-  const totalPages =
-    selectedView === "ban"
-      ? Math.ceil(tyres.length / itemsPerPage)
-      : Math.ceil(units.length / itemsPerPage);
+  // const totalPages =
+  //   selectedView === "ban"
+  //     ? Math.ceil(tyres.length / itemsPerPage)
+  //     : Math.ceil(units.length / itemsPerPage);
 
   // Fungsi pindah halaman
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginateTyre = (pageNumber) => setCurrentPageTyre(pageNumber);
 
   // Fungsi untuk tombol Prev dan Next
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  const handlePrevTyre = () => {
+    if (currentPageTyre > 1) setCurrentPageTyre(currentPageTyre - 1);
   };
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  const handleNextTyre = () => {
+    if (currentPageTyre < totalPagesTyre)
+      setCurrentPageTyre(currentPageTyre + 1);
+  };
+
+  // Fungsi paginate untuk unit
+  const paginateUnit = (pageNumber) => setCurrentPageUnit(pageNumber);
+  const handlePrevUnit = () => {
+    if (currentPageUnit > 1) setCurrentPageUnit(currentPageUnit - 1);
+  };
+  const handleNextUnit = () => {
+    if (currentPageUnit < totalPagesUnit)
+      setCurrentPageUnit(currentPageUnit + 1);
   };
 
   return (
@@ -259,7 +275,7 @@ const Home = () => {
 
       <div className="bg-white p-6 rounded-lg shadow-md">
         {/* Radio button pilihan */}
-        <div className="flex justify-center mb-4 space-x-6 pb-4">
+        {/* <div className="flex justify-center mb-4 space-x-6 pb-4">
           <label className="inline-flex items-center cursor-pointer">
             <input
               type="radio"
@@ -293,201 +309,210 @@ const Home = () => {
               Unit Data
             </span>
           </label>
-        </div>
+        </div> */}
 
         {/* Judul dan tabel data berdasarkan pilihan */}
-        {selectedView === "ban" ? (
-          <>
-            <h2 className="text-xl font-semibold mb-4 border-b pb-2">
-              Tyre Data
-            </h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full table-auto text-sm text-left border">
-                <thead className="bg-[#0F2741] text-white">
-                  <tr>
-                    <th className="px-4 py-2 border">No</th>
-                    <th className="px-4 py-2 border">Serial Number</th>
-                    <th className="px-4 py-2 border">Status</th>
-                    <th className="px-4 py-2 border">HM (Hour Meter)</th>
-                    <th className="px-4 py-2 border">KM (Kilo Meter)</th>
-                    <th className="px-4 py-2 border">Update</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentTyres.length > 0 ? (
-                    currentTyres.map((tyre, index) => {
-                      const { label, className } = getStatus(tyre);
-                      const hm = tyre.hmTyre ?? 0;
-                      const km = tyre.kmTyre ?? 0;
+        {/* {selectedView === "ban" ? ( */}
+        <>
+          <h2 className="text-xl font-semibold mb-4 border-b pb-2">
+            Tyre List
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full table-auto text-sm text-left border">
+              <thead className="bg-[#0F2741] text-white">
+                <tr>
+                  <th className="px-4 py-2 border">No</th>
+                  <th className="px-4 py-2 border">Serial Number</th>
+                  <th className="px-4 py-2 border">Status</th>
+                  <th className="px-4 py-2 border">HM (Hour Meter)</th>
+                  <th className="px-4 py-2 border">KM (Kilo Meter)</th>
+                  <th className="px-4 py-2 border">Update</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentTyres.length > 0 ? (
+                  currentTyres.map((tyre, index) => {
+                    const { label, className } = getStatus(tyre);
+                    const hm = tyre.hmTyre ?? 0;
+                    const km = tyre.kmTyre ?? 0;
 
-                      return (
-                        <tr
-                          key={tyre.id}
-                          className="even:bg-gray-50"
-                          // onClick={() => handleTyreClick(tyre.id)} //setSelectedTyre(tyre.id)
-                        >
-                          <td className="px-4 py-2 border">
-                            {indexOfFirstTyre + index + 1}
-                          </td>
-                          <td
-                            className="px-4 py-2 border"
-                            onClick={() => handleTyreClick(tyre.id)}
-                          >
-                            {tyre.stockTyre.serialNumber}
-                          </td>
-                          <td className="px-4 py-2 border">
-                            <span
-                              className={`px-2 py-1 text-xs rounded-full font-semibold ${className}`}
-                            >
-                              {label}
-                            </span>
-                          </td>
-                          <td className="px-4 py-2 border">{hm} hours</td>
-                          <td className="px-4 py-2 border">{km} hours</td>
-                          <td className="px-4 py-2 border text-center">
-                            <PencilSquareIcon
-                              className="w-6 h-6 text-blue-500 cursor-pointer mx-auto"
-                              onClick={() => navigate(`/actvtyres`)}
-                              title="Update Tyre"
-                            />
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="6"
-                        className="text-center px-4 py-3 text-gray-500"
+                    return (
+                      <tr
+                        key={tyre.id}
+                        className="even:bg-gray-50"
+                        // onClick={() => handleTyreClick(tyre.id)} //setSelectedTyre(tyre.id)
                       >
-                        No tire data.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-              <TyreDetailModal
-                show={showPopup}
-                onClose={handleClosePopup}
-                tyre={selectedTyre}
-                activityHistory={activityHistory}
-              />
-            </div>
-
-            {/* Pagination controls */}
-            <div className="flex justify-center space-x-2 mt-4">
-              <button
-                onClick={handlePrev}
-                disabled={currentPage === 1}
-                className="px-3 py-1 border rounded disabled:opacity-50"
-              >
-                Prev
-              </button>
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i + 1}
-                  onClick={() => paginate(i + 1)}
-                  className={`px-3 py-1 border rounded ${
-                    currentPage === i + 1 ? "bg-blue-500 text-white" : ""
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <button
-                onClick={handleNext}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 border rounded disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2 className="text-xl font-semibold mb-4 border-b pb-2">
-              Unit Data
-            </h2>
-            <div className="overflow-x-auto">
-              <table className="min-w-full table-auto text-sm text-left border">
-                <thead className="bg-[#0F2741] text-white">
+                        <td className="px-4 py-2 border">
+                          {indexOfFirstTyre + index + 1}
+                        </td>
+                        <td
+                          className="px-4 py-2 border"
+                          onClick={() => handleTyreClick(tyre.id)}
+                        >
+                          {tyre.stockTyre.serialNumber}
+                        </td>
+                        <td className="px-4 py-2 border">
+                          <span
+                            className={`px-2 py-1 text-xs rounded-full font-semibold ${className}`}
+                          >
+                            {label}
+                          </span>
+                        </td>
+                        <td className="px-4 py-2 border">{hm} hours</td>
+                        <td className="px-4 py-2 border">{km} hours</td>
+                        <td className="px-4 py-2 border text-center">
+                          <PencilSquareIcon
+                            className="w-6 h-6 text-blue-500 cursor-pointer mx-auto"
+                            onClick={() => navigate(`/actvtyres`)}
+                            title="Update Tyre"
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
                   <tr>
-                    <th className="px-4 py-2 border">No</th>
-                    <th className="px-4 py-2 border">Unit Number</th>
-                    <th className="px-4 py-2 border">HM Unit</th>
-                    <th className="px-4 py-2 border">KM (Kilo Meter)</th>
-                    <th className="px-4 py-2 border">Site</th>
-                    {/* <th className="px-4 py-2 border">Update</th> */}
+                    <td
+                      colSpan="6"
+                      className="text-center px-4 py-3 text-gray-500"
+                    >
+                      No tire data.
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {currentUnits.length > 0 ? (
-                    currentUnits.map((unit, index) => (
-                      <tr key={unit.id} className="even:bg-gray-50">
-                        <td className="px-4 py-2 border">
-                          {indexOfFirstUnit + index + 1}
-                        </td>
-                        <td className="px-4 py-2 border">{unit.nomorUnit}</td>
-                        <td className="px-4 py-2 border">
-                          {unit.hmUnit} hours
-                        </td>
-                        <td className="px-4 py-2 border">{unit.kmUnit} KM</td>
-                        <td className="px-4 py-2 border">
-                          {unit.site?.name || "-"}
-                        </td>
-                        {/* <td className="px-4 py-2 border text-center">
+                )}
+              </tbody>
+            </table>
+            <TyreDetailModal
+              show={showPopup}
+              onClose={handleClosePopup}
+              tyre={selectedTyre}
+              activityHistory={activityHistory}
+            />
+          </div>
+
+          {/* Pagination controls */}
+          <div className="flex justify-center space-x-2 mt-4">
+            <button
+              onClick={handlePrevTyre}
+              disabled={currentPageTyre === 1}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Prev
+            </button>
+            {[...Array(totalPagesTyre)].map((_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => paginateTyre(i + 1)}
+                className={`px-3 py-1 border rounded ${
+                  currentPageTyre === i + 1 ? "bg-blue-500 text-white" : ""
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={handleNextTyre}
+              disabled={currentPageTyre === totalPagesTyre}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </>
+        {/* ) : ( */}
+        <>
+          <h2 className="text-xl font-semibold mb-4 border-b pb-2">
+            Unit List
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full table-auto text-sm text-left border">
+              <thead className="bg-[#0F2741] text-white">
+                <tr>
+                  <th className="px-4 py-2 border">No</th>
+                  <th className="px-4 py-2 border">Unit Number</th>
+                  <th className="px-4 py-2 border">HM Unit</th>
+                  <th className="px-4 py-2 border">KM (Kilo Meter)</th>
+                  <th className="px-4 py-2 border">Site</th>
+                  {/* <th className="px-4 py-2 border">Update</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                {currentUnits.length > 0 ? (
+                  currentUnits.map((unit, index) => (
+                    <tr key={unit.id} className="even:bg-gray-50">
+                      <td className="px-4 py-2 border">
+                        {indexOfFirstUnit + index + 1}
+                      </td>
+                      <td
+                        className="px-4 py-2 border"
+                        onClick={() => handleTyreClick(unit.id)}
+                      >
+                        {unit.nomorUnit}
+                      </td>
+                      <td className="px-4 py-2 border">{unit.hmUnit} hours</td>
+                      <td className="px-4 py-2 border">{unit.kmUnit} KM</td>
+                      <td className="px-4 py-2 border">
+                        {unit.site?.name || "-"}
+                      </td>
+                      {/* <td className="px-4 py-2 border text-center">
                           <PencilSquareIcon
                             className="w-6 h-6 text-blue-500 cursor-pointer mx-auto"
                             onClick={() => navigate(`/update-tyre/${unit.id}`)}
                             title="Update Data Unit"
                           />
                         </td> */}
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan="6"
-                        className="text-center px-4 py-3 text-gray-500"
-                      >
-                        No data unit.
-                      </td>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="text-center px-4 py-3 text-gray-500"
+                    >
+                      No data unit.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+            <TyreDetailModal
+              show={showPopup}
+              onClose={handleClosePopup}
+              tyre={selectedTyre}
+              activityHistory={activityHistory}
+            />
+          </div>
 
-            {/* Pagination controls */}
-            <div className="flex justify-center space-x-2 mt-4">
+          {/* Pagination controls */}
+          <div className="flex justify-center space-x-2 mt-4">
+            <button
+              onClick={handlePrevUnit}
+              disabled={currentPageUnit === 1}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Prev
+            </button>
+            {[...Array(totalPagesUnit)].map((_, i) => (
               <button
-                onClick={handlePrev}
-                disabled={currentPage === 1}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                key={i + 1}
+                onClick={() => paginateUnit(i + 1)}
+                className={`px-3 py-1 border rounded ${
+                  currentPageUnit === i + 1 ? "bg-blue-500 text-white" : ""
+                }`}
               >
-                Prev
+                {i + 1}
               </button>
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i + 1}
-                  onClick={() => paginate(i + 1)}
-                  className={`px-3 py-1 border rounded ${
-                    currentPage === i + 1 ? "bg-blue-500 text-white" : ""
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <button
-                onClick={handleNext}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 border rounded disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          </>
-        )}
+            ))}
+            <button
+              onClick={handleNextUnit}
+              disabled={currentPageUnit === totalPagesUnit}
+              className="px-3 py-1 border rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </>
+        {/* )} */}
       </div>
     </div>
   );

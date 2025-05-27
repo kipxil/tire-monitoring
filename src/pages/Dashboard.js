@@ -8,6 +8,8 @@ import Users from "./User";
 import Settings from "./Setting";
 import AddTyre from "./AddTyre";
 import UpdateTyre from "./ActivityTyre";
+import EditTyre from "./EditTyre";
+import InspectAction from "./InspectAction";
 
 const DashboardLayout = ({ onLogout }) => {
   return (
@@ -24,6 +26,8 @@ const DashboardLayout = ({ onLogout }) => {
           <Route path="/reports" element={<Reports />} />
           <Route path="/users" element={<Users />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/edittyre" element={<EditTyre />} />
+          <Route path="/inspectaction" element={<InspectAction />} />
           {/* </>
           )} */}
           <Route path="/addtyres" element={<AddTyre />} />
