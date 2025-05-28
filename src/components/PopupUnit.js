@@ -37,14 +37,11 @@ const UnitDetailModal = ({ unitData, isOpen, onClose }) => {
                   <strong>ID Ban:</strong> {tyre.id}
                 </p>
                 <p>
-                  <strong>Seria Number:</strong> {tyre.stockTyre.serialNumber}
+                  <strong>Serial Number:</strong> {tyre.stockTyre.serialNumber}
                 </p>
                 <p>
-                  <strong>Tread:</strong> {tyre.tread1}/ {tyre.tread2}
+                  <strong>Tread:</strong> {tyre.tread1}/{tyre.tread2}
                 </p>
-                {/* <p>
-                  <strong>Tread2:</strong> {tyre.tread2}
-                </p> */}
                 <p>
                   <strong>HM:</strong> {tyre.hmTyre ?? "N/A"} |{" "}
                   <strong>KM:</strong> {tyre.kmTyre ?? "N/A"}

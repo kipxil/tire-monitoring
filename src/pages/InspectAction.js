@@ -1,327 +1,283 @@
-import React, { useState, useEffect } from "react";
-import { Plus, Edit, Trash2, Save, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
+// import axios from "axios";
+import { apiFetch } from "../services/apiClient";
 
-const InspectAction = () => {
-  const [selectedType, setSelectedType] = useState("airCondition");
-  const [data, setData] = useState({});
-  const [editingItem, setEditingItem] = useState(null);
-  const [isCreating, setIsCreating] = useState(false);
-  const [formData, setFormData] = useState({});
+const ActionTyreManager = () => {
+  const [actionTyres, setActionTyres] = useState([]);
+  const [removePurposeOptions, setRemovePurposeOptions] = useState([]);
+  const [selectedAction, setSelectedAction] = useState(null);
+  const [filterPurposeId, setFilterPurposeId] = useState("");
+  const [formData, setFormData] = useState({
+    dateTimeWork: "",
+    dateTimeDone: "",
+    isDone: false,
+  });
 
-  // Initialize data from API response
+  // Ambil data action dan dropdown purpose
   useEffect(() => {
-    fetch("https://primatyre-prismaexpress-production.up.railway.app/dropdown")
-      .then((res) => res.json())
-      .then((data) => setData(data))
-      .catch((err) => console.error("Failed to fetch dropdown data:", err));
+    fetchData();
   }, []);
 
-  const typeConfig = {
-    airCondition: { label: "Air Condition", fields: ["name"] },
-    removePurpose: { label: "Remove Purpose", fields: ["name"] },
-    removeReason: { label: "Remove Reason", fields: ["description"] },
-    roleUser: { label: "Role User", fields: ["name"] },
-    site: { label: "Site", fields: ["name"] },
-    tyreSize: { label: "Tyre Size", fields: ["size"] },
-    merk: { label: "Merk", fields: ["name"] },
+  const fetchData = async () => {
+    try {
+      const [actionData, dropdownData] = await Promise.all([
+        apiFetch("/action"),
+        apiFetch("/dropdown"),
+      ]);
+      console.log(actionData);
+      console.log(dropdownData);
+
+      setActionTyres(actionData.data);
+      setRemovePurposeOptions(dropdownData.removePurpose || []);
+    } catch (error) {
+      console.error("Gagal mengambil data:", error);
+    }
   };
 
-  const handleCreate = () => {
-    setIsCreating(true);
-    const fields = typeConfig[selectedType].fields;
-    const newFormData = {};
-    fields.forEach((field) => {
-      newFormData[field] = "";
+  const handleActionSelect = (actionId) => {
+    const action = actionTyres.find((a) => a.id === actionId);
+    setSelectedAction(action);
+    setFormData({
+      dateTimeWork: action.dateTimeWork || "",
+      dateTimeDone: action.dateTimeDone || "",
+      isDone: action.isDone,
     });
-    setFormData(newFormData);
   };
 
-  const handleEdit = (item) => {
-    setEditingItem(item.id);
-    setFormData({ ...item });
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
-  const handleSave = () => {
-    const isEmpty = Object.values(formData).some(
-      (val) => val === null || val.trim?.() === ""
-    );
-    if (isEmpty) {
-      alert("All fields must be filled in.");
+  const handleSubmit = async () => {
+    if (!formData.dateTimeWork || !formData.dateTimeDone) {
+      alert("Mohon isi semua field yang wajib.");
       return;
     }
-    if (isCreating) {
-      console.log("Posting to:", selectedType);
-      console.log("Payload:", formData);
 
-      fetch(
-        `https://primatyre-prismaexpress-production.up.railway.app/dropdown/${selectedType}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      )
-        .then((res) => res.json())
-        .then((newItem) => {
-          setData((prev) => ({
-            ...prev,
-            [selectedType]: [...prev[selectedType], newItem],
-          }));
-        })
-        .catch((err) => console.error("Failed to create item:", err));
-      setIsCreating(false);
-    } else {
-      fetch(
-        `https://primatyre-prismaexpress-production.up.railway.app/dropdown/${selectedType}/${editingItem}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      )
-        .then((res) => res.json())
-        .then((updated) => {
-          setData((prev) => ({
-            ...prev,
-            [selectedType]: prev[selectedType].map((item) =>
-              item.id === editingItem ? updated : item
-            ),
-          }));
-        })
-        .catch((err) => console.error("Failed to update item:", err));
-      setEditingItem(null);
+    const updatedData = {
+      dateTimeWork: formData.dateTimeWork || null,
+      dateTimeDone: formData.dateTimeDone || null,
+      isReady: formData.isDone,
+    };
+
+    try {
+      await apiFetch(`/action/${selectedAction.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      alert("Data berhasil diupdate!");
+      fetchData();
+      setSelectedAction(null);
+    } catch (error) {
+      console.error("Gagal mengupdate data:", error);
+      alert("Gagal mengupdate data: " + error.message);
     }
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this item?")) {
-      fetch(
-        `https://primatyre-prismaexpress-production.up.railway.app/dropdown/${selectedType}/${id}`,
-        {
-          method: "DELETE",
-        }
-      )
-        .then(() => {
-          setData((prev) => ({
-            ...prev,
-            [selectedType]: prev[selectedType].filter((item) => item.id !== id),
-          }));
-        })
-        .catch((err) => console.error("Failed to delete item:", err));
-    }
+  const formatDateTime = (dateTime) => {
+    if (!dateTime) return "-";
+    return new Date(dateTime).toLocaleString("id-ID");
   };
 
-  const handleCancel = () => {
-    setIsCreating(false);
-    setEditingItem(null);
-    setFormData({});
-  };
-
-  const renderTableHeader = () => {
-    const fields = typeConfig[selectedType].fields;
-    return (
-      <tr className="bg-gray-50">
-        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-          ID
-        </th>
-        {fields.map((field) => (
-          <th
-            key={field}
-            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            {field.charAt(0).toUpperCase() + field.slice(1)}
-          </th>
-        ))}
-        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-          Actions
-        </th>
-      </tr>
+  const filteredActions = actionTyres
+    .filter((action) => !action.isDone) // Hanya tampilkan yang belum selesai
+    .filter((action) =>
+      filterPurposeId === ""
+        ? true
+        : action.removePurposeId === parseInt(filterPurposeId)
     );
-  };
-
-  const renderTableRow = (item) => {
-    const fields = typeConfig[selectedType].fields;
-    const isEditing = editingItem === item.id;
-
-    return (
-      <tr key={item.id} className="bg-white border-b">
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-          {item.id}
-        </td>
-        {fields.map((field) => (
-          <td
-            key={field}
-            className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-          >
-            {isEditing ? (
-              <input
-                type="text"
-                value={formData[field] || ""}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    [field]: e.target.value,
-                  }))
-                }
-                className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            ) : (
-              item[field]
-            )}
-          </td>
-        ))}
-        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-          {isEditing ? (
-            <div className="flex space-x-2">
-              <button
-                onClick={handleSave}
-                className="text-green-600 hover:text-green-900"
-              >
-                <Save size={16} />
-              </button>
-              <button
-                onClick={handleCancel}
-                className="text-gray-600 hover:text-gray-900"
-              >
-                <X size={16} />
-              </button>
-            </div>
-          ) : (
-            <div className="flex space-x-2">
-              <button
-                onClick={() => handleEdit(item)}
-                className="text-blue-600 hover:text-blue-900"
-              >
-                <Edit size={16} />
-              </button>
-              <button
-                onClick={() => handleDelete(item.id)}
-                className="text-red-600 hover:text-red-900"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
-          )}
-        </td>
-      </tr>
-    );
-  };
-
-  const renderCreateRow = () => {
-    const fields = typeConfig[selectedType].fields;
-
-    return (
-      <tr className="bg-blue-50 border-b">
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-          Auto
-        </td>
-        {fields.map((field) => (
-          <td
-            key={field}
-            className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-          >
-            <input
-              type="text"
-              value={formData[field] || ""}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  [field]: e.target.value,
-                }))
-              }
-              placeholder={`Enter ${field}`}
-              className="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </td>
-        ))}
-        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-          <div className="flex space-x-2">
-            <button
-              onClick={handleSave}
-              className="text-green-600 hover:text-green-900"
-            >
-              <Save size={16} />
-            </button>
-            <button
-              onClick={handleCancel}
-              className="text-gray-600 hover:text-gray-900"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        </td>
-      </tr>
-    );
-  };
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          Inspect Action
-        </h1>
+    <div className="w-full bg-white rounded-lg shadow-lg p-6">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">
+        Action Tyre Management
+      </h1>
 
-        {/* Type Selector */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Select Remove Purpose:
+      {/* Filter */}
+      <div className="mb-6">
+        <div className="flex items-center space-x-4">
+          <label className="text-sm font-medium text-gray-700">
+            Filter by Remove Purpose:
           </label>
           <select
-            value={selectedType}
-            onChange={(e) => {
-              setSelectedType(e.target.value);
-              setEditingItem(null);
-              setIsCreating(false);
-              setFormData({});
-            }}
-            className="block w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            value={filterPurposeId}
+            onChange={(e) => setFilterPurposeId(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-md"
           >
-            {Object.entries(typeConfig).map(([key, config]) => (
-              <option key={key} value={key}>
-                {config.label}
+            <option value="">All Purpose</option>
+            {removePurposeOptions.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.name}
               </option>
             ))}
           </select>
+          {filterPurposeId && (
+            <button
+              onClick={() => setFilterPurposeId("")}
+              className="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            >
+              Clear Filter
+            </button>
+          )}
         </div>
-
-        {/* Add Button */}
-        <button
-          onClick={handleCreate}
-          disabled={isCreating || editingItem}
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <Plus size={16} className="mr-2" />
-          Add New {typeConfig[selectedType].label}
-        </button>
       </div>
 
-      {/* Data Table */}
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>{renderTableHeader()}</thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {isCreating && renderCreateRow()}
-            {data[selectedType]?.map((item) => renderTableRow(item))}
+      {/* Table */}
+      <div className="overflow-x-auto mb-8">
+        <table className="w-full border-collapse border border-gray-300">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border px-4 py-2 text-left">ID</th>
+              <th className="border px-4 py-2 text-left">Serial Number</th>
+              <th className="border px-4 py-2 text-left">Purpose</th>
+              <th className="border px-4 py-2 text-left">Status</th>
+              <th className="border px-4 py-2 text-left">Date Work</th>
+              <th className="border px-4 py-2 text-left">Date Done</th>
+              <th className="border px-4 py-2 text-left">Ready</th>
+              <th className="border px-4 py-2 text-left">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredActions.map((action) => (
+              <tr key={action.id} className="hover:bg-gray-50">
+                <td className="border px-4 py-2">{action.id}</td>
+                <td className="border px-4 py-2">
+                  {action.tyre.stockTyre.serialNumber}
+                </td>
+                <td className="border px-4 py-2">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
+                    {action.removePurpose.name}
+                  </span>
+                </td>
+                <td className="border px-4 py-2">
+                  <span
+                    className={`px-2 py-1 rounded text-sm ${
+                      action.isDone
+                        ? "bg-green-100 text-green-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}
+                  >
+                    {action.isDone ? "Done" : "In Progress"}
+                  </span>
+                </td>
+                <td className="border px-4 py-2">
+                  {formatDateTime(action.dateTimeWork)}
+                </td>
+                <td className="border px-4 py-2">
+                  {formatDateTime(action.dateTimeDone)}
+                </td>
+                <td className="border px-4 py-2">
+                  <span
+                    className={`px-2 py-1 rounded text-sm ${
+                      action.tyre.isReady
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {action.tyre.isReady ? "Ready" : "Not Ready"}
+                  </span>
+                </td>
+                <td className="border px-4 py-2">
+                  <button
+                    onClick={() => handleActionSelect(action.id)}
+                    className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                  >
+                    Update
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
 
-      {/* API Console */}
-      <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-        <h3 className="text-sm font-medium text-gray-700 mb-2">
-          API Calls Log:
-        </h3>
-        <p className="text-xs text-gray-600">
-          Check the browser console for API call logs (F12 → Console)
-        </p>
-        <div className="mt-2 text-xs text-gray-500">
-          <p>• POST /{selectedType} - Create new item</p>
-          <p>• PUT /{selectedType}/:id - Update existing item</p>
-          <p>• DELETE /{selectedType}/:id - Delete item</p>
+      {/* Update Form */}
+      {selectedAction && (
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">
+            Update Action - {selectedAction.tyre.stockTyre.serialNumber}
+            <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
+              {selectedAction.removePurpose.name}
+            </span>
+          </h2>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Date Time Work
+                </label>
+                <input
+                  type="datetime-local"
+                  value={formData.dateTimeWork}
+                  onChange={(e) =>
+                    handleInputChange("dateTimeWork", e.target.value)
+                  }
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Date Time Done
+                </label>
+                <input
+                  type="datetime-local"
+                  value={formData.dateTimeDone}
+                  onChange={(e) =>
+                    handleInputChange("dateTimeDone", e.target.value)
+                  }
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="isDone"
+                  checked={formData.isDone}
+                  onChange={(e) =>
+                    handleInputChange("isDone", e.target.checked)
+                  }
+                  className="h-4 w-4"
+                  disabled={selectedAction?.removePurpose?.name === "SCRAP"}
+                />
+                <label
+                  htmlFor="isDone"
+                  className="ml-2 block text-sm text-gray-700"
+                >
+                  Ready for use
+                </label>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 pt-4">
+              <button
+                type="button"
+                onClick={() => setSelectedAction(null)}
+                className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              >
+                Update Action
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
-export default InspectAction;
+export default ActionTyreManager;

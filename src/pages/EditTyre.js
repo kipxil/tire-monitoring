@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
+import userLogo from "../assets/logo user.png";
 
 const EditTyre = () => {
   const [selectedTyreId, setSelectedTyreId] = useState("");
@@ -62,7 +63,7 @@ const EditTyre = () => {
       if (selected) {
         setSerialNumber(selected.stockTyre.serialNumber || "");
         setTypeBan(selected.stockTyre.type || "Tidak Ada");
-        setMerk(selected.stockTyre.merk?.id || "");
+        setMerk(selected.stockTyre.merkId || "");
         setPatternBan(selected.stockTyre.pattern || "Tidak Ada");
         setOtd(selected.tread1 ?? 0);
         setOtd2(selected.tread2 ?? 0);
@@ -87,14 +88,18 @@ const EditTyre = () => {
   }, [selectedTyreId, tyreList]);
 
   const handleSubmit = async () => {
+    if (!serialNumber) {
+      alert("Mohon isi semua field yang wajib.");
+      return;
+    }
     try {
       const payload = {
         serialNumber,
-        merk: merk,
+        merkId: parseInt(merk),
         type: typeBan,
         pattern: patternBan,
         price: parseInt(hargaBan),
-        tyreSize: ukuranBan,
+        tyreSizeId: parseInt(ukuranBan),
         otd1: parseInt(otd),
         otd2: parseInt(otd2),
         oHM: parseInt(hmBan),
@@ -124,7 +129,7 @@ const EditTyre = () => {
         <div className="flex items-center gap-4 mt-3">
           <p className="text-lg font-semibold">Hello, {username}</p>
           <img
-            src="https://i.pravatar.cc/40"
+            src={userLogo}
             alt="User Avatar"
             className="w-12 h-12 rounded-full border-2 border-gray-500 shadow-md object-cover"
           />

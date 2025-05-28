@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
+import userLogo from "../assets/logo user.png";
 
 const Inspect = () => {
   const [dateTime, setDateTime] = useState("");
   const [tujuanLepas, setTujuanLepas] = useState("");
   const [selectedTyreId, setSelectedTyreId] = useState("");
+  const [summary, setSummary] = useState("");
+  const [analysys, setAnalysys] = useState("");
 
   const [isReady, setIsReady] = useState(null);
   const [tyres, setTyres] = useState([]);
@@ -61,8 +64,8 @@ const Inspect = () => {
   }, [selectedTyreId, tyres]);
 
   const handleSubmit = async () => {
-    if (!selectedInspectionId) {
-      alert("Pilih ban terlebih dahulu!");
+    if (!selectedInspectionId || isReady === null || !dateTime) {
+      alert("Mohon isi semua field yang wajib.");
       return;
     }
 
@@ -70,14 +73,16 @@ const Inspect = () => {
       dateTimeWork: dateTime,
       isReady: Boolean(isReady),
       removePurposeId: parseInt(tujuanLepas),
+      incidentNote: summary,
+      analysisNote: analysys,
     };
 
     try {
-      console.log(dataInspect);
       const result = await apiFetch(`/inspection/${selectedInspectionId}`, {
         method: "PUT",
         body: JSON.stringify(dataInspect),
       });
+      console.log(dataInspect);
       alert("Inspect berhasil.");
       // navigate("/home");
       // window.location.reload();
@@ -100,7 +105,7 @@ const Inspect = () => {
         <div className="flex items-center gap-4 mt-3">
           <p className="text-lg font-semibold">Hello, {username}</p>
           <img
-            src="https://i.pravatar.cc/40"
+            src={userLogo}
             alt="User Avatar"
             className="w-12 h-12 rounded-full border-2 border-gray-500 shadow-md object-cover"
           />
@@ -127,8 +132,8 @@ const Inspect = () => {
               {tyres
                 .filter(
                   (entry) =>
-                    entry.isReady === null ||
-                    (entry.isReady === false && entry.tyre.isScrap === false)
+                    entry.isDone === null ||
+                    (entry.isDone === false && entry.tyre.isScrap === false)
                 ) // ✅ hanya tampilkan ban yang isReady === false
                 .map((entry) => (
                   <option key={entry.id} value={entry.tyre.stockTyre.id}>
@@ -194,7 +199,9 @@ const Inspect = () => {
             </select>
           </div>
           <div>
-            <label className="block font-medium mb-1">Time Inspection</label>
+            <label className="block font-medium mb-1">
+              Time Inspection <span className="text-red-500">*</span>
+            </label>
             <input
               type="datetime-local"
               className="w-full p-2 border rounded-md"
@@ -203,7 +210,9 @@ const Inspect = () => {
             />
           </div>
           <div>
-            <label className="block font-medium mb-1">Tyre Ready to Use?</label>
+            <label className="block font-medium mb-1">
+              Tyre Ready to Use? <span className="text-red-500">*</span>
+            </label>
             <select
               className="w-full p-2 border rounded-md"
               value={isReady === null ? "" : isReady.toString()}
@@ -245,6 +254,24 @@ const Inspect = () => {
               </select>
             </div>
           )}
+          <div>
+            <label className="block font-medium mb-1">Summary</label>
+            <input
+              type="text"
+              className="w-full p-2 border rounded-md"
+              value={summary}
+              onChange={(e) => setSummary(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">Analysis</label>
+            <input
+              type="text"
+              className="w-full p-2 border rounded-md"
+              value={analysys}
+              onChange={(e) => setAnalysys(e.target.value)}
+            />
+          </div>
         </div>
         {/* Tombol Simpan */}
         <div className="mt-8 flex justify-end">

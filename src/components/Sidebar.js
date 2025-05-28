@@ -12,6 +12,7 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
+import { Wrench, Edit } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import logo from "../assets/TYRE DEPT FIX.png";
@@ -137,11 +138,6 @@ const Sidebar = ({ onLogout }) => {
                     icon={DocumentTextIcon}
                     label="Activity Tyre"
                   />
-                  <SidebarLink
-                    to="/edittyre"
-                    icon={PlusIcon}
-                    label="Edit Tyre"
-                  />
                   {roleId === 1 && (
                     <SidebarLink
                       to="/inspecttyres"
@@ -149,11 +145,14 @@ const Sidebar = ({ onLogout }) => {
                       label="Inspect Tyre"
                     />
                   )}
-                  <SidebarLink
-                    to="/inspectaction"
-                    icon={PlusIcon}
-                    label="Inspect Action"
-                  />
+                  {roleId === 1 && (
+                    <SidebarLink
+                      to="/inspectaction"
+                      icon={Wrench}
+                      label="Action Tyre"
+                    />
+                  )}
+                  <SidebarLink to="/edittyre" icon={Edit} label="Edit Tyre" />
                 </div>
               )}
             </div>

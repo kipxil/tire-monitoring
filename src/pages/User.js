@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
+import userLogo from "../assets/logo user.png";
 
 const User = () => {
   const [uname, setUname] = useState("");
@@ -24,6 +25,10 @@ const User = () => {
   }, []);
 
   const handleSubmit = async () => {
+    if (!uname || !password || !selectedRole) {
+      alert("Mohon isi semua field yang wajib.");
+      return;
+    }
     const dataUser = {
       name: uname,
       password: password,
@@ -70,7 +75,7 @@ const User = () => {
 
           {/* Avatar */}
           <img
-            src="https://i.pravatar.cc/40"
+            src={userLogo}
             alt="User Avatar"
             className="w-12 h-12 rounded-full object-cover border-2 border-gray-500 shadow-md"
           />

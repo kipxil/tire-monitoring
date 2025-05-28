@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
+import userLogo from "../assets/logo user.png";
 
 const AddTyre = () => {
   const [merk, setMerk] = useState("");
@@ -45,6 +46,10 @@ const AddTyre = () => {
 
   // TODO: Tambahkan state untuk input lain jika dibutuhkan
   const handleSubmit = async () => {
+    if (!serialNumber || !merk || !otd || !otd2 || !ukuranBan) {
+      alert("Mohon isi semua field yang wajib.");
+      return;
+    }
     const dataBan = {
       merkId: parseInt(merk),
       serialNumber: serialNumber,
@@ -64,7 +69,17 @@ const AddTyre = () => {
         method: "POST",
         body: JSON.stringify(dataBan),
       });
-      alert("ban berhasil ditambahkan");
+      alert("Ban Berhasil Ditambahkan");
+      setMerk("");
+      setTypeBan("");
+      setPatternBan("");
+      setOtd("");
+      setOtd2("");
+      setHargaBan("");
+      setSerialNumber("");
+      setUkuranBan("");
+      setHmBan("");
+      setKmBan("");
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);
     } catch (error) {
@@ -84,7 +99,7 @@ const AddTyre = () => {
         <div className="flex items-center gap-4 mt-3">
           <p className="text-lg font-semibold">Hello, {username}</p>
           <img
-            src="https://i.pravatar.cc/40"
+            src={userLogo}
             alt="User Avatar"
             className="w-12 h-12 rounded-full border-2 border-gray-500 shadow-md object-cover"
           />
@@ -108,7 +123,6 @@ const AddTyre = () => {
               className="w-full p-2 border rounded-md"
               value={serialNumber}
               onChange={(e) => setSerialNumber(e.target.value)}
-              required
             />
           </div>
           <div>

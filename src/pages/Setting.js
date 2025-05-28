@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Edit, Trash2, Save, X } from "lucide-react";
+import { apiFetch } from "../services/apiClient";
 
 const Setting = () => {
   const [selectedType, setSelectedType] = useState("airCondition");
@@ -10,8 +11,8 @@ const Setting = () => {
 
   // Initialize data from API response
   useEffect(() => {
-    fetch("https://primatyre-prismaexpress-production.up.railway.app/dropdown")
-      .then((res) => res.json())
+    apiFetch("/dropdown")
+      // .then((res) => res.json())
       .then((data) => setData(data))
       .catch((err) => console.error("Failed to fetch dropdown data:", err));
   }, []);
@@ -53,14 +54,11 @@ const Setting = () => {
       console.log("Posting to:", selectedType);
       console.log("Payload:", formData);
 
-      fetch(
-        `https://primatyre-prismaexpress-production.up.railway.app/dropdown/${selectedType}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      )
+      apiFetch(`/dropdown/${selectedType}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
         .then((res) => res.json())
         .then((newItem) => {
           setData((prev) => ({
@@ -71,14 +69,11 @@ const Setting = () => {
         .catch((err) => console.error("Failed to create item:", err));
       setIsCreating(false);
     } else {
-      fetch(
-        `https://primatyre-prismaexpress-production.up.railway.app/dropdown/${selectedType}/${editingItem}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      )
+      apiFetch(`/dropdown/${selectedType}/${editingItem}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
         .then((res) => res.json())
         .then((updated) => {
           setData((prev) => ({
@@ -95,12 +90,9 @@ const Setting = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
-      fetch(
-        `https://primatyre-prismaexpress-production.up.railway.app/dropdown/${selectedType}/${id}`,
-        {
-          method: "DELETE",
-        }
-      )
+      apiFetch(`/dropdown/${selectedType}/${id}`, {
+        method: "DELETE",
+      })
         .then(() => {
           setData((prev) => ({
             ...prev,

@@ -1,5 +1,6 @@
 import { apiFetch } from "../services/apiClient";
 import React, { useState, useEffect } from "react";
+import userLogo from "../assets/logo user.png";
 
 const UpdateTyre = () => {
   const [noUnit, setNoUnit] = useState("");
@@ -73,6 +74,22 @@ const UpdateTyre = () => {
   }, [noUnit, serialNumberLepasMaster]);
 
   const handleSubmit = async () => {
+    if (
+      !noUnit ||
+      !Hm ||
+      !Km ||
+      !treadLepas1 ||
+      !treadLepas2 ||
+      !serialNumberLepas ||
+      !tujuanLepas ||
+      !alasanLepas ||
+      !serialNumberPasang ||
+      !dateStart ||
+      !dateEnd
+    ) {
+      alert("Mohon isi semua field yang wajib.");
+      return;
+    }
     const dataActivity = {
       unitId: parseInt(noUnit),
       hmAtActivity: parseInt(Hm),
@@ -99,9 +116,26 @@ const UpdateTyre = () => {
         method: "POST",
         body: JSON.stringify(dataActivity),
       });
-      alert("activity berhasil.");
+      alert("Activity berhasil.");
+      // setNoUnit("");
+      // setHm("");
+      // setKm("");
+      // setLokasiLepas("");
+      // setSerialNumberLepas("");
+      // setAlasanLepas("");
+      // setTujuanLepas("");
+      // setSerialNumberPasang("");
+      // setAirCondition("");
+      // setPsi("");
+      // setManPower("");
+      // setDateStart("");
+      // setDateEnd("");
+      // setTreadLepas1("");
+      // setTreadLepas2("");
+      // setTreadPasang1("");
+      // setTreadPasang2("");
       // navigate("/home");
-      // window.location.reload();
+      window.location.reload();
       // fetchDropdownData();
       console.log("Response: ", result);
     } catch (error) {
@@ -121,7 +155,7 @@ const UpdateTyre = () => {
         <div className="flex items-center gap-4 mt-3">
           <p className="text-lg font-semibold">Hello, {username}</p>
           <img
-            src="https://i.pravatar.cc/40"
+            src={userLogo}
             alt="User Avatar"
             className="w-12 h-12 rounded-full border-2 border-gray-500 shadow-md object-cover"
           />
@@ -155,7 +189,7 @@ const UpdateTyre = () => {
               </select>
             </div>
             <div>
-              <label className="block font-medium mb-1">Location</label>
+              <label className="block font-medium mb-1">Location Unit</label>
               <input
                 type="text"
                 className="w-full p-2 border rounded-md"
@@ -164,7 +198,9 @@ const UpdateTyre = () => {
               />
             </div>
             <div>
-              <label className="block font-medium mb-1">HM</label>
+              <label className="block font-medium mb-1">
+                HM Unit <span className="text-red-500">*</span>
+              </label>
               <input
                 type="number"
                 className="w-full p-2 border rounded-md"
@@ -173,30 +209,14 @@ const UpdateTyre = () => {
               />
             </div>
             <div>
-              <label className="block font-medium mb-1">KM</label>
+              <label className="block font-medium mb-1">
+                KM Unit <span className="text-red-500">*</span>
+              </label>
               <input
                 type="number"
                 className="w-full p-2 border rounded-md"
                 value={Km}
                 onChange={(e) => setKm(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block font-medium mb-1">Tread 1</label>
-              <input
-                type="number"
-                className="w-full p-2 border rounded-md"
-                value={treadLepas1}
-                onChange={(e) => setTreadLepas1(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block font-medium mb-1">Tread 2</label>
-              <input
-                type="number"
-                className="w-full p-2 border rounded-md"
-                value={treadLepas2}
-                onChange={(e) => setTreadLepas2(e.target.value)}
               />
             </div>
             <div>
@@ -215,6 +235,28 @@ const UpdateTyre = () => {
                   </option>
                 ))}
               </select>
+            </div>
+            <div>
+              <label className="block font-medium mb-1">
+                Tread 1 <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-md"
+                value={treadLepas1}
+                onChange={(e) => setTreadLepas1(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">
+                Tread 2 <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-md"
+                value={treadLepas2}
+                onChange={(e) => setTreadLepas2(e.target.value)}
+              />
             </div>
             <div>
               <label className="block font-medium mb-1">

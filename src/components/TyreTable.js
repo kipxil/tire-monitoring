@@ -56,7 +56,7 @@ const TyreTable = ({
                       </span>
                     </td>
                     <td className="px-4 py-2 border">{hm} hours</td>
-                    <td className="px-4 py-2 border">{km} hours</td>
+                    <td className="px-4 py-2 border">{km} KM</td>
                     <td className="px-4 py-2 border text-center">
                       <PencilSquareIcon
                         className="w-6 h-6 text-blue-500 cursor-pointer mx-auto"

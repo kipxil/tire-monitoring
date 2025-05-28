@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../services/apiClient";
+import userLogo from "../assets/logo user.png";
 import TyreDetailModal from "../components/Popup";
 import SummaryCard from "../components/SummaryCard";
 import UnitTable from "../components/UnitTable";
@@ -81,15 +82,16 @@ const Home = () => {
         const type =
           act.installedTyreId === data.tyre.id ? "Installation" : "Removal";
 
+        const inspection = act.inspections?.[0];
+        const actionTyre = inspection?.actionTyre;
+
         const descriptionLines = [
           `Date: ${new Date(act.dateTimeDone).toLocaleString()}`,
           `Unit: ${act.unit?.nomorUnit}`,
           `Location: ${act.location}`,
           type === "Installation"
             ? `Tread Install: ${act.tread1Install}/${act.tread2Install}`
-            : type === "Removal" &&
-              act.tread1Remove != null &&
-              act.tread2Remove != null
+            : type === "Removal" && act.tread1Remove != null
             ? `Tread Remove: ${act.tread1Remove}/${act.tread2Remove}`
             : null,
           `HM/KM: ${act.hmAtActivity}/${act.kmAtActivity}`,
@@ -104,10 +106,27 @@ const Home = () => {
           .filter(Boolean)
           .join("\n");
 
+        // console.log(actionTyre);
         return {
           type,
           description: descriptionLines,
           date: new Date(act.createdAt).toLocaleString(),
+          inspectionDetail: inspection
+            ? {
+                removePurpose: inspection.removePurpose?.name || "-",
+                incidentNote: inspection.incidentNote || "-",
+                analysisNote: inspection.analysisNote || "-",
+                dateTimeIn: inspection.dateTimeIn,
+                dateTimeWork: inspection.dateTimeWork,
+              }
+            : null,
+          actionTyreDetail: actionTyre
+            ? {
+                removePurpose: actionTyre?.removePurpose?.name || "-",
+                dateTimeWork: actionTyre?.dateTimeWork,
+                dateTimeDone: actionTyre?.dateTimeDone,
+              }
+            : null,
         };
       });
 
@@ -183,6 +202,8 @@ const Home = () => {
       return { label: "Scrap", className: "bg-gray-300 text-gray-800" };
     if (tyre.isInstalled)
       return { label: "Installed", className: "bg-green-200 text-green-700" };
+    if (tyre.isReady)
+      return { label: "Ready", className: "bg-yellow-200 text-green-700" };
     return { label: "Removed", className: "bg-red-200 text-red-700" };
   };
 
@@ -191,6 +212,8 @@ const Home = () => {
   );
   const filteredTyresRemove = tyres.filter(
     (tyre) => tyre.isInstalled === false && tyre.isScrap === false
+    // &&
+    // tyre.isReady === false
   );
   const filteredTyresScrap = tyres.filter((tyre) => tyre.isScrap === true);
 
@@ -302,7 +325,7 @@ const Home = () => {
         <div className="flex items-center space-x-4 mt-3">
           <p className="text-lg mr-2 font-semibold">Hello, {username}</p>
           <img
-            src="https://i.pravatar.cc/40"
+            src={userLogo}
             alt="User Avatar"
             className="w-12 h-12 rounded-full object-cover border-2 border-gray-500 shadow-md"
           />

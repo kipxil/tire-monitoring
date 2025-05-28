@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../services/apiClient";
 import React, { useState, useEffect } from "react";
+import userLogo from "../assets/logo user.png";
 
 const AddUnit = () => {
   const [noUnit, setNoUnit] = useState("");
@@ -54,6 +55,10 @@ const AddUnit = () => {
   };
 
   const handleSubmit = async () => {
+    if (!noUnit || !hmunit || !kmUnit || !site) {
+      alert("Mohon isi semua field yang wajib.");
+      return;
+    }
     const dataUnit = {
       nomorUnit: noUnit,
       hmUnit: parseInt(hmunit),
@@ -90,7 +95,7 @@ const AddUnit = () => {
         <div className="flex items-center gap-4 mt-3">
           <p className="text-lg font-semibold">Hello, {username}</p>
           <img
-            src="https://i.pravatar.cc/40"
+            src={userLogo}
             alt="User Avatar"
             className="w-12 h-12 rounded-full border-2 border-gray-500 shadow-md object-cover"
           />
