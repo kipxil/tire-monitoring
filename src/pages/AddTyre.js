@@ -53,8 +53,8 @@ const AddTyre = () => {
       otd1: parseInt(otd),
       otd2: parseInt(otd2),
       price: parseInt(hargaBan),
-      hmTyre: parseInt(hmBan),
-      kmTyre: parseInt(kmBan),
+      oHM: parseInt(hmBan),
+      oKM: parseInt(kmBan),
       tyreSizeId: parseInt(ukuranBan),
     };
 

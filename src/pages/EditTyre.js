@@ -61,15 +61,15 @@ const EditTyre = () => {
       );
       if (selected) {
         setSerialNumber(selected.stockTyre.serialNumber || "");
-        setTypeBan(selected.type || "Tidak Ada");
+        setTypeBan(selected.stockTyre.type || "Tidak Ada");
         setMerk(selected.stockTyre.merk?.id || "");
-        setPatternBan(selected.pattern || "Tidak Ada");
+        setPatternBan(selected.stockTyre.pattern || "Tidak Ada");
         setOtd(selected.tread1 ?? 0);
         setOtd2(selected.tread2 ?? 0);
-        setHmBan(selected.hmTyre ?? 0);
-        setKmBan(selected.kmTyre ?? 0);
-        setHargaBan(selected.price ?? 0);
-        setUkuranBan(selected.stockTyre.tyreSize?.id || "");
+        setHmBan(selected.stockTyre.oHM ?? 0);
+        setKmBan(selected.stockTyre.oKM ?? 0);
+        setHargaBan(selected.stockTyre.price ?? 0);
+        setUkuranBan(selected.stockTyre.tyreSizeId || "");
       }
     } else {
       // Kosongkan jika tidak dipilih
@@ -90,19 +90,15 @@ const EditTyre = () => {
     try {
       const payload = {
         serialNumber,
+        merk: merk,
         type: typeBan,
         pattern: patternBan,
-        tread1: parseFloat(otd),
-        tread2: parseFloat(otd2),
-        hmTyre: parseFloat(hmBan),
-        kmTyre: parseFloat(kmBan),
-        price: parseFloat(hargaBan),
-        // stockTyre: {
-        //   merk: { id: merk },
-        //   tyreSize: { id: ukuranBan },
-        // },
-        merk: merk,
+        price: parseInt(hargaBan),
         tyreSize: ukuranBan,
+        otd1: parseInt(otd),
+        otd2: parseInt(otd2),
+        oHM: parseInt(hmBan),
+        oKM: parseInt(kmBan),
       };
       console.log(payload);
       await apiFetch(`/tyre/${selectedTyreId}`, {

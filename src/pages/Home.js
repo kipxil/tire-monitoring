@@ -12,6 +12,7 @@ import TyreDetailModal from "../components/Popup";
 import SummaryCard from "../components/SummaryCard";
 import UnitTable from "../components/UnitTable";
 import TyreTable from "../components/TyreTable";
+import UnitDetailModal from "../components/PopupUnit";
 
 const Home = () => {
   const [summary, setSummary] = useState({
@@ -22,6 +23,8 @@ const Home = () => {
     scrapTyre: 0,
     userTotal: 0,
   });
+  const [selectedUnit, setSelectedUnit] = useState(null);
+  const [isUnitModalOpen, setIsUnitModalOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTyre, setSelectedTyre] = useState(null);
   const [activityHistory, setActivityHistory] = useState([]);
@@ -42,6 +45,17 @@ const Home = () => {
   };
 
   const username = capitalizeFirst(user?.name);
+
+  const fetchUnitDetails = async (unitId) => {
+    try {
+      const data = await apiFetch(`/unit/${unitId}`);
+
+      setSelectedUnit(data.data); // sesuai struktur respons API Anda
+      setIsUnitModalOpen(true);
+    } catch (error) {
+      console.error("Failed to fetch unit details:", error);
+    }
+  };
 
   const handleTyreClick = async (tyreId) => {
     try {
@@ -338,7 +352,7 @@ const Home = () => {
       <div className="bg-white p-6 rounded-lg shadow-md">
         <UnitTable
           units={currentUnits}
-          onClickUnit={handleTyreClick}
+          onClickUnit={fetchUnitDetails}
           currentPage={currentPageUnit}
           totalPages={totalPagesUnit}
           onPageChange={paginateUnit}
@@ -346,11 +360,10 @@ const Home = () => {
           onNext={handleNextUnit}
           indexOfFirstUnit={indexOfFirstUnit}
         />
-        <TyreDetailModal
-          show={showPopup}
-          onClose={handleClosePopup}
-          tyre={selectedTyre}
-          activityHistory={activityHistory}
+        <UnitDetailModal
+          unitData={selectedUnit}
+          isOpen={isUnitModalOpen}
+          onClose={() => setIsUnitModalOpen(false)}
         />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TyreTable
