@@ -36,7 +36,6 @@ const User = () => {
         method: "POST",
         body: JSON.stringify(dataUser),
       });
-      alert(result);
       alert("Berhasil menambahkan user");
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);

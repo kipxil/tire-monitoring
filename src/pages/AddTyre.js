@@ -64,7 +64,7 @@ const AddTyre = () => {
         method: "POST",
         body: JSON.stringify(dataBan),
       });
-      alert(result);
+      alert("ban berhasil ditambahkan");
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);
     } catch (error) {

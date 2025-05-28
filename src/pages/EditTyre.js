@@ -110,7 +110,7 @@ const EditTyre = () => {
         body: JSON.stringify(payload),
       });
 
-      alert("Data berhasil diperbarui!");
+      alert("Data ban berhasil diperbarui!");
     } catch (error) {
       console.error("Gagal memperbarui data:", error);
       alert("Terjadi kesalahan saat menyimpan data.");

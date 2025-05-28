@@ -78,7 +78,7 @@ const Inspect = () => {
         method: "PUT",
         body: JSON.stringify(dataInspect),
       });
-      alert("activity berhasil.");
+      alert("Inspect berhasil.");
       // navigate("/home");
       // window.location.reload();
       // fetchDropdownData();
