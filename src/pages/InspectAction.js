@@ -64,6 +64,7 @@ const ActionTyreManager = () => {
     };
 
     try {
+      console.log(updatedData);
       await apiFetch(`/action/${selectedAction.id}`, {
         method: "PUT",
         headers: {

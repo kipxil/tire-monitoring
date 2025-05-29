@@ -52,7 +52,7 @@ const Login = ({ onLogin }) => {
       }
     } catch (error) {
       console.error("Terjadi kesalahan saat login:", error);
-      alert("Gagal menghubungi server.");
+      toast.error("Gagal menghubungi server.");
     }
   };
 

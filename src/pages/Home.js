@@ -14,6 +14,7 @@ import SummaryCard from "../components/SummaryCard";
 import UnitTable from "../components/UnitTable";
 import TyreTable from "../components/TyreTable";
 import UnitDetailModal from "../components/PopupUnit";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [summary, setSummary] = useState({
@@ -138,31 +139,72 @@ const Home = () => {
     }
   };
 
+  const handleDeleteTyre = async (tyreId) => {
+    const tyre = tyres.find((t) => t.id === tyreId); // cari data ban berdasarkan ID
+    if (!tyre) {
+      toast.error("Data tyre tidak ditemukan.");
+      return;
+    }
+
+    if (tyre.isInstalled || tyre.installedUnitId) {
+      toast.error("Ban sedang terpasang di unit. Tidak dapat dihapus.");
+      return;
+    }
+
+    if (!tyre.isReady && !tyre.isScrap) {
+      toast.error("Status ban harus Ready/Scrap");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Apakah Anda yakin ingin menghapus tyre ini?"
+    );
+    if (!confirmed) return;
+
+    const dataDelete = {
+      deletedBy: username,
+    };
+
+    try {
+      await apiFetch(`/tyre/${tyreId}`, {
+        method: "DELETE",
+        body: JSON.stringify(dataDelete),
+      });
+
+      toast.success("Tyre berhasil dihapus.");
+      await fetchTyres();
+      await fetchUnits();
+    } catch (error) {
+      console.error("Gagal menghapus tyre:", error);
+      toast.error("Gagal menghapus tyre.");
+    }
+  };
+
   const handleClosePopup = () => {
     setShowPopup(false);
     setSelectedTyre(null);
     setActivityHistory([]);
   };
 
+  const fetchTyres = async () => {
+    try {
+      const result = await apiFetch("/tyre");
+      setTyres(result.data);
+    } catch (error) {
+      console.error("Gagal mengambil data ban:", error);
+    }
+  };
+
+  const fetchUnits = async () => {
+    try {
+      const result = await apiFetch("/unit");
+      setUnits(result.data);
+    } catch (error) {
+      console.error("Gagal mengambil data unit:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchTyres = async () => {
-      try {
-        const result = await apiFetch("/tyre");
-        setTyres(result.data);
-      } catch (error) {
-        console.error("Gagal mengambil data ban:", error);
-      }
-    };
-
-    const fetchUnits = async () => {
-      try {
-        const result = await apiFetch("/unit");
-        setUnits(result.data);
-      } catch (error) {
-        console.error("Gagal mengambil data unit:", error);
-      }
-    };
-
     const fetchData = async () => {
       try {
         // const response = await fetch('URL_API_KAMU');
@@ -401,6 +443,7 @@ const Home = () => {
             onNext={handleNextTyre}
             indexOfFirstItem={indexOfFirstTyre}
             getStatus={getStatus}
+            onDeleteTyre={handleDeleteTyre}
           />
           <TyreDetailModal
             show={showPopup}
@@ -412,6 +455,7 @@ const Home = () => {
           <TyreTable
             title="Tyre Installed"
             tyres={currentTyresInstall}
+            onClickTyre={handleTyreClick}
             navigateTo={() => navigate("/actvtyres")}
             currentPage={currentPageTyreInstall}
             totalPages={totalPagesTyreInstall}
@@ -421,10 +465,17 @@ const Home = () => {
             indexOfFirstItem={indexOfFirstTyreInstall}
             getStatus={getStatus}
           />
+          <TyreDetailModal
+            show={showPopup}
+            onClose={handleClosePopup}
+            tyre={selectedTyre}
+            activityHistory={activityHistory}
+          />
 
           <TyreTable
             title="Tyre Removed"
             tyres={currentTyresRemove}
+            onClickTyre={handleTyreClick}
             navigateTo={() => navigate("/actvtyres")}
             currentPage={currentPageTyreRemove}
             totalPages={totalPagesTyreRemove}
@@ -434,10 +485,17 @@ const Home = () => {
             indexOfFirstItem={indexOfFirstTyreRemove}
             getStatus={getStatus}
           />
+          <TyreDetailModal
+            show={showPopup}
+            onClose={handleClosePopup}
+            tyre={selectedTyre}
+            activityHistory={activityHistory}
+          />
 
           <TyreTable
             title="Tyre Scrap"
             tyres={currentTyresScrap}
+            onClickTyre={handleTyreClick}
             navigateTo={() => navigate("/actvtyres")}
             currentPage={currentPageTyreScrap}
             totalPages={totalPagesTyreScrap}
@@ -446,6 +504,12 @@ const Home = () => {
             onNext={handleNextTyreScrap}
             indexOfFirstItem={indexOfFirstTyreScrap}
             getStatus={getStatus}
+          />
+          <TyreDetailModal
+            show={showPopup}
+            onClose={handleClosePopup}
+            tyre={selectedTyre}
+            activityHistory={activityHistory}
           />
         </div>
       </div>

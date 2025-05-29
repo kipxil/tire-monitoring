@@ -1,5 +1,5 @@
 import React from "react";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Pagination from "./Pagination";
 
 const TyreTable = ({
@@ -7,6 +7,7 @@ const TyreTable = ({
   tyres,
   onClickTyre,
   navigateTo,
+  onDeleteTyre,
   currentPage,
   totalPages,
   onPageChange,
@@ -27,7 +28,7 @@ const TyreTable = ({
               <th className="px-4 py-2 border">Status</th>
               <th className="px-4 py-2 border">HM (Hour Meter)</th>
               <th className="px-4 py-2 border">KM (Kilo Meter)</th>
-              <th className="px-4 py-2 border">Update</th>
+              <th className="px-4 py-2 border">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -57,11 +58,17 @@ const TyreTable = ({
                     </td>
                     <td className="px-4 py-2 border">{hm} hours</td>
                     <td className="px-4 py-2 border">{km} KM</td>
-                    <td className="px-4 py-2 border text-center">
+                    <td className="px-4 py-2 border text-center flex justify-center gap-2">
                       <PencilSquareIcon
-                        className="w-6 h-6 text-blue-500 cursor-pointer mx-auto"
+                        className="w-5 h-5 text-blue-500 cursor-pointer"
                         onClick={() => navigateTo?.()}
                         title="Update Tyre"
+                      />
+                      /
+                      <TrashIcon
+                        className="w-5 h-5 text-red-500 cursor-pointer"
+                        onClick={() => onDeleteTyre?.(tyre.id)}
+                        title="Delete Tyre"
                       />
                     </td>
                   </tr>

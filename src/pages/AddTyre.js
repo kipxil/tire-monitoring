@@ -72,15 +72,15 @@ const AddTyre = () => {
       });
       toast.success("Ban Berhasil Ditambahkan");
       // setMerk("");
-      // setTypeBan("");
-      // setPatternBan("");
-      // setOtd("");
-      // setOtd2("");
-      // setHargaBan("");
-      // setSerialNumber("");
-      // setUkuranBan("");
-      // setHmBan("");
-      // setKmBan("");
+      setTypeBan("");
+      setPatternBan("");
+      setOtd("");
+      setOtd2("");
+      setHargaBan("");
+      setSerialNumber("");
+      setUkuranBan("");
+      setHmBan("");
+      setKmBan("");
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);
     } catch (error) {
@@ -201,16 +201,6 @@ const AddTyre = () => {
               onChange={(e) => setKmBan(e.target.value)}
             />
           </div>
-          {/* <div>
-            <label className="block font-medium mb-1">Tyre Price</label>
-            <input
-              type="number"
-              value={hargaBan}
-              onChange={(e) => setHargaBan(e.target.value)}
-              className="w-full p-2 border rounded-md"
-              placeholder="Contoh: 1500000"
-            />
-          </div> */}
           <div>
             <label className="block font-medium mb-1">Tyre Price</label>
             <div className="relative">
