@@ -1,6 +1,7 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../services/apiClient";
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import userLogo from "../assets/logo user.png";
 
 const AddUnit = () => {
@@ -13,7 +14,7 @@ const AddUnit = () => {
   const [siteList, setSiteList] = useState([]);
   const [banList, setBanList] = useState([]);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const user = JSON.parse(sessionStorage.getItem("user"));
 
   const capitalizeFirst = (text) => {
@@ -23,23 +24,23 @@ const AddUnit = () => {
 
   const username = capitalizeFirst(user?.name);
 
+  const fetchDropdownData = async () => {
+    try {
+      const data = await apiFetch("/dropdown");
+
+      // Filter hanya ban yang siap dipakai
+      const readyTyres = (data.tyre || []).filter(
+        (ban) => ban.isReady && !ban.isScrap && !ban.isInstalled
+      );
+
+      setSiteList(data.site || []);
+      setBanList(readyTyres);
+    } catch (error) {
+      console.error("Gagal fetch data dropdown:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchDropdownData = async () => {
-      try {
-        const data = await apiFetch("/dropdown");
-
-        // Filter hanya ban yang siap dipakai
-        const readyTyres = (data.tyre || []).filter(
-          (ban) => ban.isReady && !ban.isScrap && !ban.isInstalled
-        );
-
-        setSiteList(data.site || []);
-        setBanList(readyTyres);
-      } catch (error) {
-        console.error("Gagal fetch data dropdown:", error);
-      }
-    };
-
     fetchDropdownData();
   }, []);
 
@@ -56,7 +57,7 @@ const AddUnit = () => {
 
   const handleSubmit = async () => {
     if (!noUnit || !hmunit || !kmUnit || !site) {
-      alert("Mohon isi semua field yang wajib.");
+      toast.error("Mohon isi semua field yang wajib.");
       return;
     }
     const dataUnit = {
@@ -73,14 +74,19 @@ const AddUnit = () => {
         method: "POST",
         body: JSON.stringify(dataUnit),
       });
-      alert("Unit berhasil ditambahkan.");
-      navigate("/home");
+      toast.success("Unit berhasil ditambahkan.");
+      await fetchDropdownData();
+      setNoUnit("");
+      setHmUnit("");
+      setKmUnit("");
+      setSite("");
+      // navigate("/home");
       // window.location.reload();
       // fetchDropdownData();
       console.log("Response: ", result);
     } catch (error) {
       console.error("Error: ", error);
-      alert("Gagal menghubungi server: " + error.message);
+      toast.error("Gagal menghubungi server");
     }
   };
 

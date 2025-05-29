@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
+import { toast } from "react-toastify";
 import userLogo from "../assets/logo user.png";
 
 const AddTyre = () => {
@@ -28,26 +29,26 @@ const AddTyre = () => {
   const username = capitalizeFirst(user?.name);
 
   // Fetch dropdown data saat component mount
+  const fetchDropdownData = async () => {
+    try {
+      const data = await apiFetch("/dropdown");
+
+      // Set state dari response API
+      setMerkList(data.merk || []);
+      setUkuranList(data.tyreSize || []);
+    } catch (error) {
+      console.error("Gagal fetch data dropdown:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchDropdownData = async () => {
-      try {
-        const data = await apiFetch("/dropdown");
-
-        // Set state dari response API
-        setMerkList(data.merk || []);
-        setUkuranList(data.tyreSize || []);
-      } catch (error) {
-        console.error("Gagal fetch data dropdown:", error);
-      }
-    };
-
     fetchDropdownData();
   }, []);
 
   // TODO: Tambahkan state untuk input lain jika dibutuhkan
   const handleSubmit = async () => {
     if (!serialNumber || !merk || !otd || !otd2 || !ukuranBan) {
-      alert("Mohon isi semua field yang wajib.");
+      toast.error("Mohon isi semua field yang wajib.");
       return;
     }
     const dataBan = {
@@ -69,22 +70,22 @@ const AddTyre = () => {
         method: "POST",
         body: JSON.stringify(dataBan),
       });
-      alert("Ban Berhasil Ditambahkan");
-      setMerk("");
-      setTypeBan("");
-      setPatternBan("");
-      setOtd("");
-      setOtd2("");
-      setHargaBan("");
-      setSerialNumber("");
-      setUkuranBan("");
-      setHmBan("");
-      setKmBan("");
+      toast.success("Ban Berhasil Ditambahkan");
+      // setMerk("");
+      // setTypeBan("");
+      // setPatternBan("");
+      // setOtd("");
+      // setOtd2("");
+      // setHargaBan("");
+      // setSerialNumber("");
+      // setUkuranBan("");
+      // setHmBan("");
+      // setKmBan("");
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);
     } catch (error) {
       console.error("Error: ", error);
-      alert("Gagal menghubungi server." + error.message);
+      toast.error("Gagal menghubungi server");
     }
   };
 

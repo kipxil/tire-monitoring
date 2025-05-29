@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
+import { toast } from "react-toastify";
 import userLogo from "../assets/logo user.png";
 
 const User = () => {
@@ -26,7 +27,7 @@ const User = () => {
 
   const handleSubmit = async () => {
     if (!uname || !password || !selectedRole) {
-      alert("Mohon isi semua field yang wajib.");
+      toast.error("Mohon isi semua field yang wajib.");
       return;
     }
     const dataUser = {
@@ -41,12 +42,12 @@ const User = () => {
         method: "POST",
         body: JSON.stringify(dataUser),
       });
-      alert("Berhasil menambahkan user");
+      toast.success("Berhasil menambahkan user");
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);
     } catch (error) {
       console.error("Error: ", error);
-      alert("Gagal menghubungi server." + error.message);
+      toast.error("Gagal menghubungi server");
     }
   };
 

@@ -1,5 +1,6 @@
 import { apiFetch } from "../services/apiClient";
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import userLogo from "../assets/logo user.png";
 
 const UpdateTyre = () => {
@@ -37,41 +38,64 @@ const UpdateTyre = () => {
 
   const username = capitalizeFirst(user?.name);
 
+  const fetchDropdownData = async () => {
+    try {
+      const data = await apiFetch("/dropdown");
+
+      const banReady = (data.tyre || []).filter(
+        (ready) => !ready.isReady && !ready.isScrap && ready.isInstalled
+      );
+
+      const banNotReady = (data.tyre || []).filter(
+        (ready) => ready.isReady && !ready.isScrap && !ready.isInstalled
+      );
+
+      setunitList(data.unit || []);
+      setSerialNumberLepasList(banReady);
+      setSerialNumberLepasMaster(banReady);
+      setAlasanLepasList(data.removeReason || []);
+      setTujuanLepasList(data.removePurpose || []);
+      setSerialNumberPasangList(banNotReady);
+      setAirConditionList(data.airCondition || []);
+    } catch (error) {
+      console.error("Gagal fetch data dropdown:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchDropdownData = async () => {
-      try {
-        const data = await apiFetch("/dropdown");
-
-        const banReady = (data.tyre || []).filter(
-          (ready) => !ready.isReady && !ready.isScrap && ready.isInstalled
-        );
-
-        const banNotReady = (data.tyre || []).filter(
-          (ready) => ready.isReady && !ready.isScrap && !ready.isInstalled
-        );
-
-        setunitList(data.unit || []);
-        setSerialNumberLepasList(banReady);
-        setSerialNumberLepasMaster(banReady);
-        setAlasanLepasList(data.removeReason || []);
-        setTujuanLepasList(data.removePurpose || []);
-        setSerialNumberPasangList(banNotReady);
-        setAirConditionList(data.airCondition || []);
-      } catch (error) {
-        console.error("Gagal fetch data dropdown:", error);
-      }
-    };
-
     fetchDropdownData();
   }, []);
 
   useEffect(() => {
-    if (!noUnit) return;
-    const filtered = serialNumberLepasMaster.filter(
-      (ban) => ban.installedUnitId?.toString() === noUnit
+    if (!noUnit) {
+      setSerialNumberLepasList([]);
+      setLokasiLepas("");
+      setHm("");
+      setKm("");
+      return;
+    }
+
+    const unit = unitList.find((u) => u.id.toString() === noUnit);
+    if (!unit) return;
+
+    const installedTyreIds = [
+      unit.tyre1Id,
+      unit.tyre2Id,
+      unit.tyre3Id,
+      unit.tyre4Id,
+      unit.tyre5Id,
+      unit.tyre6Id,
+    ].filter(Boolean);
+
+    const filtered = serialNumberLepasMaster.filter((ban) =>
+      installedTyreIds.includes(ban.stockTyre.id)
     );
+
     setSerialNumberLepasList(filtered);
-  }, [noUnit, serialNumberLepasMaster]);
+    // setLokasiLepas(unit.location || "");
+    setHm(unit.hmUnit?.toString() || "");
+    setKm(unit.kmUnit?.toString() || "");
+  }, [noUnit, unitList, serialNumberLepasMaster]);
 
   const handleSubmit = async () => {
     if (
@@ -87,7 +111,7 @@ const UpdateTyre = () => {
       !dateStart ||
       !dateEnd
     ) {
-      alert("Mohon isi semua field yang wajib.");
+      toast.error("Mohon isi semua field yang wajib.");
       return;
     }
     const dataActivity = {
@@ -116,31 +140,29 @@ const UpdateTyre = () => {
         method: "POST",
         body: JSON.stringify(dataActivity),
       });
-      alert("Activity berhasil.");
-      // setNoUnit("");
-      // setHm("");
-      // setKm("");
-      // setLokasiLepas("");
-      // setSerialNumberLepas("");
-      // setAlasanLepas("");
-      // setTujuanLepas("");
-      // setSerialNumberPasang("");
-      // setAirCondition("");
-      // setPsi("");
-      // setManPower("");
-      // setDateStart("");
-      // setDateEnd("");
-      // setTreadLepas1("");
-      // setTreadLepas2("");
-      // setTreadPasang1("");
-      // setTreadPasang2("");
-      // navigate("/home");
-      window.location.reload();
-      // fetchDropdownData();
+      toast.success("Activity berhasil.");
+      await fetchDropdownData();
+      setNoUnit("");
+      setHm("");
+      setKm("");
+      setLokasiLepas("");
+      setSerialNumberLepas("");
+      setAlasanLepas("");
+      setTujuanLepas("");
+      setSerialNumberPasang("");
+      setAirCondition("");
+      setPsi("");
+      setManPower("");
+      setDateStart("");
+      setDateEnd("");
+      setTreadLepas1("");
+      setTreadLepas2("");
+      setTreadPasang1("");
+      setTreadPasang2("");
       console.log("Response: ", result);
     } catch (error) {
       console.error("Error: ", error);
-      alert("Gagal menghubungi server: " + error.message);
+      toast.error("Gagal menghubungi server");
     }
   };
 

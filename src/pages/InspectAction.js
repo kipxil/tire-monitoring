@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-// import axios from "axios";
 import { apiFetch } from "../services/apiClient";
+import { toast } from "react-toastify";
 
 const ActionTyreManager = () => {
   const [actionTyres, setActionTyres] = useState([]);
@@ -53,7 +53,7 @@ const ActionTyreManager = () => {
 
   const handleSubmit = async () => {
     if (!formData.dateTimeWork || !formData.dateTimeDone) {
-      alert("Mohon isi semua field yang wajib.");
+      toast.error("Mohon isi semua field yang wajib.");
       return;
     }
 
@@ -72,12 +72,12 @@ const ActionTyreManager = () => {
         body: JSON.stringify(updatedData),
       });
 
-      alert("Data berhasil diupdate!");
+      toast.success("Data berhasil diupdate!");
       fetchData();
       setSelectedAction(null);
     } catch (error) {
       console.error("Gagal mengupdate data:", error);
-      alert("Gagal mengupdate data: " + error.message);
+      toast.error("Gagal mengupdate data");
     }
   };
 

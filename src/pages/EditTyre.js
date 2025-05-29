@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import { apiFetch } from "../services/apiClient";
 import userLogo from "../assets/logo user.png";
 
@@ -28,30 +29,31 @@ const EditTyre = () => {
 
   const username = capitalizeFirst(user?.name);
 
+  const fetchTyres = async () => {
+    try {
+      const response = await apiFetch("/tyre"); // Ganti sesuai endpoint
+      setTyreList(response.data);
+
+      const dropdown = await apiFetch("/dropdown");
+      // Generate unique merk list
+      // const merks = [...new Set(dropdown.merk.map((t) => t.name))];
+      const merks = dropdown.merk.map((m) => ({ id: m.id, name: m.name }));
+      setMerkList(merks);
+
+      // Generate unique tyre sizes
+      // const sizes = [...new Set(dropdown.tyreSize.map((t) => t.size))];
+      const sizes = dropdown.tyreSize.map((s) => ({
+        id: s.id,
+        size: s.size,
+      }));
+      setUkuranList(sizes);
+    } catch (error) {
+      console.error("Gagal mengambil data ban:", error);
+    }
+  };
+
+  // Di dalam useEffect
   useEffect(() => {
-    const fetchTyres = async () => {
-      try {
-        const response = await apiFetch("/tyre"); // Ganti sesuai endpoint
-        setTyreList(response.data);
-
-        const dropdown = await apiFetch("/dropdown");
-        // Generate unique merk list
-        // const merks = [...new Set(dropdown.merk.map((t) => t.name))];
-        const merks = dropdown.merk.map((m) => ({ id: m.id, name: m.name }));
-        setMerkList(merks);
-
-        // Generate unique tyre sizes
-        // const sizes = [...new Set(dropdown.tyreSize.map((t) => t.size))];
-        const sizes = dropdown.tyreSize.map((s) => ({
-          id: s.id,
-          size: s.size,
-        }));
-        setUkuranList(sizes);
-      } catch (error) {
-        console.error("Gagal mengambil data ban:", error);
-      }
-    };
-
     fetchTyres();
   }, []);
 
@@ -89,7 +91,7 @@ const EditTyre = () => {
 
   const handleSubmit = async () => {
     if (!serialNumber) {
-      alert("Mohon isi semua field yang wajib.");
+      toast.error("Mohon isi semua field yang wajib.");
       return;
     }
     try {
@@ -111,10 +113,24 @@ const EditTyre = () => {
         body: JSON.stringify(payload),
       });
 
-      alert("Data ban berhasil diperbarui!");
+      // alert("Data ban berhasil diperbarui!");
+      toast.success("Data ban berhasil diperbarui!");
+      await fetchTyres();
+      setSelectedTyreId("");
+      setSerialNumber("");
+      setTypeBan("");
+      setMerk("");
+      setPatternBan("");
+      setOtd("");
+      setOtd2("");
+      setHmBan("");
+      setKmBan("");
+      setHargaBan("");
+      setUkuranBan("");
     } catch (error) {
       console.error("Gagal memperbarui data:", error);
-      alert("Terjadi kesalahan saat menyimpan data.");
+      // alert("Terjadi kesalahan saat menyimpan data.");
+      toast.error("Terjadi kesalahan saat menyimpan data.");
     }
   };
 
@@ -292,7 +308,7 @@ const EditTyre = () => {
             onClick={handleSubmit}
             className="bg-yellow-400 text-white px-6 py-2 rounded-md font-semibold hover:bg-yellow-500"
           >
-            Add Tyre
+            Edit Tyre
           </button>
         </div>
       </div>

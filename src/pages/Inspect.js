@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
 import userLogo from "../assets/logo user.png";
+import { toast } from "react-toastify";
 
 const Inspect = () => {
   const [dateTime, setDateTime] = useState("");
@@ -30,23 +31,35 @@ const Inspect = () => {
   };
   const username = capitalizeFirst(user?.name);
 
+  const fetchData = async () => {
+    try {
+      const res = await apiFetch("/inspection");
+      setTyres(res.data || []);
+      const dropdown = await apiFetch("/dropdown");
+      setUnits(dropdown.unit || []);
+      setRemovePurposeList(dropdown.removePurpose || []);
+    } catch (error) {
+      console.error("Gagal fetch data ban/unit:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await apiFetch("/inspection");
-        setTyres(res.data || []);
-        const dropdown = await apiFetch("/dropdown");
-        setUnits(dropdown.unit || []);
-        setRemovePurposeList(dropdown.removePurpose || []);
-      } catch (error) {
-        console.error("Gagal fetch data ban/unit:", error);
-      }
-    };
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (!selectedTyreId) return;
+    if (!selectedTyreId) {
+      // reset form
+      setFormData({
+        positionUnit: "",
+        tread1: "",
+        tread2: "",
+        hmUnit: "",
+        installedUnitId: "",
+      });
+      setSelectedInspectionId(null); // optional, untuk memastikan
+      return;
+    }
     const selected = tyres.find(
       (t) => t.tyre?.stockTyre?.id.toString() === selectedTyreId
     );
@@ -65,7 +78,7 @@ const Inspect = () => {
 
   const handleSubmit = async () => {
     if (!selectedInspectionId || isReady === null || !dateTime) {
-      alert("Mohon isi semua field yang wajib.");
+      toast.error("Mohon isi semua field yang wajib.");
       return;
     }
 
@@ -83,14 +96,24 @@ const Inspect = () => {
         body: JSON.stringify(dataInspect),
       });
       console.log(dataInspect);
-      alert("Inspect berhasil.");
-      // navigate("/home");
-      // window.location.reload();
-      // fetchDropdownData();
+      toast.success("Inspect berhasil!");
+      await fetchData();
+      setSelectedTyreId("");
+      setDateTime("");
+      setIsReady("");
+      setSummary("");
+      setAnalysys("");
+      setFormData({
+        positionUnit: "",
+        tread1: "",
+        tread2: "",
+        hmUnit: "",
+        installedUnitId: "",
+      });
       console.log("Response: ", result);
     } catch (error) {
       console.error("Error: ", error);
-      alert("Gagal menghubungi server: " + error.message);
+      toast.error("Gagal Inspect!");
     }
   };
 
