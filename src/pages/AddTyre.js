@@ -163,7 +163,7 @@ const AddTyre = () => {
           </div>
           <div>
             <label className="block font-medium mb-1">
-              OTD 1 (Original Tread)
+              OTD 1 (Original Tread) <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
@@ -174,7 +174,7 @@ const AddTyre = () => {
           </div>
           <div>
             <label className="block font-medium mb-1">
-              OTD 2 (Original Tread)
+              OTD 2 (Original Tread) <span className="text-red-500">*</span>
             </label>
             <input
               type="number"

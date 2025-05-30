@@ -13,7 +13,7 @@ const Popup = ({ show, onClose, tyre, activityHistory }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black bg-opacity-25 z-50 flex items-center justify-center">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl relative">
         {/* Tombol Close */}
         <button

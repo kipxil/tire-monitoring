@@ -56,7 +56,7 @@ const AddUnit = () => {
   };
 
   const handleSubmit = async () => {
-    if (!noUnit || !hmunit || !kmUnit || !site) {
+    if (!noUnit || !hmunit || !kmUnit || !site || !selectedBans) {
       toast.error("Mohon isi semua field yang wajib.");
       return;
     }

@@ -13,6 +13,7 @@ import TyreDetailModal from "../components/Popup";
 import SummaryCard from "../components/SummaryCard";
 import UnitTable from "../components/UnitTable";
 import TyreTable from "../components/TyreTable";
+import TyreTableAction from "../components/TyreTableAction";
 import UnitDetailModal from "../components/PopupUnit";
 import { toast } from "react-toastify";
 
@@ -431,7 +432,7 @@ const Home = () => {
           onClose={() => setIsUnitModalOpen(false)}
         />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <TyreTable
+          <TyreTableAction
             title="Tyre List"
             tyres={currentTyres}
             onClickTyre={handleTyreClick}

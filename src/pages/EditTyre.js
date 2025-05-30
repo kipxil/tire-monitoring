@@ -90,7 +90,7 @@ const EditTyre = () => {
   }, [selectedTyreId, tyreList]);
 
   const handleSubmit = async () => {
-    if (!serialNumber) {
+    if (!selectedTyreId) {
       toast.error("Mohon isi semua field yang wajib.");
       return;
     }
@@ -183,9 +183,7 @@ const EditTyre = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block font-medium mb-1">
-              Serial Number <span className="text-red-500">*</span>
-            </label>
+            <label className="block font-medium mb-1">Serial Number</label>
             <input
               type="text"
               className="w-full p-2 border rounded-md"

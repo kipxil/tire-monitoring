@@ -1,8 +1,8 @@
-import React from "react";
-// import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import React, { useEffect, useState } from "react";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Pagination from "./Pagination";
 
-const TyreTable = ({
+const TyreTableAction = ({
   title,
   tyres,
   onClickTyre,
@@ -16,6 +16,14 @@ const TyreTable = ({
   indexOfFirstItem,
   getStatus,
 }) => {
+  const [roleId, setRoleId] = useState(null);
+
+  useEffect(() => {
+    // const storedUsername = sessionStorage.getItem("username");
+    const storedRoleId = sessionStorage.getItem("roleId");
+    // if (storedUsername) setUsername(storedUsername);
+    if (storedRoleId) setRoleId(parseInt(storedRoleId));
+  }, []);
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4 border-b pb-2">{title}</h2>
@@ -28,6 +36,7 @@ const TyreTable = ({
               <th className="px-4 py-2 border">Status</th>
               <th className="px-4 py-2 border">HM (Hour Meter)</th>
               <th className="px-4 py-2 border">KM (Kilo Meter)</th>
+              <th className="px-4 py-2 border">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -57,6 +66,23 @@ const TyreTable = ({
                     </td>
                     <td className="px-4 py-2 border">{hm} hours</td>
                     <td className="px-4 py-2 border">{km} KM</td>
+                    <td className="px-4 py-2 border text-center flex justify-center gap-2">
+                      <PencilSquareIcon
+                        className="w-5 h-5 text-blue-500 cursor-pointer"
+                        onClick={() => navigateTo?.()}
+                        title="Update Tyre"
+                      />
+                      {roleId === 1 && (
+                        <>
+                          <span className="text-gray-400">/</span>
+                          <TrashIcon
+                            className="w-5 h-5 text-red-500 cursor-pointer"
+                            onClick={() => onDeleteTyre?.(tyre.id)}
+                            title="Delete Tyre"
+                          />
+                        </>
+                      )}
+                    </td>
                   </tr>
                 );
               })
@@ -81,4 +107,4 @@ const TyreTable = ({
   );
 };
 
-export default TyreTable;
+export default TyreTableAction;

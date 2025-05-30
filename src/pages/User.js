@@ -92,6 +92,9 @@ const User = () => {
             Create New User Account
           </div>
           <div className="p-6 flex flex-col gap-4">
+            <label className="block font-medium mb-1">
+              Username <span className="text-red-500">*</span>
+            </label>
             <input
               className="w-full p-2 border border-gray-300 rounded-md"
               type="text"
@@ -99,6 +102,9 @@ const User = () => {
               onChange={(e) => setUname(e.target.value)}
               placeholder="Create a username"
             />
+            <label className="block font-medium mb-1">
+              Password <span className="text-red-500">*</span>
+            </label>
             <input
               className="w-full p-2 border border-gray-300 rounded-md"
               type="password"
