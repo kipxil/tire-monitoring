@@ -1,5 +1,5 @@
-const BASE_URL = "http://192.168.137.26:8080";
-// const BASE_URL = "https://primatyre-prismaexpress-production.up.railway.app";
+// const BASE_URL = "http://192.168.137.26:8080";
+const BASE_URL = "https://primatyre-prismaexpress-production.up.railway.app";
 const apiKey = "halodek";
 
 export const apiFetch = async (endpoint, options = {}) => {
