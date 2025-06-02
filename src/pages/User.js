@@ -70,8 +70,8 @@ const User = () => {
       <div className="flex items-ends justify-between mb-6 ml-3">
         {/* Breadcrumb & Title */}
         <div>
-          <p className="text-sm text-gray-500">Pages / User Management</p>
-          <h1 className="text-3xl font-bold text-[#1a1f36]">User Management</h1>
+          <p className="text-sm text-gray-500">Pages / Add User</p>
+          <h1 className="text-3xl font-bold text-[#1a1f36]">Add User</h1>
         </div>
 
         {/* Right Icons */}

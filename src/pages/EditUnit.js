@@ -106,8 +106,8 @@ const EditUnit = () => {
       {/* Header */}
       <div className="flex justify-between items-end mb-6 ml-3">
         <div>
-          <p className="text-sm text-gray-500">Pages / Unit Tyres</p>
-          <h1 className="text-3xl font-bold text-[#1a1f36]">Unit Tyres</h1>
+          <p className="text-sm text-gray-500">Pages / Edit Unit</p>
+          <h1 className="text-3xl font-bold text-[#1a1f36]">Edit Unit</h1>
         </div>
         <div className="flex items-center gap-4 mt-3">
           <p className="text-lg font-semibold">Hello, {username}</p>
@@ -121,7 +121,7 @@ const EditUnit = () => {
 
       {/* Form Container */}
       <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">
-        Unit Tyres
+        Edit Unit
       </div>
       <div className="bg-white p-6 rounded-lg shadow-md">
         {/* === Informasi Dasar Ban === */}
