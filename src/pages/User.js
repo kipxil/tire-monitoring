@@ -43,6 +43,10 @@ const User = () => {
         body: JSON.stringify(dataUser),
       });
       toast.success("Berhasil menambahkan user");
+      await fetchUsers();
+      setUname("");
+      setPassword("");
+      setSelectedRole("");
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);
     } catch (error) {
@@ -124,8 +128,8 @@ const User = () => {
               >
                 <option value="">-- Select Role --</option>
                 <option value="1">Administrator</option>
-                <option value="2">TCM</option>
-                <option value="3">TIS</option>
+                <option value="2">TCMM</option>
+                <option value="3">TISM</option>
               </select>
             </div>
 

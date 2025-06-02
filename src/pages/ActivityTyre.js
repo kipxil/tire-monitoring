@@ -1,5 +1,5 @@
 import { apiFetch } from "../services/apiClient";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import userLogo from "../assets/logo user.png";
 
@@ -38,19 +38,31 @@ const UpdateTyre = () => {
 
   const username = capitalizeFirst(user?.name);
 
-  const fetchDropdownData = async () => {
+  const fetchDropdownData = useCallback(async () => {
     try {
       const data = await apiFetch("/dropdown");
+      const user = JSON.parse(sessionStorage.getItem("user"));
+
+      const allUnits = data.unit || [];
+
+      const filteredUnits =
+        user.roleId === 1
+          ? allUnits
+          : allUnits.filter((unit) => unit.site.name === user.roleUser.name);
 
       const banReady = (data.tyre || []).filter(
-        (ready) => !ready.isReady && !ready.isScrap && ready.isInstalled
+        (tyre) => !tyre.isReady && !tyre.isScrap && tyre.isInstalled
       );
 
       const banNotReady = (data.tyre || []).filter(
-        (ready) => ready.isReady && !ready.isScrap && !ready.isInstalled
+        (tyre) =>
+          tyre.isReady &&
+          !tyre.isScrap &&
+          !tyre.isInstalled &&
+          filteredUnits.some((unit) => unit.siteId === tyre.siteId)
       );
 
-      setunitList(data.unit || []);
+      setunitList(filteredUnits);
       setSerialNumberLepasList(banReady);
       setSerialNumberLepasMaster(banReady);
       setAlasanLepasList(data.removeReason || []);
@@ -60,11 +72,11 @@ const UpdateTyre = () => {
     } catch (error) {
       console.error("Gagal fetch data dropdown:", error);
     }
-  };
+  }, []); // Kosong karena tidak ada state/props dari luar
 
   useEffect(() => {
     fetchDropdownData();
-  }, []);
+  }, [fetchDropdownData]);
 
   useEffect(() => {
     if (!noUnit) {
@@ -78,14 +90,7 @@ const UpdateTyre = () => {
     const unit = unitList.find((u) => u.id.toString() === noUnit);
     if (!unit) return;
 
-    const installedTyreIds = [
-      unit.tyre1Id,
-      unit.tyre2Id,
-      unit.tyre3Id,
-      unit.tyre4Id,
-      unit.tyre5Id,
-      unit.tyre6Id,
-    ].filter(Boolean);
+    const installedTyreIds = unit.tyres.map((t) => t.tyreId);
 
     const filtered = serialNumberLepasMaster.filter((ban) =>
       installedTyreIds.includes(ban.stockTyre.id)
@@ -252,7 +257,7 @@ const UpdateTyre = () => {
               >
                 <option value="">-- Select Tyre --</option>
                 {serialNumberLepasList.map((lepas) => (
-                  <option key={lepas.stockTyre.id} value={lepas.stockTyre.id}>
+                  <option key={lepas.id} value={lepas.id}>
                     {lepas.stockTyre.serialNumber}
                   </option>
                 ))}

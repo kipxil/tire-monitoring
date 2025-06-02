@@ -38,6 +38,14 @@ const Home = () => {
   const [currentPageTyreInstall, setCurrentPageTyreInstall] = useState(1);
   const [currentPageTyreRemove, setCurrentPageTyreRemove] = useState(1);
   const [currentPageTyreScrap, setCurrentPageTyreScrap] = useState(1);
+  const [roleId, setRoleId] = useState(null);
+
+  useEffect(() => {
+    // const storedUsername = sessionStorage.getItem("username");
+    const storedRoleId = sessionStorage.getItem("roleId");
+    // if (storedUsername) setUsername(storedUsername);
+    if (storedRoleId) setRoleId(parseInt(storedRoleId));
+  }, []);
   const itemsPerPage = 10; // Jumlah data per halaman
   const navigate = useNavigate();
   const user = JSON.parse(sessionStorage.getItem("user"));
@@ -77,7 +85,7 @@ const Home = () => {
       };
 
       const sortedActivities = [...data.activities].sort(
-        (a, b) => new Date(b.dateTimeDone) - new Date(a.dateTimeDone)
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
 
       const activityHistory = sortedActivities.map((act) => {
@@ -250,26 +258,38 @@ const Home = () => {
     return { label: "Removed", className: "bg-red-200 text-red-700" };
   };
 
-  const filteredTyresInstall = tyres.filter(
+  const filteredUnits =
+    user?.roleId === 1
+      ? units
+      : units.filter((unit) => unit.site.name === user.roleUser.name);
+
+  const filteredTyres =
+    user?.roleId === 1
+      ? tyres
+      : tyres.filter((tyre) => tyre.site.name === user.roleUser.name);
+
+  const filteredTyresInstall = filteredTyres.filter(
     (tyre) => tyre.isInstalled === true
   );
-  const filteredTyresRemove = tyres.filter(
+  const filteredTyresRemove = filteredTyres.filter(
     (tyre) => tyre.isInstalled === false && tyre.isScrap === false
     // &&
     // tyre.isReady === false
   );
-  const filteredTyresScrap = tyres.filter((tyre) => tyre.isScrap === true);
+  const filteredTyresScrap = filteredTyres.filter(
+    (tyre) => tyre.isScrap === true
+  );
 
   // Pagination logic untuk data ban
   const indexOfLastTyre = currentPageTyre * itemsPerPage;
   const indexOfFirstTyre = indexOfLastTyre - itemsPerPage;
-  const currentTyres = tyres.slice(indexOfFirstTyre, indexOfLastTyre);
+  const currentTyres = filteredTyres.slice(indexOfFirstTyre, indexOfLastTyre);
   const totalPagesTyre = Math.ceil(tyres.length / itemsPerPage);
 
   // Pagination logic untuk data unit
   const indexOfLastUnit = currentPageUnit * itemsPerPage;
   const indexOfFirstUnit = indexOfLastUnit - itemsPerPage;
-  const currentUnits = units.slice(indexOfFirstUnit, indexOfLastUnit);
+  const currentUnits = filteredUnits.slice(indexOfFirstUnit, indexOfLastUnit);
   const totalPagesUnit = Math.ceil(units.length / itemsPerPage);
 
   //pagination logic data ban terpasang
@@ -377,42 +397,46 @@ const Home = () => {
 
       {/* Content bawah header */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-        <SummaryCard
-          title="Unit Total"
-          value={summary.totalUnit}
-          icon={<TruckIcon className="w-10 h-10" />}
-          borderColor="border-green-500"
-        />
-        <SummaryCard
-          title="Tyre Total"
-          value={summary.totalTyre}
-          icon={<ArchiveBoxIcon className="w-10 h-10" />}
-          borderColor="border-red-500"
-        />
-        <SummaryCard
-          title="Installed Tyre"
-          value={summary.installedTyre}
-          icon={<CheckCircleIcon className="w-10 h-10" />}
-          borderColor="border-yellow-500"
-        />
-        <SummaryCard
-          title="Removed Tyre"
-          value={summary.removedTyre}
-          icon={<TrashIcon className="w-10 h-10" />}
-          borderColor="border-blue-500"
-        />
-        <SummaryCard
-          title="Scrap Tyre"
-          value={summary.scrapTyre}
-          icon={<ArchiveBoxIcon className="w-10 h-10" />}
-          borderColor="border-purple-500"
-        />
-        <SummaryCard
-          title="Total user"
-          value={summary.userTotal}
-          icon={<UserIcon className="w-10 h-10" />}
-          borderColor="border-orange-500"
-        />
+        {roleId === 1 && (
+          <>
+            <SummaryCard
+              title="Unit Total"
+              value={summary.totalUnit}
+              icon={<TruckIcon className="w-10 h-10" />}
+              borderColor="border-green-500"
+            />
+            <SummaryCard
+              title="Tyre Total"
+              value={summary.totalTyre}
+              icon={<ArchiveBoxIcon className="w-10 h-10" />}
+              borderColor="border-red-500"
+            />
+            <SummaryCard
+              title="Installed Tyre"
+              value={summary.installedTyre}
+              icon={<CheckCircleIcon className="w-10 h-10" />}
+              borderColor="border-yellow-500"
+            />
+            <SummaryCard
+              title="Removed Tyre"
+              value={summary.removedTyre}
+              icon={<TrashIcon className="w-10 h-10" />}
+              borderColor="border-blue-500"
+            />
+            <SummaryCard
+              title="Scrap Tyre"
+              value={summary.scrapTyre}
+              icon={<ArchiveBoxIcon className="w-10 h-10" />}
+              borderColor="border-purple-500"
+            />
+            <SummaryCard
+              title="Total user"
+              value={summary.userTotal}
+              icon={<UserIcon className="w-10 h-10" />}
+              borderColor="border-orange-500"
+            />
+          </>
+        )}
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md">

@@ -10,9 +10,13 @@ const AddUnit = () => {
   const [kmUnit, setKmUnit] = useState("");
   const [site, setSite] = useState("");
 
-  const [selectedBans, setSelectedBans] = useState(["", "", "", "", "", ""]);
+  const [selectedBans, setSelectedBans] = useState([]);
   const [siteList, setSiteList] = useState([]);
+  const [amountTyre, setAmountTyreList] = useState([]);
   const [banList, setBanList] = useState([]);
+  const [tireCount, setTireCount] = useState("");
+  const [selectedTires, setSelectedTires] = useState([]);
+  const [allReadyTyres, setAllReadyTyres] = useState([]);
 
   // const navigate = useNavigate();
   const user = JSON.parse(sessionStorage.getItem("user"));
@@ -28,17 +32,30 @@ const AddUnit = () => {
     try {
       const data = await apiFetch("/dropdown");
 
-      // Filter hanya ban yang siap dipakai
       const readyTyres = (data.tyre || []).filter(
         (ban) => ban.isReady && !ban.isScrap && !ban.isInstalled
       );
 
+      setAllReadyTyres(readyTyres); // Simpan semua ban ready
       setSiteList(data.site || []);
-      setBanList(readyTyres);
+      setAmountTyreList(data.unitTyreAmount || []);
     } catch (error) {
       console.error("Gagal fetch data dropdown:", error);
     }
   };
+  useEffect(() => {
+    if (site) {
+      const filtered = allReadyTyres.filter(
+        (ban) => String(ban.siteId) === String(site)
+      );
+      setBanList(filtered);
+    } else {
+      setBanList([]);
+    }
+
+    // Reset selected bans saat ganti site
+    setSelectedBans([]);
+  }, [site, allReadyTyres]);
 
   useEffect(() => {
     fetchDropdownData();
@@ -55,8 +72,38 @@ const AddUnit = () => {
     return banList.filter((ban) => !used.includes(String(ban.stockTyre.id)));
   };
 
+  const handleTireCountChange = (e) => {
+    const selectedId = e.target.value;
+
+    if (!selectedId) {
+      setTireCount("");
+      setSelectedTires([]);
+      return;
+    }
+
+    const selected = amountTyre.find(
+      (item) => item.id.toString() === selectedId
+    );
+
+    if (!selected) {
+      setTireCount("");
+      setSelectedTires([]);
+      return;
+    }
+
+    setTireCount(selectedId);
+    setSelectedTires(Array(selected.amount).fill(""));
+  };
+
   const handleSubmit = async () => {
-    if (!noUnit || !hmunit || !kmUnit || !site || !selectedBans) {
+    if (
+      !noUnit ||
+      !hmunit ||
+      !site ||
+      !tireCount ||
+      selectedBans.length !== selectedTires.length ||
+      selectedBans.some((ban) => !ban)
+    ) {
       toast.error("Mohon isi semua field yang wajib.");
       return;
     }
@@ -65,11 +112,12 @@ const AddUnit = () => {
       hmUnit: parseInt(hmunit),
       kmUnit: parseInt(kmUnit),
       siteId: parseInt(site),
+      unitTyreAmountId: parseInt(tireCount),
       tyreIds: selectedBans.map((id) => parseInt(id)),
     };
 
     try {
-      // console.log(dataUnit);
+      console.log(dataUnit);
       const result = await apiFetch("/unit", {
         method: "POST",
         body: JSON.stringify(dataUnit),
@@ -80,9 +128,7 @@ const AddUnit = () => {
       setHmUnit("");
       setKmUnit("");
       setSite("");
-      // navigate("/home");
-      // window.location.reload();
-      // fetchDropdownData();
+      setTireCount("");
       console.log("Response: ", result);
     } catch (error) {
       console.error("Error: ", error);
@@ -117,7 +163,7 @@ const AddUnit = () => {
         <h2 className="text-blue-600 text-lg font-bold mb-4 border-b pb-2">
           Unit Information
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4 pb-4">
           <div>
             <label className="block font-medium mb-1">
               Unit Number <span className="text-red-500">*</span>
@@ -141,9 +187,7 @@ const AddUnit = () => {
             />
           </div>
           <div>
-            <label className="block font-medium mb-1">
-              KM Unit <span className="text-red-500">*</span>
-            </label>
+            <label className="block font-medium mb-1">KM Unit</label>
             <input
               type="number"
               className="w-full p-2 border rounded-md"
@@ -168,10 +212,57 @@ const AddUnit = () => {
               ))}
             </select>
           </div>
+          <div>
+            <label className="block font-medium mb-1">
+              Total Tyre <span className="text-red-500">*</span>
+            </label>
+            <select
+              className="w-full p-2 border rounded-md"
+              value={tireCount}
+              onChange={handleTireCountChange}
+            >
+              <option value="">-- Pilih Jumlah Ban --</option>
+              {amountTyre.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.amount}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
+        {/* Dropdown untuk Ban yang Akan Dipasang */}
+        {selectedTires.length > 0 && (
+          <div>
+            <h2 className="text-blue-600 text-lg font-bold mb-4 border-b pb-2">
+              Tyre Information
+            </h2>
+            <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+              {selectedTires.map((value, index) => (
+                <div key={index}>
+                  <label className="block font-medium mb-1">
+                    Tyre {index + 1}
+                  </label>
+                  <select
+                    className="w-full p-2 border rounded-md"
+                    value={selectedBans[index]}
+                    onChange={(e) => handleBanChange(index, e.target.value)}
+                  >
+                    <option value="">-- Pilih Ban --</option>
+                    {getAvailableBans(index).map((ban) => (
+                      <option key={ban.stockTyre.id} value={ban.stockTyre.id}>
+                        {ban.stockTyre.serialNumber}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Dropdown Ban 1-6 */}
-        <div className="space-y-4 pt-5">
+        {/* <div className="space-y-4 pt-5">
           <h2 className="text-blue-600 text-lg font-bold mb-4 border-b pb-2">
             Tyre Information
           </h2>
@@ -194,7 +285,7 @@ const AddUnit = () => {
               </select>
             </div>
           ))}
-        </div>
+        </div> */}
 
         {/* Tombol Simpan */}
         <div className="mt-8 flex justify-end">

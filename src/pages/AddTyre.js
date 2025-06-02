@@ -14,10 +14,12 @@ const AddTyre = () => {
   const [ukuranBan, setUkuranBan] = useState("");
   const [hmBan, setHmBan] = useState("");
   const [kmBan, setKmBan] = useState("");
+  const [site, setSite] = useState("");
 
   //dropdown
   const [merkList, setMerkList] = useState([]);
   const [ukuranList, setUkuranList] = useState([]);
+  const [siteList, setSiteList] = useState([]);
 
   const user = JSON.parse(sessionStorage.getItem("user"));
 
@@ -36,6 +38,7 @@ const AddTyre = () => {
       // Set state dari response API
       setMerkList(data.merk || []);
       setUkuranList(data.tyreSize || []);
+      setSiteList(data.site || []);
     } catch (error) {
       console.error("Gagal fetch data dropdown:", error);
     }
@@ -62,6 +65,7 @@ const AddTyre = () => {
       oHM: parseInt(hmBan),
       oKM: parseInt(kmBan),
       tyreSizeId: parseInt(ukuranBan),
+      siteId: parseInt(site),
     };
 
     try {
@@ -71,7 +75,7 @@ const AddTyre = () => {
         body: JSON.stringify(dataBan),
       });
       toast.success("Ban Berhasil Ditambahkan");
-      // setMerk("");
+      setMerk("");
       setTypeBan("");
       setPatternBan("");
       setOtd("");
@@ -81,6 +85,7 @@ const AddTyre = () => {
       setUkuranBan("");
       setHmBan("");
       setKmBan("");
+      setSite("");
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);
     } catch (error) {
@@ -125,6 +130,27 @@ const AddTyre = () => {
               value={serialNumber}
               onChange={(e) => setSerialNumber(e.target.value)}
             />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              Site <span className="text-red-500">*</span>
+            </label>
+            <select
+              className="w-full p-2 border rounded-md"
+              value={site}
+              onChange={(e) => setSite(e.target.value)}
+            >
+              <option value="">-- Select Site --</option>
+              {(user?.roleId === 1
+                ? siteList // Admin: tampilkan semua
+                : siteList.filter((s) => s.name === user.roleUser.name)
+              ) // Non-admin: filter siteId sesuai roleId
+                .map((site) => (
+                  <option key={site.id} value={site.id}>
+                    {site.name}
+                  </option>
+                ))}
+            </select>
           </div>
           <div>
             <label className="block font-medium mb-1">Tyre Type</label>

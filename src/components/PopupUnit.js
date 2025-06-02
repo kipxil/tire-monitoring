@@ -26,10 +26,12 @@ const UnitDetailModal = ({ unitData, isOpen, onClose }) => {
           Daftar Ban Terpasang:
         </h3>
         <ul className="grid grid-cols-2 gap-2">
-          {[1, 2, 3, 4, 5, 6].map((pos) => {
-            const tyre = unitData[`tyre${pos}`];
+          {unitData.tyres.map((item) => {
+            const tyre = item.tyre;
+            const pos = item.position;
+
             return tyre ? (
-              <li key={pos} className="p-2 border rounded-md shadow">
+              <li key={item.id} className="p-2 border rounded-md shadow">
                 <p>
                   <strong>Posisi:</strong> {pos}
                 </p>
@@ -48,7 +50,7 @@ const UnitDetailModal = ({ unitData, isOpen, onClose }) => {
                 </p>
               </li>
             ) : (
-              <li key={pos}>Ban posisi {pos} tidak tersedia.</li>
+              <li key={item.id}>Ban posisi {pos} tidak tersedia.</li>
             );
           })}
         </ul>

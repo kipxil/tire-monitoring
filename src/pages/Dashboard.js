@@ -10,6 +10,7 @@ import AddTyre from "./AddTyre";
 import UpdateTyre from "./ActivityTyre";
 import EditTyre from "./EditTyre";
 import InspectAction from "./InspectAction";
+import EditUnit from "./EditUnit";
 
 const DashboardLayout = ({ onLogout }) => {
   return (
@@ -28,6 +29,7 @@ const DashboardLayout = ({ onLogout }) => {
           <Route path="/settings" element={<Settings />} />
           <Route path="/edittyre" element={<EditTyre />} />
           <Route path="/inspectaction" element={<InspectAction />} />
+          <Route path="/editunit" element={<EditUnit />} />
           {/* </>
           )} */}
           <Route path="/addtyres" element={<AddTyre />} />

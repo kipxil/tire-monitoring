@@ -10,6 +10,7 @@ const EditTyre = () => {
   const [merk, setMerk] = useState("");
   const [patternBan, setPatternBan] = useState("");
   const [otd, setOtd] = useState("");
+  const [siteId, setSiteId] = useState("");
   const [otd2, setOtd2] = useState("");
   const [hmBan, setHmBan] = useState("");
   const [kmBan, setKmBan] = useState("");
@@ -19,6 +20,7 @@ const EditTyre = () => {
   const [tyreList, setTyreList] = useState([]);
   const [merkList, setMerkList] = useState([]);
   const [ukuranList, setUkuranList] = useState([]);
+  const [siteList, setSiteList] = useState([]);
 
   const user = JSON.parse(sessionStorage.getItem("user"));
 
@@ -39,6 +41,9 @@ const EditTyre = () => {
       // const merks = [...new Set(dropdown.merk.map((t) => t.name))];
       const merks = dropdown.merk.map((m) => ({ id: m.id, name: m.name }));
       setMerkList(merks);
+
+      const site = dropdown.site.map((m) => ({ id: m.id, name: m.name }));
+      setSiteList(site);
 
       // Generate unique tyre sizes
       // const sizes = [...new Set(dropdown.tyreSize.map((t) => t.size))];
@@ -67,6 +72,7 @@ const EditTyre = () => {
         setTypeBan(selected.stockTyre.type || "Tidak Ada");
         setMerk(selected.stockTyre.merkId || "");
         setPatternBan(selected.stockTyre.pattern || "Tidak Ada");
+        setSiteId(selected.siteId || "");
         setOtd(selected.tread1 ?? 0);
         setOtd2(selected.tread2 ?? 0);
         setHmBan(selected.stockTyre.oHM ?? 0);
@@ -106,6 +112,7 @@ const EditTyre = () => {
         otd2: parseInt(otd2),
         oHM: parseInt(hmBan),
         oKM: parseInt(kmBan),
+        siteId: parseInt(siteId),
       };
       console.log(payload);
       await apiFetch(`/tyre/${selectedTyreId}`, {
@@ -127,6 +134,7 @@ const EditTyre = () => {
       setKmBan("");
       setHargaBan("");
       setUkuranBan("");
+      setSiteId("");
     } catch (error) {
       console.error("Gagal memperbarui data:", error);
       toast.error("Terjadi kesalahan saat menyimpan data.");
@@ -189,6 +197,21 @@ const EditTyre = () => {
               value={serialNumber}
               onChange={(e) => setSerialNumber(e.target.value)}
             />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">Site</label>
+            <select
+              className="w-full p-2 border rounded-md"
+              value={siteId}
+              onChange={(e) => setSiteId(e.target.value)}
+            >
+              <option value="">-- Select Site --</option>
+              {siteList.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <label className="block font-medium mb-1">Tyre Type</label>

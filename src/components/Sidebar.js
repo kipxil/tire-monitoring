@@ -138,21 +138,19 @@ const Sidebar = ({ onLogout }) => {
                     icon={DocumentTextIcon}
                     label="Activity Tyre"
                   />
+                  <SidebarLink
+                    to="/inspecttyres"
+                    icon={XCircleIcon}
+                    label="Inspect Tyre"
+                  />
+                  <SidebarLink
+                    to="/inspectaction"
+                    icon={Wrench}
+                    label="Action Tyre"
+                  />
                   {roleId === 1 && (
-                    <SidebarLink
-                      to="/inspecttyres"
-                      icon={XCircleIcon}
-                      label="Inspect Tyre"
-                    />
+                    <SidebarLink to="/edittyre" icon={Edit} label="Edit Tyre" />
                   )}
-                  {roleId === 1 && (
-                    <SidebarLink
-                      to="/inspectaction"
-                      icon={Wrench}
-                      label="Action Tyre"
-                    />
-                  )}
-                  <SidebarLink to="/edittyre" icon={Edit} label="Edit Tyre" />
                 </div>
               )}
             </div>
@@ -181,6 +179,7 @@ const Sidebar = ({ onLogout }) => {
                       icon={PlusIcon}
                       label="Add Unit"
                     />
+                    <SidebarLink to="/editunit" icon={Edit} label="Edit Unit" />
                   </div>
                 )}
               </div>
