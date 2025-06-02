@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Edit, Trash2, Save, X } from "lucide-react";
 import { apiFetch } from "../services/apiClient";
+import userLogo from "../assets/logo user.png";
 
 const Setting = () => {
   const [selectedType, setSelectedType] = useState("airCondition");
@@ -8,6 +9,15 @@ const Setting = () => {
   const [editingItem, setEditingItem] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [formData, setFormData] = useState({});
+
+  const user = JSON.parse(sessionStorage.getItem("user"));
+
+  const capitalizeFirst = (text) => {
+    if (!text) return "";
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  };
+
+  const username = capitalizeFirst(user?.name);
 
   // Initialize data from API response
   useEffect(() => {
@@ -247,13 +257,29 @@ const Setting = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          Settings Management
-        </h1>
+    <div className="w-full bg-gray-100 p-2 rounded-md">
+      <div className="flex justify-between items-end mb-6 ml-3">
+        <div>
+          <p className="text-sm text-gray-500">Pages / Setting Management</p>
+          <h1 className="text-3xl font-bold text-[#1a1f36]">
+            Setting Management
+          </h1>
+        </div>
+        <div className="flex items-center gap-4 mt-3">
+          <p className="text-lg font-semibold">Hello, {username}</p>
+          <img
+            src={userLogo}
+            alt="User Avatar"
+            className="w-12 h-12 rounded-full border-2 border-gray-500 shadow-md object-cover"
+          />
+        </div>
+      </div>
 
-        {/* Type Selector */}
+      {/* Form Container */}
+      <div className="bg-[#0F2741] text-white p-4 rounded-t-lg font-semibold">
+        Setting Management
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Select Data Type:
@@ -285,31 +311,27 @@ const Setting = () => {
           <Plus size={16} className="mr-2" />
           Add New {typeConfig[selectedType].label}
         </button>
-      </div>
-
-      {/* Data Table */}
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>{renderTableHeader()}</thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {isCreating && renderCreateRow()}
-            {data[selectedType]?.map((item) => renderTableRow(item))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* API Console */}
-      <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-        <h3 className="text-sm font-medium text-gray-700 mb-2">
-          API Calls Log:
-        </h3>
-        <p className="text-xs text-gray-600">
-          Check the browser console for API call logs (F12 → Console)
-        </p>
-        <div className="mt-2 text-xs text-gray-500">
-          <p>• POST /{selectedType} - Create new item</p>
-          <p>• PUT /{selectedType}/:id - Update existing item</p>
-          <p>• DELETE /{selectedType}/:id - Delete item</p>
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>{renderTableHeader()}</thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {isCreating && renderCreateRow()}
+              {data[selectedType]?.map((item) => renderTableRow(item))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-6 p-4 bg-gray-100 rounded-lg">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">
+            API Calls Log:
+          </h3>
+          <p className="text-xs text-gray-600">
+            Check the browser console for API call logs (F12 → Console)
+          </p>
+          <div className="mt-2 text-xs text-gray-500">
+            <p>• POST /{selectedType} - Create new item</p>
+            <p>• PUT /{selectedType}/:id - Update existing item</p>
+            <p>• DELETE /{selectedType}/:id - Delete item</p>
+          </div>
         </div>
       </div>
     </div>

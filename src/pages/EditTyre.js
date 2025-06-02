@@ -129,7 +129,6 @@ const EditTyre = () => {
       setUkuranBan("");
     } catch (error) {
       console.error("Gagal memperbarui data:", error);
-      // alert("Terjadi kesalahan saat menyimpan data.");
       toast.error("Terjadi kesalahan saat menyimpan data.");
     }
   };
