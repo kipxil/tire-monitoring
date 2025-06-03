@@ -201,7 +201,7 @@ const EditUnit = () => {
             onClick={handleSubmit}
             className="bg-yellow-400 text-white px-6 py-2 rounded-md font-semibold hover:bg-yellow-500"
           >
-            Edit Tyre
+            Edit Unit
           </button>
         </div>
       </div>
