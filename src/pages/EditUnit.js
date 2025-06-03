@@ -76,7 +76,7 @@ const EditUnit = () => {
     }
     try {
       const payload = {
-        unitNumber,
+        nomorUnit: unitNumber,
         hmUnit: parseInt(hmUnit),
         kmUnit: parseInt(kmUnit),
         siteId: parseInt(siteId),
