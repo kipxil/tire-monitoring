@@ -79,9 +79,14 @@ const Home = () => {
         size: data.stockTyre.tyreSize.size,
         currentUnit: data.tyre.installedUnit?.nomorUnit || "N/A",
         position: `Pos ${data.tyre.positionTyre || "-"}`,
-        installDate: new Date(data.tyre.createdAt).toLocaleDateString(),
+        installDate: new Date(
+          data.tyre.stockTyre.dateTimeIn
+        ).toLocaleDateString(),
         totalKm: data.tyre.kmTyre,
         avgTreadDepth: `${data.tyre.tread1}/${data.tyre.tread2}`,
+        dateTimeWork: data.tyre.dateTimeWork
+          ? new Date(data.tyre.dateTimeWork).toLocaleDateString()
+          : "N/A",
       };
 
       const sortedActivities = [...data.activities].sort(

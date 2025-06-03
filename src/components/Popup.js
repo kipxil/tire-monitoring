@@ -46,13 +46,16 @@ const Popup = ({ show, onClose, tyre, activityHistory }) => {
               <strong>Position:</strong> {tyre.position}
             </p>
             <p>
-              <strong>Installation Date:</strong> {tyre.installDate}
+              <strong>Created Date:</strong> {tyre.installDate}
             </p>
             <p>
               <strong>Total Kilometers:</strong> {tyre.totalKm}
             </p>
             <p>
               <strong>Average Tread Depth:</strong> {tyre.avgTreadDepth}
+            </p>
+            <p>
+              <strong>Date:</strong> {tyre.dateTimeWork}
             </p>
           </div>
 

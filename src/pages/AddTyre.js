@@ -15,6 +15,7 @@ const AddTyre = () => {
   const [hmBan, setHmBan] = useState("");
   const [kmBan, setKmBan] = useState("");
   const [site, setSite] = useState("");
+  const [dateTime, setDateTime] = useState("");
 
   //dropdown
   const [merkList, setMerkList] = useState([]);
@@ -50,7 +51,7 @@ const AddTyre = () => {
 
   // TODO: Tambahkan state untuk input lain jika dibutuhkan
   const handleSubmit = async () => {
-    if (!serialNumber || !merk || !otd || !otd2 || !ukuranBan) {
+    if (!serialNumber || !merk || !otd || !otd2 || !ukuranBan || !dateTime) {
       toast.error("Mohon isi semua field yang wajib.");
       return;
     }
@@ -66,6 +67,7 @@ const AddTyre = () => {
       oKM: parseInt(kmBan),
       tyreSizeId: parseInt(ukuranBan),
       siteId: parseInt(site),
+      dateTimeIn: dateTime,
     };
 
     try {
@@ -86,6 +88,7 @@ const AddTyre = () => {
       setHmBan("");
       setKmBan("");
       setSite("");
+      setDateTime("");
       // Debug: tampilkan data user dari server
       console.log("Response: ", result);
     } catch (error) {
@@ -258,6 +261,17 @@ const AddTyre = () => {
                 </option>
               ))}
             </select>
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              Time Created <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="datetime-local"
+              className="w-full p-2 border rounded-md"
+              value={dateTime}
+              onChange={(e) => setDateTime(e.target.value)}
+            />
           </div>
         </div>
 

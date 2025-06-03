@@ -9,6 +9,7 @@ const AddUnit = () => {
   const [hmunit, setHmUnit] = useState("");
   const [kmUnit, setKmUnit] = useState("");
   const [site, setSite] = useState("");
+  const [dateTime, setDateTime] = useState("");
 
   const [selectedBans, setSelectedBans] = useState([]);
   const [siteList, setSiteList] = useState([]);
@@ -100,6 +101,7 @@ const AddUnit = () => {
       !noUnit ||
       !hmunit ||
       !site ||
+      !dateTime ||
       !tireCount ||
       selectedBans.length !== selectedTires.length ||
       selectedBans.some((ban) => !ban)
@@ -114,6 +116,7 @@ const AddUnit = () => {
       siteId: parseInt(site),
       unitTyreAmountId: parseInt(tireCount),
       tyreIds: selectedBans.map((id) => parseInt(id)),
+      dateTimeDone: dateTime,
     };
 
     try {
@@ -129,6 +132,7 @@ const AddUnit = () => {
       setKmUnit("");
       setSite("");
       setTireCount("");
+      setDateTime("");
       console.log("Response: ", result);
     } catch (error) {
       console.error("Error: ", error);
@@ -211,6 +215,17 @@ const AddUnit = () => {
                 </option>
               ))}
             </select>
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              Time Created <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="datetime-local"
+              className="w-full p-2 border rounded-md"
+              value={dateTime}
+              onChange={(e) => setDateTime(e.target.value)}
+            />
           </div>
           <div>
             <label className="block font-medium mb-1">

@@ -28,6 +28,10 @@ const UnitDetailModal = ({ unitData, isOpen, onClose }) => {
               <strong>HM:</strong> {unitData.hmUnit} | <strong>KM:</strong>{" "}
               {unitData.kmUnit}
             </p>
+            <p>
+              <strong>Created Date:</strong>{" "}
+              {new Date(unitData.createdAt).toLocaleDateString()}
+            </p>
           </div>
           <h3 className="text-xl font-semibold mt-8 mb-3">
             Daftar Ban Terpasang:

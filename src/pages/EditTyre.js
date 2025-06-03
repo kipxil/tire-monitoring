@@ -16,6 +16,8 @@ const EditTyre = () => {
   const [kmBan, setKmBan] = useState("");
   const [hargaBan, setHargaBan] = useState("");
   const [ukuranBan, setUkuranBan] = useState("");
+  const [dateTime, setDateTime] = useState("");
+  const [isInstalled, setIsInstalled] = useState(false);
 
   const [tyreList, setTyreList] = useState([]);
   const [merkList, setMerkList] = useState([]);
@@ -79,6 +81,7 @@ const EditTyre = () => {
         setKmBan(selected.stockTyre.oKM ?? 0);
         setHargaBan(selected.stockTyre.price ?? 0);
         setUkuranBan(selected.stockTyre.tyreSizeId || "");
+        setIsInstalled(selected.isInstalled === true);
       }
     } else {
       // Kosongkan jika tidak dipilih
@@ -92,11 +95,14 @@ const EditTyre = () => {
       setKmBan("");
       setHargaBan("");
       setUkuranBan("");
+      setDateTime("");
+      setIsInstalled(false);
+      setSiteId("");
     }
   }, [selectedTyreId, tyreList]);
 
   const handleSubmit = async () => {
-    if (!selectedTyreId) {
+    if (!selectedTyreId || !dateTime) {
       toast.error("Mohon isi semua field yang wajib.");
       return;
     }
@@ -113,6 +119,7 @@ const EditTyre = () => {
         oHM: parseInt(hmBan),
         oKM: parseInt(kmBan),
         siteId: parseInt(siteId),
+        dateTimeUpdate: dateTime,
       };
       console.log(payload);
       await apiFetch(`/tyre/${selectedTyreId}`, {
@@ -135,6 +142,7 @@ const EditTyre = () => {
       setHargaBan("");
       setUkuranBan("");
       setSiteId("");
+      setDateTime("");
     } catch (error) {
       console.error("Gagal memperbarui data:", error);
       toast.error("Terjadi kesalahan saat menyimpan data.");
@@ -204,6 +212,7 @@ const EditTyre = () => {
               className="w-full p-2 border rounded-md"
               value={siteId}
               onChange={(e) => setSiteId(e.target.value)}
+              disabled={isInstalled}
             >
               <option value="">-- Select Site --</option>
               {siteList.map((m) => (
@@ -212,6 +221,11 @@ const EditTyre = () => {
                 </option>
               ))}
             </select>
+            {isInstalled && (
+              <p className="text-sm text-red-500 mt-1">
+                Ban ini sedang terpasang, tidak bisa ubah site.
+              </p>
+            )}
           </div>
           <div>
             <label className="block font-medium mb-1">Tyre Type</label>
@@ -319,6 +333,17 @@ const EditTyre = () => {
                 </option>
               ))}
             </select>
+          </div>
+          <div>
+            <label className="block font-medium mb-1">
+              Time Updated <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="datetime-local"
+              className="w-full p-2 border rounded-md"
+              value={dateTime}
+              onChange={(e) => setDateTime(e.target.value)}
+            />
           </div>
         </div>
 
