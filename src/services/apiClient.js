@@ -1,4 +1,4 @@
-// const BASE_URL = "http://192.168.137.87:8080";
+// const BASE_URL = "http://192.168.137.251:8080";
 const BASE_URL = "https://primatyre-prismaexpress-production.up.railway.app";
 const apiKey = "halodek";
 

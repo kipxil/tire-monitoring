@@ -31,6 +31,7 @@ const Home = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTyre, setSelectedTyre] = useState(null);
   const [activityHistory, setActivityHistory] = useState([]);
+  const [siteList, setSiteList] = useState([]);
   const [tyres, setTyres] = useState([]);
   const [units, setUnits] = useState([]);
   const [currentPageTyre, setCurrentPageTyre] = useState(1);
@@ -39,6 +40,10 @@ const Home = () => {
   const [currentPageTyreRemove, setCurrentPageTyreRemove] = useState(1);
   const [currentPageTyreScrap, setCurrentPageTyreScrap] = useState(1);
   const [roleId, setRoleId] = useState(null);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [selectedSite, setSelectedSite] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
     // const storedUsername = sessionStorage.getItem("username");
@@ -66,6 +71,75 @@ const Home = () => {
     } catch (error) {
       console.error("Failed to fetch unit details:", error);
     }
+  };
+
+  const handleExportSubmit = async () => {
+    if (!selectedSite) {
+      toast.error("Mohon isi semua field yang wajib.");
+      return;
+    }
+
+    const data = {
+      roleId: parseInt(user.roleId),
+      siteId: parseInt(selectedSite),
+      startDate: startDate,
+      endDate: endDate,
+    };
+
+    try {
+      console.log(data);
+      // const result = await apiFetch("/export", {
+      //   method: "POST",
+      //   body: JSON.stringify(data),
+      // });
+      const result = await fetch(
+        `https://primatyre-prismaexpress-production.up.railway.app/export`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": "halodek",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      if (!result.ok) {
+        throw new Error("Gagal export data");
+      }
+      // 🟢 Tangani sebagai file (Blob)
+      const blob = await result.blob();
+
+      // 🟢 Buat link download
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "export-data.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("Data Berhasil Diexport");
+      setSelectedSite("");
+      setStartDate("");
+      setEndDate("");
+      console.log("Response: ", result);
+    } catch (error) {
+      console.error("Error: ", error);
+      toast.error("Gagal menghubungi server");
+      setSelectedSite("");
+      setStartDate("");
+      setEndDate("");
+    }
+
+    // Tutup modal
+    setShowExportModal(false);
+  };
+
+  const handleCancelExport = () => {
+    setSelectedSite("");
+    setStartDate("");
+    setEndDate("");
+    setShowExportModal(false);
   };
 
   const handleTyreClick = async (tyreId) => {
@@ -218,6 +292,17 @@ const Home = () => {
     }
   };
 
+  const fetchSite = async () => {
+    try {
+      const data = await apiFetch("/dropdown");
+
+      // Set state dari response API
+      setSiteList(data.site || []);
+    } catch (error) {
+      console.error("Gagal fetch data dropdown:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -251,6 +336,7 @@ const Home = () => {
     fetchTyres();
     fetchUnits();
     fetchData();
+    fetchSite();
   }, []);
 
   const getStatus = (tyre) => {
@@ -542,6 +628,83 @@ const Home = () => {
             activityHistory={activityHistory}
           />
         </div>
+        <div className="mt-8 flex justify-end">
+          <button
+            onClick={() => setShowExportModal(true)}
+            className="bg-yellow-400 text-white px-6 py-2 rounded-md font-semibold hover:bg-yellow-500"
+          >
+            Export Data
+          </button>
+        </div>
+        {showExportModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+              <h2 className="text-xl font-bold mb-4">Export Data</h2>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">
+                  Site <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={selectedSite}
+                  onChange={(e) => setSelectedSite(e.target.value)}
+                  className="w-full border px-3 py-2 rounded"
+                >
+                  <option value="">-- Select Site --</option>
+                  {(user?.roleId === 1
+                    ? siteList // Admin: tampilkan semua
+                    : siteList.filter((s) => s.name === user.roleUser.name)
+                  ) // Non-admin: filter siteId sesuai roleId
+                    .map((site) => (
+                      <option key={site.id} value={site.id}>
+                        {site.name}
+                      </option>
+                    ))}
+                  {/* Tambah sesuai kebutuhan */}
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full border px-3 py-2 rounded"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="w-full border px-3 py-2 rounded"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={handleCancelExport}
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleExportSubmit()} // buat fungsinya nanti
+                  className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                >
+                  Export
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
