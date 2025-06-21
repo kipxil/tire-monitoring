@@ -94,7 +94,7 @@ const Home = () => {
       //   body: JSON.stringify(data),
       // });
       const result = await fetch(
-        `https://primatyre-prismaexpress-production.up.railway.app/export`,
+        `https://d91f-103-24-58-37.ngrok-free.app/export`,
         {
           method: "POST",
           headers: {
@@ -114,7 +114,30 @@ const Home = () => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "export-data.xlsx";
+      //
+      // a.download = "export-data.xlsx";
+      //
+      const now = new Date();
+      const formattedDate = now
+        .toLocaleString("sv-SE", { hour12: false }) // sv-SE → format: YYYY-MM-DD HH:mm:ss
+        .replace(" ", "_")
+        .replace(/:/g, "-");
+
+      a.download = `export-data_${formattedDate}.xlsx`;
+      //
+      // let fileName = "export-data";
+
+      // if (startDate && endDate) {
+      //   fileName += `_${startDate}_to_${endDate}`;
+      // } else if (startDate) {
+      //   fileName += `_from_${startDate}`;
+      // } else if (endDate) {
+      //   fileName += `_until_${endDate}`;
+      // } else {
+      //   fileName += ``;
+      // }
+      // a.download = `${fileName}.xlsx`;
+
       document.body.appendChild(a);
       a.click();
       a.remove();

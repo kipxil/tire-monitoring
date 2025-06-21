@@ -1,5 +1,6 @@
 // const BASE_URL = "http://192.168.137.251:8080";
-const BASE_URL = "https://primatyre-prismaexpress-production.up.railway.app";
+// const BASE_URL = "https://primatyre-prismaexpress-production.up.railway.app";
+const BASE_URL = "https://d91f-103-24-58-37.ngrok-free.app";
 const apiKey = "halodek";
 
 export const apiFetch = async (endpoint, options = {}) => {
@@ -8,6 +9,7 @@ export const apiFetch = async (endpoint, options = {}) => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": apiKey,
+        "ngrok-skip-browser-warning": "true",
         ...(options.headers || {}),
       },
       ...options,

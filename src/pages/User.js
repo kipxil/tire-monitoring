@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { apiFetch } from "../services/apiClient";
 import { toast } from "react-toastify";
 import userLogo from "../assets/logo user.png";
+import { Trash2 } from "lucide-react";
 
 const User = () => {
   const [uname, setUname] = useState("");
@@ -24,6 +25,24 @@ const User = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  const handleDeleteUser = async (userId) => {
+    const confirmDelete = window.confirm(
+      "Apakah Anda yakin ingin menghapus user ini?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await apiFetch(`/user/${userId}`, {
+        method: "DELETE",
+      });
+      toast.success("User berhasil dihapus");
+      fetchUsers(); // Refresh list
+    } catch (error) {
+      console.error("Gagal menghapus user:", error);
+      toast.error("Terjadi kesalahan saat menghapus user");
+    }
+  };
 
   const handleSubmit = async () => {
     if (!uname || !password || !selectedRole) {
@@ -193,11 +212,23 @@ const User = () => {
                   </div>
                   <div className="flex items-center gap-4">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold ${roleColor}`}
+                      className={`px-3 py-1 rounded-full text-xs font-bold flex items-center justify-center ${roleColor}`}
                     >
                       {user.roleUser.name.toUpperCase()}
                     </span>
                     <div className={`w-3 h-3 rounded-full ${statusColor}`} />
+                    <div className="flex items-center gap-4">
+                      {/* Tombol Hapus */}
+                      {user.roleUser.name !== "admin" && (
+                        <button
+                          onClick={() => handleDeleteUser(user.id)}
+                          className="text-red-500 hover:text-red-700 p-1"
+                          title="Hapus user"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
