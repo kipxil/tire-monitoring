@@ -45,6 +45,11 @@ const Home = () => {
   const [selectedSite, setSelectedSite] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [unitSearchQuery, setUnitSearchQuery] = useState("");
+  const [installedSearchQuery, setInstalledSearchQuery] = useState("");
+  const [removedSearchQuery, setRemovedSearchQuery] = useState("");
+  const [scrapSearchQuery, setScrapSearchQuery] = useState("");
 
   useEffect(() => {
     // const storedUsername = sessionStorage.getItem("username");
@@ -363,6 +368,20 @@ const Home = () => {
     fetchSite();
   }, []);
 
+  useEffect(() => {
+    setCurrentPageTyre(1);
+    setCurrentPageUnit(1);
+    setCurrentPageTyreInstall(1);
+    setCurrentPageTyreRemove(1);
+    setCurrentPageTyreScrap(1);
+  }, [
+    searchQuery,
+    unitSearchQuery,
+    installedSearchQuery,
+    removedSearchQuery,
+    scrapSearchQuery,
+  ]);
+
   const getStatus = (tyre) => {
     if (tyre.isScrap)
       return { label: "Scrap", className: "bg-gray-300 text-gray-800" };
@@ -395,22 +414,99 @@ const Home = () => {
     (tyre) => tyre.isScrap === true
   );
 
+  const searchedTyres = filteredTyres.filter((tyre) =>
+    tyre.stockTyre.serialNumber
+      .toLowerCase()
+      .includes(searchQuery.trim().toLowerCase())
+  );
+  const searchedUnits = filteredUnits.filter((unit) =>
+    unit.nomorUnit.toLowerCase().includes(unitSearchQuery.trim().toLowerCase())
+  );
+
+  const searchedInstalledTyres = filteredTyresInstall.filter((tyre) =>
+    tyre.stockTyre.serialNumber
+      .toLowerCase()
+      .includes(installedSearchQuery.trim().toLowerCase())
+  );
+
+  const searchedRemovedTyres = filteredTyresRemove.filter((tyre) =>
+    tyre.stockTyre.serialNumber
+      .toLowerCase()
+      .includes(removedSearchQuery.trim().toLowerCase())
+  );
+
+  const searchedScrapTyres = filteredTyresScrap.filter((tyre) =>
+    tyre.stockTyre.serialNumber
+      .toLowerCase()
+      .includes(scrapSearchQuery.trim().toLowerCase())
+  );
+
+  const tyreSearchInput = (
+    <input
+      type="text"
+      placeholder="Search by serial number..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className="mt-2 sm:mt-0 px-4 py-2 border border-gray-300 rounded-md w-full sm:w-64"
+    />
+  );
+
+  const unitSearchInput = (
+    <input
+      type="text"
+      placeholder="Search unit..."
+      value={unitSearchQuery}
+      onChange={(e) => setUnitSearchQuery(e.target.value)}
+      className="mt-2 sm:mt-0 px-4 py-2 border border-gray-300 rounded-md w-full sm:w-64"
+    />
+  );
+
+  const installedSearchInput = (
+    <input
+      type="text"
+      placeholder="Search installed tyre..."
+      value={installedSearchQuery}
+      onChange={(e) => setInstalledSearchQuery(e.target.value)}
+      className="mt-2 sm:mt-0 px-4 py-2 border border-gray-300 rounded-md w-full sm:w-64"
+    />
+  );
+
+  const removedSearchInput = (
+    <input
+      type="text"
+      placeholder="Search removed tyre..."
+      value={removedSearchQuery}
+      onChange={(e) => setRemovedSearchQuery(e.target.value)}
+      className="mt-2 sm:mt-0 px-4 py-2 border border-gray-300 rounded-md w-full sm:w-64"
+    />
+  );
+
+  const scrapSearchInput = (
+    <input
+      type="text"
+      placeholder="Search scrap tyre..."
+      value={scrapSearchQuery}
+      onChange={(e) => setScrapSearchQuery(e.target.value)}
+      className="mt-2 sm:mt-0 px-4 py-2 border border-gray-300 rounded-md w-full sm:w-64"
+    />
+  );
+
   // Pagination logic untuk data ban
   const indexOfLastTyre = currentPageTyre * itemsPerPage;
   const indexOfFirstTyre = indexOfLastTyre - itemsPerPage;
-  const currentTyres = filteredTyres.slice(indexOfFirstTyre, indexOfLastTyre);
+  const currentTyres = searchedTyres.slice(indexOfFirstTyre, indexOfLastTyre);
   const totalPagesTyre = Math.ceil(tyres.length / itemsPerPage);
 
   // Pagination logic untuk data unit
   const indexOfLastUnit = currentPageUnit * itemsPerPage;
   const indexOfFirstUnit = indexOfLastUnit - itemsPerPage;
-  const currentUnits = filteredUnits.slice(indexOfFirstUnit, indexOfLastUnit);
+  const currentUnits = searchedUnits.slice(indexOfFirstUnit, indexOfLastUnit);
   const totalPagesUnit = Math.ceil(units.length / itemsPerPage);
 
   //pagination logic data ban terpasang
   const indexOfLastTyreInstall = currentPageTyreInstall * itemsPerPage;
   const indexOfFirstTyreInstall = indexOfLastTyreInstall - itemsPerPage;
-  const currentTyresInstall = filteredTyresInstall.slice(
+  const currentTyresInstall = searchedInstalledTyres.slice(
     indexOfFirstTyreInstall,
     indexOfLastTyreInstall
   );
@@ -421,7 +517,7 @@ const Home = () => {
   //pagination logic data ban terlepas
   const indexOfLastTyreRemove = currentPageTyreRemove * itemsPerPage;
   const indexOfFirstTyreRemove = indexOfLastTyreRemove - itemsPerPage;
-  const currentTyresRemove = filteredTyresRemove.slice(
+  const currentTyresRemove = searchedRemovedTyres.slice(
     indexOfFirstTyreRemove,
     indexOfLastTyreRemove
   );
@@ -431,7 +527,7 @@ const Home = () => {
   //pagination logic data ban scrap
   const indexOfLastTyreScrap = currentPageTyreScrap * itemsPerPage;
   const indexOfFirstTyreScrap = indexOfLastTyreScrap - itemsPerPage;
-  const currentTyresScrap = filteredTyresScrap.slice(
+  const currentTyresScrap = searchedScrapTyres.slice(
     indexOfFirstTyreScrap,
     indexOfLastTyreScrap
   );
@@ -564,6 +660,7 @@ const Home = () => {
           onPrev={handlePrevUnit}
           onNext={handleNextUnit}
           indexOfFirstUnit={indexOfFirstUnit}
+          searchInput={unitSearchInput}
         />
         <UnitDetailModal
           unitData={selectedUnit}
@@ -584,6 +681,7 @@ const Home = () => {
             indexOfFirstItem={indexOfFirstTyre}
             getStatus={getStatus}
             onDeleteTyre={handleDeleteTyre}
+            searchInput={tyreSearchInput}
           />
           <TyreDetailModal
             show={showPopup}
@@ -604,6 +702,7 @@ const Home = () => {
             onNext={handleNextTyreInstall}
             indexOfFirstItem={indexOfFirstTyreInstall}
             getStatus={getStatus}
+            searchInput={installedSearchInput}
           />
           <TyreDetailModal
             show={showPopup}
@@ -624,6 +723,7 @@ const Home = () => {
             onNext={handleNextTyreRemove}
             indexOfFirstItem={indexOfFirstTyreRemove}
             getStatus={getStatus}
+            searchInput={removedSearchInput}
           />
           <TyreDetailModal
             show={showPopup}
@@ -644,6 +744,7 @@ const Home = () => {
             onNext={handleNextTyreScrap}
             indexOfFirstItem={indexOfFirstTyreScrap}
             getStatus={getStatus}
+            searchInput={scrapSearchInput}
           />
           <TyreDetailModal
             show={showPopup}

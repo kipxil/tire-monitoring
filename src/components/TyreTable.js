@@ -15,11 +15,15 @@ const TyreTable = ({
   onNext,
   indexOfFirstItem,
   getStatus,
+  searchInput,
 }) => {
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4 border-b pb-2">{title}</h2>
-      <div className="overflow-x-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 border-b pb-2">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        {searchInput}
+      </div>
+      <div className="overflow-x-auto custom-scrollbar">
         <table className="min-w-full table-auto text-sm text-left border">
           <thead className="bg-[#0F2741] text-white">
             <tr>
