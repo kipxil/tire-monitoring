@@ -262,7 +262,7 @@ const ActionTyreManager = () => {
                   />
                 </div>
 
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                   <input
                     type="checkbox"
                     id="isDone"
@@ -279,6 +279,49 @@ const ActionTyreManager = () => {
                   >
                     Ready for use
                   </label>
+                </div> */}
+                <div className="flex items-center gap-6">
+                  {/* Ready for Use */}
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="ready"
+                      name="statusTyre"
+                      value="true"
+                      checked={formData.isDone === true}
+                      onChange={(e) =>
+                        handleInputChange("isDone", e.target.value === "true")
+                      }
+                      className="h-4 w-4"
+                    />
+                    <label
+                      htmlFor="ready"
+                      className="ml-2 text-sm text-gray-700"
+                    >
+                      Ready for use
+                    </label>
+                  </div>
+
+                  {/* Scrap */}
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      id="scrap"
+                      name="statusTyre"
+                      value="false"
+                      checked={formData.isDone === false}
+                      onChange={(e) =>
+                        handleInputChange("isDone", e.target.value === "true")
+                      }
+                      className="h-4 w-4"
+                    />
+                    <label
+                      htmlFor="scrap"
+                      className="ml-2 text-sm text-gray-700"
+                    >
+                      Scrap
+                    </label>
+                  </div>
                 </div>
               </div>
 
