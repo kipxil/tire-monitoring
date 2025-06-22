@@ -50,22 +50,15 @@ const Home = () => {
   const [installedSearchQuery, setInstalledSearchQuery] = useState("");
   const [removedSearchQuery, setRemovedSearchQuery] = useState("");
   const [scrapSearchQuery, setScrapSearchQuery] = useState("");
-
-  useEffect(() => {
-    // const storedUsername = sessionStorage.getItem("username");
-    const storedRoleId = sessionStorage.getItem("roleId");
-    // if (storedUsername) setUsername(storedUsername);
-    if (storedRoleId) setRoleId(parseInt(storedRoleId));
-  }, []);
-  const itemsPerPage = 10; // Jumlah data per halaman
   const navigate = useNavigate();
-  const user = JSON.parse(sessionStorage.getItem("user"));
 
+  const itemsPerPage = 10; // Jumlah data per halaman
+
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const capitalizeFirst = (text) => {
     if (!text) return "";
     return text.charAt(0).toUpperCase() + text.slice(1);
   };
-
   const username = capitalizeFirst(user?.name);
 
   const fetchUnitDetails = async (unitId) => {
@@ -332,36 +325,40 @@ const Home = () => {
     }
   };
 
+  const fetchData = async () => {
+    try {
+      // const response = await fetch('URL_API_KAMU');
+      const data = await apiFetch("/dropdown");
+
+      const totalUnit = data.unit?.length || 0;
+      const totalTyre = data.tyre?.length || 0;
+      const installedTyre =
+        data.tyre?.filter((t) => t.isInstalled)?.length || 0;
+      const removedTyre =
+        data.tyre?.filter((t) => !t.isInstalled && !t.isScrap)?.length || 0;
+      const scrapTyre = data.tyre?.filter((t) => t.isScrap)?.length || 0;
+
+      const result = await apiFetch("/user");
+      const userTotal = result.data?.length || 0;
+
+      setSummary({
+        totalUnit,
+        totalTyre,
+        installedTyre,
+        removedTyre,
+        scrapTyre,
+        userTotal,
+      });
+    } catch (error) {
+      console.error("Gagal mengambil data:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // const response = await fetch('URL_API_KAMU');
-        const data = await apiFetch("/dropdown");
-
-        const totalUnit = data.unit?.length || 0;
-        const totalTyre = data.tyre?.length || 0;
-        const installedTyre =
-          data.tyre?.filter((t) => t.isInstalled)?.length || 0;
-        const removedTyre =
-          data.tyre?.filter((t) => !t.isInstalled)?.length || 0;
-        const scrapTyre = data.tyre?.filter((t) => t.isScrap)?.length || 0;
-
-        const result = await apiFetch("/user");
-        const userTotal = result.data?.length || 0;
-
-        setSummary({
-          totalUnit,
-          totalTyre,
-          installedTyre,
-          removedTyre,
-          scrapTyre,
-          userTotal,
-        });
-      } catch (error) {
-        console.error("Gagal mengambil data:", error);
-      }
-    };
-
+    // const storedUsername = sessionStorage.getItem("username");
+    const storedRoleId = sessionStorage.getItem("roleId");
+    // if (storedUsername) setUsername(storedUsername);
+    if (storedRoleId) setRoleId(parseInt(storedRoleId));
     fetchTyres();
     fetchUnits();
     fetchData();
@@ -524,6 +521,7 @@ const Home = () => {
   const totalPagesTyreRemove = Math.ceil(
     filteredTyresRemove.length / itemsPerPage
   );
+
   //pagination logic data ban scrap
   const indexOfLastTyreScrap = currentPageTyreScrap * itemsPerPage;
   const indexOfFirstTyreScrap = indexOfLastTyreScrap - itemsPerPage;
