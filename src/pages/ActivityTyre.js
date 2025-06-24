@@ -1,6 +1,7 @@
 import { apiFetch } from "../services/apiClient";
 import React, { useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
+import Select from "react-select";
 import userLogo from "../assets/logo user.png";
 
 const UpdateTyre = () => {
@@ -330,18 +331,23 @@ const UpdateTyre = () => {
               <label className="block font-medium mb-1">
                 Install Tyre <span className="text-red-500">*</span>
               </label>
-              <select
-                className="w-full p-2 border rounded-md"
-                value={serialNumberPasang}
-                onChange={(e) => setSerialNumberPasang(e.target.value)}
-              >
-                <option value="">-- Select Tyre --</option>
-                {serialNumberPasangList.map((pasang) => (
-                  <option key={pasang.stockTyre.id} value={pasang.stockTyre.id}>
-                    {pasang.stockTyre.serialNumber}
-                  </option>
-                ))}
-              </select>
+              <Select
+                options={serialNumberPasangList.map((pasang) => ({
+                  value: pasang.stockTyre.id,
+                  label: pasang.stockTyre.serialNumber,
+                }))}
+                value={serialNumberPasangList
+                  .map((pasang) => ({
+                    value: pasang.stockTyre.id,
+                    label: pasang.stockTyre.serialNumber,
+                  }))
+                  .find((opt) => opt.value === parseInt(serialNumberPasang))}
+                onChange={(selectedOption) =>
+                  setSerialNumberPasang(selectedOption?.value || "")
+                }
+                placeholder="-- Select Tyre --"
+                isClearable
+              />
             </div>
             <div>
               <label className="block font-medium mb-1">Man Power</label>
