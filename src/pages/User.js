@@ -76,6 +76,8 @@ const User = () => {
 
   const user = JSON.parse(sessionStorage.getItem("user"));
 
+  const loggedInUserId = user?.id;
+
   const capitalizeFirst = (text) => {
     if (!text) return "";
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -208,7 +210,14 @@ const User = () => {
                     >
                       {user.name[0].toUpperCase()}
                     </div>
-                    <div>{user.name}</div>
+                    <div>
+                      {user.name}
+                      {user.id === loggedInUserId && (
+                        <span className="text-xs italic text-gray-500 ml-1">
+                          (sedang digunakan)
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <span
@@ -219,7 +228,14 @@ const User = () => {
                     <div className={`w-3 h-3 rounded-full ${statusColor}`} />
                     <div className="flex items-center gap-4">
                       {/* Tombol Hapus */}
-                      {user.roleUser.name !== "admin" && (
+                      {/* <button
+                        onClick={() => handleDeleteUser(user.id)}
+                        className="text-red-500 hover:text-red-700 p-1"
+                        title="Hapus user"
+                      >
+                        <Trash2 size={18} />
+                      </button> */}
+                      {user.id !== loggedInUserId && (
                         <button
                           onClick={() => handleDeleteUser(user.id)}
                           className="text-red-500 hover:text-red-700 p-1"
