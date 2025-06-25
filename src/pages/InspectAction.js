@@ -8,6 +8,7 @@ const ActionTyreManager = () => {
   const [removePurposeOptions, setRemovePurposeOptions] = useState([]);
   const [selectedAction, setSelectedAction] = useState(null);
   const [filterPurposeId, setFilterPurposeId] = useState("");
+  const [searchSerial, setSearchSerial] = useState("");
   const [formData, setFormData] = useState({
     dateTimeWork: "",
     dateTimeDone: "",
@@ -97,12 +98,24 @@ const ActionTyreManager = () => {
     return new Date(dateTime).toLocaleString("id-ID");
   };
 
+  // const filteredActions = actionTyres
+  //   .filter((action) => !action.isDone) // Hanya tampilkan yang belum selesai
+  //   .filter((action) =>
+  //     filterPurposeId === ""
+  //       ? true
+  //       : action.removePurposeId === parseInt(filterPurposeId)
+  //   );
   const filteredActions = actionTyres
-    .filter((action) => !action.isDone) // Hanya tampilkan yang belum selesai
+    .filter((action) => !action.isDone)
     .filter((action) =>
       filterPurposeId === ""
         ? true
         : action.removePurposeId === parseInt(filterPurposeId)
+    )
+    .filter((action) =>
+      action.tyre.stockTyre.serialNumber
+        .toLowerCase()
+        .includes(searchSerial.toLowerCase())
     );
 
   return (
@@ -159,7 +172,19 @@ const ActionTyreManager = () => {
             <thead className="bg-gray-100">
               <tr>
                 <th className="border px-4 py-2 text-left">ID</th>
-                <th className="border px-4 py-2 text-left">Serial Number</th>
+                {/* <th className="border px-4 py-2 text-left">Serial Number</th> */}
+                <th className="border px-4 py-2 text-left">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">Serial Number</span>
+                    <input
+                      type="text"
+                      placeholder="Search"
+                      value={searchSerial}
+                      onChange={(e) => setSearchSerial(e.target.value)}
+                      className="w-35 px-2 py-1 border border-gray-300 rounded text-xs ml-auto"
+                    />
+                  </div>
+                </th>
                 <th className="border px-4 py-2 text-left">Purpose</th>
                 <th className="border px-4 py-2 text-left">Status</th>
                 <th className="border px-4 py-2 text-left">Date Work</th>

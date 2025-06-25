@@ -91,16 +91,19 @@ const UpdateTyre = () => {
     const unit = unitList.find((u) => u.id.toString() === noUnit);
     if (!unit) return;
 
-    const installedTyreIds = unit.tyres.map((t) => t.tyreId);
+    // Ambil semua stockTyreId dari ban yang sedang terpasang di unit
+    const installedStockTyreIds = unit.tyres.map((t) => t.tyre?.stockTyreId);
 
+    // Filter ban di master list yang id-nya cocok
     const filtered = serialNumberLepasMaster.filter((ban) =>
-      installedTyreIds.includes(ban.stockTyre.id)
+      installedStockTyreIds.includes(ban.stockTyre.id)
     );
 
     setSerialNumberLepasList(filtered);
-    // setLokasiLepas(unit.location || "");
+
     setHm(unit.hmUnit?.toString() || "");
     setKm(unit.kmUnit?.toString() || "");
+    setLokasiLepas(unit.location || "");
   }, [noUnit, unitList, serialNumberLepasMaster]);
 
   const handleSubmit = async () => {
