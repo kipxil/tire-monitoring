@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Select from "react-select";
 import { apiFetch } from "../services/apiClient";
 import userLogo from "../assets/logo user.png";
 import { toast } from "react-toastify";
@@ -146,24 +147,38 @@ const Inspect = () => {
             <label className="block font-medium mb-1">
               Serial Number <span className="text-red-500">*</span>
             </label>
-            <select
-              className="w-full p-2 border rounded-md"
-              value={selectedTyreId}
-              onChange={(e) => setSelectedTyreId(e.target.value)}
-            >
-              <option value="">-- Select Tyre --</option>
-              {tyres
+            <Select
+              className="w-full"
+              options={tyres
                 .filter(
                   (entry) =>
                     entry.isDone === null ||
                     (entry.isDone === false && entry.tyre.isScrap === false)
-                ) // ✅ hanya tampilkan ban yang isReady === false
-                .map((entry) => (
-                  <option key={entry.id} value={entry.tyre.stockTyre.id}>
-                    {entry.tyre.stockTyre.serialNumber}
-                  </option>
-                ))}
-            </select>
+                )
+                .map((entry) => ({
+                  value: entry.tyre.stockTyre.id.toString(),
+                  label: entry.tyre.stockTyre.serialNumber,
+                  raw: entry, // simpan raw data jika diperlukan
+                }))}
+              value={
+                tyres
+                  .filter(
+                    (entry) =>
+                      entry.isDone === null ||
+                      (entry.isDone === false && entry.tyre.isScrap === false)
+                  )
+                  .map((entry) => ({
+                    value: entry.tyre.stockTyre.id.toString(),
+                    label: entry.tyre.stockTyre.serialNumber,
+                  }))
+                  .find((opt) => opt.value === selectedTyreId) || null
+              }
+              onChange={(selected) => {
+                setSelectedTyreId(selected ? selected.value : "");
+              }}
+              placeholder="-- Select Tyre --"
+              isClearable
+            />
           </div>
           <div>
             <label className="block font-medium mb-1">Tyre Position</label>
