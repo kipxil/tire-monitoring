@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import Select from "react-select";
 import { apiFetch } from "../services/apiClient";
 import userLogo from "../assets/logo user.png";
 
@@ -179,19 +180,30 @@ const EditTyre = () => {
             <label className="block font-medium mb-1">
               Select Tyre <span className="text-red-500">*</span>
             </label>
-            <select
-              className="w-full p-2 border rounded-md"
-              value={selectedTyreId}
-              onChange={(e) => setSelectedTyreId(e.target.value)}
-            >
-              <option value="">-- Select Tyre --</option>
-              {tyreList.map((tyre) => (
-                <option key={tyre.id} value={tyre.id}>
-                  {tyre.stockTyre.serialNumber}
-                </option>
-              ))}
-            </select>
+            <Select
+              className="w-full"
+              options={tyreList.map((tyre) => ({
+                value: tyre.id,
+                label: tyre.stockTyre.serialNumber,
+              }))}
+              value={
+                tyreList
+                  .map((tyre) => ({
+                    value: tyre.id,
+                    label: tyre.stockTyre.serialNumber,
+                  }))
+                  .find(
+                    (option) => option.value === parseInt(selectedTyreId)
+                  ) || null
+              }
+              onChange={(selected) =>
+                setSelectedTyreId(selected ? selected.value : "")
+              }
+              placeholder="-- Select Tyre --"
+              isClearable
+            />
           </div>
+
           <h2 className="text-blue-600 text-lg font-bold mb-4 border-b pb-2">
             Edit Tyre
           </h2>

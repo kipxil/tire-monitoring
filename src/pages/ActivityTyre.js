@@ -106,6 +106,11 @@ const UpdateTyre = () => {
     setLokasiLepas(unit.location || "");
   }, [noUnit, unitList, serialNumberLepasMaster]);
 
+  const alasanOptions = alasanLepasList.map((item) => ({
+    value: item.id,
+    label: item.description,
+  }));
+
   const handleSubmit = async () => {
     if (
       !noUnit ||
@@ -206,18 +211,26 @@ const UpdateTyre = () => {
               <label className="block font-medium mb-1">
                 Unit <span className="text-red-500">*</span>
               </label>
-              <select
-                className="w-full p-2 border rounded-md"
-                value={noUnit}
-                onChange={(e) => setNoUnit(e.target.value)}
-              >
-                <option value="">-- Select Unit --</option>
-                {unitList.map((unit) => (
-                  <option key={unit.id} value={unit.id}>
-                    {unit.nomorUnit}
-                  </option>
-                ))}
-              </select>
+              <Select
+                options={unitList.map((unit) => ({
+                  value: unit.id,
+                  label: unit.nomorUnit,
+                }))}
+                value={
+                  unitList
+                    .map((unit) => ({
+                      value: unit.id,
+                      label: unit.nomorUnit,
+                    }))
+                    .find((option) => option.value === parseInt(noUnit)) || null
+                }
+                onChange={(selected) =>
+                  setNoUnit(selected ? selected.value.toString() : "")
+                }
+                placeholder="-- Select Unit --"
+                isClearable
+                className="w-full"
+              />
             </div>
             <div>
               <label className="block font-medium mb-1">Location Unit</label>
@@ -254,18 +267,29 @@ const UpdateTyre = () => {
               <label className="block font-medium mb-1">
                 Removed Tyre <span className="text-red-500">*</span>
               </label>
-              <select
-                className="w-full p-2 border rounded-md"
-                value={serialNumberLepas}
-                onChange={(e) => setSerialNumberLepas(e.target.value)}
-              >
-                <option value="">-- Select Tyre --</option>
-                {serialNumberLepasList.map((lepas) => (
-                  <option key={lepas.id} value={lepas.id}>
-                    {lepas.stockTyre.serialNumber}
-                  </option>
-                ))}
-              </select>
+              <Select
+                options={serialNumberLepasList.map((lepas) => ({
+                  value: lepas.id,
+                  label: lepas.stockTyre.serialNumber,
+                }))}
+                value={
+                  serialNumberLepasList
+                    .map((lepas) => ({
+                      value: lepas.id,
+                      label: lepas.stockTyre.serialNumber,
+                    }))
+                    .find((opt) => opt.value === parseInt(serialNumberLepas)) ||
+                  null
+                }
+                onChange={(selected) =>
+                  setSerialNumberLepas(
+                    selected ? selected.value.toString() : ""
+                  )
+                }
+                placeholder="-- Select Tyre --"
+                isClearable
+                className="w-full"
+              />
             </div>
             <div>
               <label className="block font-medium mb-1">
@@ -293,18 +317,26 @@ const UpdateTyre = () => {
               <label className="block font-medium mb-1">
                 Remove reason <span className="text-red-500">*</span>
               </label>
-              <select
-                className="w-full p-2 border rounded-md"
-                value={alasanLepas}
-                onChange={(e) => setAlasanLepas(e.target.value)}
-              >
-                <option value="">-- Select Reason --</option>
-                {alasanLepasList.map((banl) => (
-                  <option key={banl.id} value={banl.id}>
-                    {banl.description}
-                  </option>
-                ))}
-              </select>
+              <Select
+                className="w-full"
+                options={alasanLepasList.map((item) => ({
+                  value: item.id,
+                  label: item.description,
+                }))}
+                value={
+                  alasanLepasList
+                    .map((item) => ({
+                      value: item.id,
+                      label: item.description,
+                    }))
+                    .find((option) => option.value === alasanLepas) || null
+                }
+                onChange={(selected) =>
+                  setAlasanLepas(selected ? selected.value : "")
+                }
+                placeholder="-- Select Reason --"
+                isClearable
+              />
             </div>
             <div>
               <label className="block font-medium mb-1">
@@ -339,12 +371,16 @@ const UpdateTyre = () => {
                   value: pasang.stockTyre.id,
                   label: pasang.stockTyre.serialNumber,
                 }))}
-                value={serialNumberPasangList
-                  .map((pasang) => ({
-                    value: pasang.stockTyre.id,
-                    label: pasang.stockTyre.serialNumber,
-                  }))
-                  .find((opt) => opt.value === parseInt(serialNumberPasang))}
+                value={
+                  serialNumberPasangList
+                    .map((pasang) => ({
+                      value: pasang.stockTyre.id,
+                      label: pasang.stockTyre.serialNumber,
+                    }))
+                    .find(
+                      (opt) => opt.value === parseInt(serialNumberPasang)
+                    ) || null
+                }
                 onChange={(selectedOption) =>
                   setSerialNumberPasang(selectedOption?.value || "")
                 }

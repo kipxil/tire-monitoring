@@ -8,8 +8,11 @@ const User = () => {
   const [uname, setUname] = useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [users, setUsers] = useState([]);
+
+  const usersPerPage = 5; // atau ubah sesuai keinginan
 
   const fetchUsers = async () => {
     try {
@@ -25,6 +28,15 @@ const User = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset ke halaman pertama saat user list berubah
+  }, [users]);
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(users.length / usersPerPage);
 
   const handleDeleteUser = async (userId) => {
     const confirmDelete = window.confirm(
@@ -175,7 +187,7 @@ const User = () => {
             User Accounts
           </div>
           <div className="p-4 divide-y text-sm">
-            {users.map((user, i) => {
+            {currentUsers.map((user, i) => {
               // Tentukan warna berdasarkan role
               const roleColor =
                 user.roleUser.name === "admin"
@@ -249,6 +261,25 @@ const User = () => {
                 </div>
               );
             })}
+          </div>
+          <div className="flex justify-between items-center mt-4 px-4">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+              className="px-3 py-1 rounded bg-gray-200 text-sm hover:bg-gray-300 disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <p className="text-sm">
+              Page {currentPage} of {totalPages}
+            </p>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(currentPage + 1)}
+              className="px-3 py-1 rounded bg-gray-200 text-sm hover:bg-gray-300 disabled:opacity-50"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>

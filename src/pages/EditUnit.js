@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import Select from "react-select";
 import { apiFetch } from "../services/apiClient";
 import userLogo from "../assets/logo user.png";
 
@@ -127,23 +128,27 @@ const EditUnit = () => {
         {/* === Informasi Dasar Ban === */}
         {/* <h2 className="text-lg font-semibold mb-4 border-b pb-2">Informasi Dasar Ban</h2> */}
         <div className="space-y-4 pb-4">
-          <div>
-            <label className="block font-medium mb-1">
-              Select Unit <span className="text-red-500">*</span>
-            </label>
-            <select
-              className="w-full p-2 border rounded-md"
-              value={selectedUnitId}
-              onChange={(e) => setselectedUnitId(e.target.value)}
-            >
-              <option value="">-- Select Unit --</option>
-              {unitList.map((unit) => (
-                <option key={unit.id} value={unit.id}>
-                  {unit.nomorUnit}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Select
+            className="w-full"
+            options={unitList.map((unit) => ({
+              value: unit.id,
+              label: unit.nomorUnit,
+            }))}
+            value={
+              unitList
+                .map((unit) => ({
+                  value: unit.id,
+                  label: unit.nomorUnit,
+                }))
+                .find((option) => option.value === parseInt(selectedUnitId)) ||
+              null
+            }
+            onChange={(selected) =>
+              setselectedUnitId(selected ? selected.value : "")
+            }
+            placeholder="-- Select Unit --"
+            isClearable
+          />
           <h2 className="text-blue-600 text-lg font-bold mb-4 border-b pb-2">
             Edit Unit
           </h2>
