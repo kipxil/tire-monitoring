@@ -1,6 +1,7 @@
 // import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../services/apiClient";
 import React, { useState, useEffect } from "react";
+import Select from "react-select";
 import { toast } from "react-toastify";
 import userLogo from "../assets/logo user.png";
 
@@ -258,18 +259,27 @@ const AddUnit = () => {
                   <label className="block font-medium mb-1">
                     Tyre {index + 1}
                   </label>
-                  <select
-                    className="w-full p-2 border rounded-md"
-                    value={selectedBans[index]}
-                    onChange={(e) => handleBanChange(index, e.target.value)}
-                  >
-                    <option value="">-- Pilih Ban --</option>
-                    {getAvailableBans(index).map((ban) => (
-                      <option key={ban.stockTyre.id} value={ban.stockTyre.id}>
-                        {ban.stockTyre.serialNumber}
-                      </option>
-                    ))}
-                  </select>
+                  <Select
+                    className="w-full"
+                    options={getAvailableBans(index).map((ban) => ({
+                      value: ban.stockTyre.id.toString(),
+                      label: ban.stockTyre.serialNumber,
+                    }))}
+                    value={
+                      getAvailableBans(index)
+                        .map((ban) => ({
+                          value: ban.stockTyre.id.toString(),
+                          label: ban.stockTyre.serialNumber,
+                        }))
+                        .find((opt) => opt.value === selectedBans[index]) ||
+                      null
+                    }
+                    onChange={(selected) =>
+                      handleBanChange(index, selected ? selected.value : "")
+                    }
+                    placeholder="-- Pilih Ban --"
+                    isClearable
+                  />
                 </div>
               ))}
             </div>
