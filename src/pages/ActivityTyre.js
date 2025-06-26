@@ -106,11 +106,6 @@ const UpdateTyre = () => {
     setLokasiLepas(unit.location || "");
   }, [noUnit, unitList, serialNumberLepasMaster]);
 
-  const alasanOptions = alasanLepasList.map((item) => ({
-    value: item.id,
-    label: item.description,
-  }));
-
   const handleSubmit = async () => {
     if (
       !noUnit ||
