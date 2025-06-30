@@ -262,7 +262,7 @@ const User = () => {
               );
             })}
           </div>
-          <div className="flex justify-between items-center mt-4 px-4">
+          <div className="flex justify-center items-center space-x-2 mt-4 mb-4">
             <button
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(currentPage - 1)}
