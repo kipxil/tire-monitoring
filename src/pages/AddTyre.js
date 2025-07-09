@@ -144,7 +144,7 @@ const AddTyre = () => {
               onChange={(e) => setSite(e.target.value)}
             >
               <option value="">-- Select Site --</option>
-              {(user?.roleId === 1
+              {(user?.roleUser?.id === 1
                 ? siteList // Admin: tampilkan semua
                 : siteList.filter((s) => s.name === user.roleUser.name)
               ) // Non-admin: filter siteId sesuai roleId

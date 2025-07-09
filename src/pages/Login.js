@@ -28,30 +28,48 @@ const Login = ({ onLogin }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    const dataUser = {
+      name: username,
+      password: password,
+    };
+
     try {
-      const result = await apiFetch("/user");
+      const result = await apiFetch("/login", {
+        method: "POST",
+        body: JSON.stringify(dataUser),
+      });
 
-      // Debug: tampilkan data user dari server
-      console.log("Data user dari API:", result.data);
-
-      // Cek apakah ada user yang cocok
-      const user = result.data.find(
-        (u) => u.name === username && u.password === password
-      );
-
-      if (user) {
-        console.log("Login berhasil sebagai:", user.name);
-        sessionStorage.setItem("isLoggedIn", "true");
-        sessionStorage.setItem("user", JSON.stringify(user));
-        sessionStorage.setItem("roleId", user.roleId);
-        onLogin(); // Tidak kirim role — akses semua fitur
-      } else {
-        // alert("Username atau password salah");
-        toast.error("Login gagal. Periksa Kembali username dan password!");
+      if (!result.token) {
+        toast.error("Login gagal. Token tidak ditemukan.");
+        return;
       }
+
+      // Simpan token dan user info (jika ada)
+      sessionStorage.setItem("token", result.token);
+      sessionStorage.setItem("isLoggedIn", "true");
+      // const token = sessionStorage.getItem("token");
+
+      const userList = await apiFetch("/user", {
+        // headers: {
+        //   Authorization: `Bearer ${result.token}`, // jika pakai Bearer token
+        // },
+      });
+
+      const currentUser = userList.data.find((u) => u.name === username);
+
+      if (!currentUser) {
+        toast.error("Data user tidak ditemukan.");
+        return;
+      }
+
+      sessionStorage.setItem("user", JSON.stringify(currentUser));
+      sessionStorage.setItem("roleId", currentUser.roleUser.id);
+
+      toast.success("Login berhasil!");
+      onLogin(); // Trigger ke parent (untuk redirect ke dashboard, dll)
     } catch (error) {
       console.error("Terjadi kesalahan saat login:", error);
-      toast.error("Gagal menghubungi server.");
+      toast.error("Login gagal. Periksa username dan password.");
     }
   };
 

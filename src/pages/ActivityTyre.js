@@ -47,7 +47,7 @@ const UpdateTyre = () => {
       const allUnits = data.unit || [];
 
       const filteredUnits =
-        user.roleId === 1
+        user.roleUser.id === 1
           ? allUnits
           : allUnits.filter((unit) => unit.site.name === user.roleUser.name);
 

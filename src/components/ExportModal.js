@@ -17,7 +17,7 @@ const ExportModal = ({
   if (!show) return null;
 
   const filteredSites =
-    user?.roleId === 1
+    user?.roleUser.id === 1
       ? siteList
       : siteList.filter((s) => s.name === user.roleUser.name);
 

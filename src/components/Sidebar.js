@@ -42,6 +42,7 @@ const Sidebar = ({ onLogout }) => {
     sessionStorage.removeItem("isLoggedIn");
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("roleId");
+    sessionStorage.removeItem("token");
     onLogout();
     navigate("/"); // Redirect ke login
   };
