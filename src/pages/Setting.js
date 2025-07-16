@@ -24,7 +24,7 @@ const Setting = () => {
     apiFetch("/dropdown")
       // .then((res) => res.json())
       .then((data) => setData(data))
-      .catch((err) => console.error("Failed to fetch dropdown data:", err));
+      .catch((err) => console.error("Failed to fetch dropdown data"));
   }, []);
 
   const typeConfig = {
@@ -61,8 +61,8 @@ const Setting = () => {
       return;
     }
     if (isCreating) {
-      console.log("Posting to:", selectedType);
-      console.log("Payload:", formData);
+      // console.log("Posting to:", selectedType);
+      // console.log("Payload:", formData);
 
       apiFetch(`/dropdown/${selectedType}`, {
         method: "POST",
@@ -76,7 +76,7 @@ const Setting = () => {
             [selectedType]: [...prev[selectedType], newItem],
           }));
         })
-        .catch((err) => console.error("Failed to create item:", err));
+        .catch((err) => console.error("Failed to create item"));
       setIsCreating(false);
     } else {
       apiFetch(`/dropdown/${selectedType}/${editingItem}`, {
@@ -93,7 +93,7 @@ const Setting = () => {
             ),
           }));
         })
-        .catch((err) => console.error("Failed to update item:", err));
+        .catch((err) => console.error("Failed to update item"));
       setEditingItem(null);
     }
   };
@@ -109,7 +109,7 @@ const Setting = () => {
             [selectedType]: prev[selectedType].filter((item) => item.id !== id),
           }));
         })
-        .catch((err) => console.error("Failed to delete item:", err));
+        .catch((err) => console.error("Failed to delete item"));
     }
   };
 

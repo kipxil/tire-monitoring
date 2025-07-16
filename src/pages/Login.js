@@ -68,7 +68,7 @@ const Login = ({ onLogin }) => {
       toast.success("Login berhasil!");
       onLogin(); // Trigger ke parent (untuk redirect ke dashboard, dll)
     } catch (error) {
-      console.error("Terjadi kesalahan saat login:", error);
+      console.error("Terjadi kesalahan saat login");
       toast.error("Login gagal. Periksa username dan password.");
     }
   };

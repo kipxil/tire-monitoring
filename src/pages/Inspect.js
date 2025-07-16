@@ -40,7 +40,7 @@ const Inspect = () => {
       setUnits(dropdown.unit || []);
       setRemovePurposeList(dropdown.removePurpose || []);
     } catch (error) {
-      console.error("Gagal fetch data ban/unit:", error);
+      console.error("Gagal fetch data ban/unit");
     }
   };
 
@@ -92,11 +92,11 @@ const Inspect = () => {
     };
 
     try {
-      const result = await apiFetch(`/inspection/${selectedInspectionId}`, {
+      await apiFetch(`/inspection/${selectedInspectionId}`, {
         method: "PUT",
         body: JSON.stringify(dataInspect),
       });
-      console.log(dataInspect);
+      // console.log(dataInspect);
       toast.success("Inspect berhasil!");
       await fetchData();
       setSelectedTyreId("");
@@ -111,9 +111,9 @@ const Inspect = () => {
         hmUnit: "",
         installedUnitId: "",
       });
-      console.log("Response: ", result);
+      // console.log("Response: ", result);
     } catch (error) {
-      console.error("Error: ", error);
+      console.error("Error");
       toast.error("Gagal Inspect!");
     }
   };

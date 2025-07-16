@@ -42,7 +42,7 @@ const AddUnit = () => {
       setSiteList(data.site || []);
       setAmountTyreList(data.unitTyreAmount || []);
     } catch (error) {
-      console.error("Gagal fetch data dropdown:", error);
+      console.error("Gagal fetch data dropdown");
     }
   };
   useEffect(() => {
@@ -121,8 +121,8 @@ const AddUnit = () => {
     };
 
     try {
-      console.log(dataUnit);
-      const result = await apiFetch("/unit", {
+      // console.log(dataUnit);
+      await apiFetch("/unit", {
         method: "POST",
         body: JSON.stringify(dataUnit),
       });
@@ -134,9 +134,9 @@ const AddUnit = () => {
       setSite("");
       setTireCount("");
       setDateTime("");
-      console.log("Response: ", result);
+      // console.log("Response: ", result);
     } catch (error) {
-      console.error("Error: ", error);
+      console.error("Error");
       toast.error("Gagal menghubungi server");
     }
   };

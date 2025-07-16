@@ -41,7 +41,7 @@ const AddTyre = () => {
       setUkuranList(data.tyreSize || []);
       setSiteList(data.site || []);
     } catch (error) {
-      console.error("Gagal fetch data dropdown:", error);
+      console.error("Gagal fetch data dropdown");
     }
   };
 
@@ -71,8 +71,8 @@ const AddTyre = () => {
     };
 
     try {
-      console.log(dataBan);
-      const result = await apiFetch("/tyre", {
+      // console.log(dataBan);
+      await apiFetch("/tyre", {
         method: "POST",
         body: JSON.stringify(dataBan),
       });
@@ -90,9 +90,9 @@ const AddTyre = () => {
       setSite("");
       setDateTime("");
       // Debug: tampilkan data user dari server
-      console.log("Response: ", result);
+      // console.log("Response: ", result);
     } catch (error) {
-      console.error("Error: ", error);
+      console.error("Error");
       toast.error("Gagal menghubungi server");
     }
   };

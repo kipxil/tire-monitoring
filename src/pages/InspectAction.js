@@ -35,13 +35,13 @@ const ActionTyreManager = () => {
         apiFetch("/action"),
         apiFetch("/dropdown"),
       ]);
-      console.log(actionData);
-      console.log(dropdownData);
+      // console.log(actionData);
+      // console.log(dropdownData);
 
       setActionTyres(actionData.data);
       setRemovePurposeOptions(dropdownData.removePurpose || []);
     } catch (error) {
-      console.error("Gagal mengambil data:", error);
+      console.error("Gagal mengambil data");
     }
   };
 
@@ -75,7 +75,7 @@ const ActionTyreManager = () => {
     };
 
     try {
-      console.log(updatedData);
+      // console.log(updatedData);
       await apiFetch(`/action/${selectedAction.id}`, {
         method: "PUT",
         headers: {
@@ -88,7 +88,7 @@ const ActionTyreManager = () => {
       fetchData();
       setSelectedAction(null);
     } catch (error) {
-      console.error("Gagal mengupdate data:", error);
+      console.error("Gagal mengupdate data");
       toast.error("Gagal mengupdate data");
     }
   };

@@ -56,7 +56,7 @@ const EditTyre = () => {
       }));
       setUkuranList(sizes);
     } catch (error) {
-      console.error("Gagal mengambil data ban:", error);
+      console.error("Gagal mengambil data ban");
     }
   };
 
@@ -122,7 +122,7 @@ const EditTyre = () => {
         siteId: parseInt(siteId),
         dateTimeUpdate: dateTime,
       };
-      console.log(payload);
+      // console.log(payload);
       await apiFetch(`/tyre/${selectedTyreId}`, {
         method: "PUT",
         body: JSON.stringify(payload),
@@ -145,7 +145,7 @@ const EditTyre = () => {
       setSiteId("");
       setDateTime("");
     } catch (error) {
-      console.error("Gagal memperbarui data:", error);
+      console.error("Gagal memperbarui data");
       toast.error("Terjadi kesalahan saat menyimpan data.");
     }
   };

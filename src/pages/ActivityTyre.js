@@ -71,7 +71,7 @@ const UpdateTyre = () => {
       setSerialNumberPasangList(banNotReady);
       setAirConditionList(data.airCondition || []);
     } catch (error) {
-      console.error("Gagal fetch data dropdown:", error);
+      console.error("Gagal fetch data dropdown");
     }
   }, []); // Kosong karena tidak ada state/props dari luar
 
@@ -144,8 +144,8 @@ const UpdateTyre = () => {
     };
 
     try {
-      console.log(dataActivity);
-      const result = await apiFetch("/activity", {
+      // console.log(dataActivity);
+      await apiFetch("/activity", {
         method: "POST",
         body: JSON.stringify(dataActivity),
       });
@@ -168,9 +168,9 @@ const UpdateTyre = () => {
       setTreadLepas2("");
       setTreadPasang1("");
       setTreadPasang2("");
-      console.log("Response: ", result);
+      // console.log("Response: ", result);
     } catch (error) {
-      console.error("Error: ", error);
+      console.error("Error");
       toast.error("Gagal menghubungi server");
     }
   };

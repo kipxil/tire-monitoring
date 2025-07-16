@@ -21,7 +21,7 @@ const User = () => {
       const result = await apiFetch("/user");
       setUsers(result.data);
     } catch (err) {
-      console.error("Gagal mengambil user:", err);
+      console.error("Gagal mengambil user");
     }
   };
 
@@ -51,7 +51,7 @@ const User = () => {
       toast.success("User berhasil dihapus");
       fetchUsers(); // Refresh list
     } catch (error) {
-      console.error("Gagal menghapus user:", error);
+      console.error("Gagal menghapus user");
       toast.error("Terjadi kesalahan saat menghapus user");
     }
   };
@@ -68,8 +68,8 @@ const User = () => {
     };
 
     try {
-      console.log(dataUser);
-      const result = await apiFetch("/user", {
+      // console.log(dataUser);
+      await apiFetch("/user", {
         method: "POST",
         body: JSON.stringify(dataUser),
       });
@@ -79,9 +79,9 @@ const User = () => {
       setPassword("");
       setSelectedRole("");
       // Debug: tampilkan data user dari server
-      console.log("Response: ", result);
+      // console.log("Response: ", result);
     } catch (error) {
-      console.error("Error: ", error);
+      console.error("Error");
       toast.error("Gagal menghubungi server");
     }
   };

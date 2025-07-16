@@ -41,7 +41,7 @@ const EditUnit = () => {
       // }));
       // setUkuranList(sizes);
     } catch (error) {
-      console.error("Gagal mengambil data ban:", error);
+      console.error("Gagal mengambil data ban");
     }
   };
 
@@ -82,7 +82,7 @@ const EditUnit = () => {
         kmUnit: parseInt(kmUnit),
         siteId: parseInt(siteId),
       };
-      console.log(payload);
+      // console.log(payload);
       await apiFetch(`/unit/${selectedUnitId}`, {
         method: "PUT",
         body: JSON.stringify(payload),
@@ -97,7 +97,7 @@ const EditUnit = () => {
       setKmUnit("");
       setSiteId("");
     } catch (error) {
-      console.error("Gagal memperbarui data:", error);
+      console.error("Gagal memperbarui data");
       toast.error("Terjadi kesalahan saat menyimpan data.");
     }
   };

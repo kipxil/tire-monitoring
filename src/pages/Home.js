@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../services/apiClient";
+import { exportData } from "../services/exportClient";
 import userLogo from "../assets/logo user.png";
 import TyreDetailModal from "../components/Popup";
 import SummaryCard from "../components/SummaryCard";
@@ -68,7 +69,7 @@ const Home = () => {
       setSelectedUnit(data.data); // sesuai struktur respons API Anda
       setIsUnitModalOpen(true);
     } catch (error) {
-      console.error("Failed to fetch unit details:", error);
+      console.error("Failed to fetch unit details");
     }
   };
 
@@ -86,67 +87,18 @@ const Home = () => {
     };
 
     try {
-      console.log(data);
-      // const result = await apiFetch("/export", {
-      //   method: "POST",
-      //   body: JSON.stringify(data),
-      // });
-      const result = await fetch(
-        `https://08b5-103-24-56-35.ngrok-free.app/export`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "halodek",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-      if (!result.ok) {
-        throw new Error("Gagal export data");
-      }
-      // 🟢 Tangani sebagai file (Blob)
-      const blob = await result.blob();
-
-      // 🟢 Buat link download
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      //
-      // a.download = "export-data.xlsx";
-      //
-      const now = new Date();
-      const formattedDate = now
-        .toLocaleString("sv-SE", { hour12: false }) // sv-SE → format: YYYY-MM-DD HH:mm:ss
-        .replace(" ", "_")
-        .replace(/:/g, "-");
-
-      a.download = `export-data_${formattedDate}.xlsx`;
-      //
-      // let fileName = "export-data";
-
-      // if (startDate && endDate) {
-      //   fileName += `_${startDate}_to_${endDate}`;
-      // } else if (startDate) {
-      //   fileName += `_from_${startDate}`;
-      // } else if (endDate) {
-      //   fileName += `_until_${endDate}`;
-      // } else {
-      //   fileName += ``;
-      // }
-      // a.download = `${fileName}.xlsx`;
-
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
+      // console.log(data);
+      await exportData("/export", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
       toast.success("Data Berhasil Diexport");
       setSelectedSite("");
       setStartDate("");
       setEndDate("");
-      console.log("Response: ", result);
+      // console.log("Response: ", result);
     } catch (error) {
-      console.error("Error: ", error);
+      console.error("Error");
       toast.error("Gagal menghubungi server");
       setSelectedSite("");
       setStartDate("");
@@ -245,7 +197,7 @@ const Home = () => {
       setActivityHistory(activityHistory);
       setShowPopup(true);
     } catch (error) {
-      console.error("Error fetching activity:", error);
+      console.error("Error fetching activity");
     }
   };
 
@@ -285,7 +237,7 @@ const Home = () => {
       await fetchTyres();
       await fetchUnits();
     } catch (error) {
-      console.error("Gagal menghapus tyre:", error);
+      console.error("Gagal menghapus tyre");
       toast.error("Gagal menghapus tyre.");
     }
   };
@@ -301,7 +253,7 @@ const Home = () => {
       const result = await apiFetch("/tyre");
       setTyres(result.data);
     } catch (error) {
-      console.error("Gagal mengambil data ban:", error);
+      console.error("Gagal mengambil data ban");
     }
   };
 
@@ -310,7 +262,7 @@ const Home = () => {
       const result = await apiFetch("/unit");
       setUnits(result.data);
     } catch (error) {
-      console.error("Gagal mengambil data unit:", error);
+      console.error("Gagal mengambil data unit");
     }
   };
 
@@ -321,7 +273,7 @@ const Home = () => {
       // Set state dari response API
       setSiteList(data.site || []);
     } catch (error) {
-      console.error("Gagal fetch data dropdown:", error);
+      console.error("Gagal fetch data dropdown");
     }
   };
 
@@ -350,7 +302,7 @@ const Home = () => {
         userTotal,
       });
     } catch (error) {
-      console.error("Gagal mengambil data:", error);
+      console.error("Gagal mengambil data");
     }
   };
 
