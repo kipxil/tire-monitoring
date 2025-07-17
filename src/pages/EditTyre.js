@@ -146,7 +146,7 @@ const EditTyre = () => {
       setDateTime("");
     } catch (error) {
       console.error("Gagal memperbarui data");
-      toast.error("Terjadi kesalahan saat menyimpan data.");
+      toast.error("Data Ban Gagal Diperbarui");
     }
   };
 

@@ -93,7 +93,7 @@ const AddTyre = () => {
       // console.log("Response: ", result);
     } catch (error) {
       console.error("Error");
-      toast.error("Gagal menghubungi server");
+      toast.error("Ban Gagal Ditambahkan");
     }
   };
 

@@ -98,7 +98,7 @@ const EditUnit = () => {
       setSiteId("");
     } catch (error) {
       console.error("Gagal memperbarui data");
-      toast.error("Terjadi kesalahan saat menyimpan data.");
+      toast.error("Data Unit Gagal Diperbarui");
     }
   };
 

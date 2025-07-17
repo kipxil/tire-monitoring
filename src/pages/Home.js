@@ -99,7 +99,7 @@ const Home = () => {
       // console.log("Response: ", result);
     } catch (error) {
       console.error("Error");
-      toast.error("Gagal menghubungi server");
+      toast.error("Export Gagal");
       setSelectedSite("");
       setStartDate("");
       setEndDate("");

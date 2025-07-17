@@ -40,7 +40,7 @@ const Login = ({ onLogin }) => {
       });
 
       if (!result.token) {
-        toast.error("Login gagal. Token tidak ditemukan.");
+        toast.error("Login gagal");
         return;
       }
 
