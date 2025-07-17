@@ -9,6 +9,16 @@ const Pagination = ({
 }) => {
   return (
     <div className="flex justify-center items-center space-x-2 mt-4 mb-4">
+      {/* Tombol ke halaman pertama */}
+      <button
+        onClick={() => onPageChange(1)}
+        disabled={currentPage === 1}
+        className="px-3 py-1 border rounded disabled:opacity-50"
+      >
+        First
+      </button>
+
+      {/* Tombol sebelumnya */}
       <button
         onClick={onPrev}
         disabled={currentPage === 1}
@@ -21,12 +31,22 @@ const Pagination = ({
         Page {currentPage} of {totalPages}
       </p>
 
+      {/* Tombol berikutnya */}
       <button
         onClick={onNext}
         disabled={currentPage === totalPages}
         className="px-3 py-1 border rounded disabled:opacity-50"
       >
         Next
+      </button>
+
+      {/* Tombol ke halaman terakhir */}
+      <button
+        onClick={() => onPageChange(totalPages)}
+        disabled={currentPage === totalPages}
+        className="px-3 py-1 border rounded disabled:opacity-50"
+      >
+        Last
       </button>
     </div>
   );

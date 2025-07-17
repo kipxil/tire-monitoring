@@ -3,6 +3,7 @@ import { apiFetch } from "../services/apiClient";
 import { toast } from "react-toastify";
 import userLogo from "../assets/logo user.png";
 import { Trash2 } from "lucide-react";
+import Pagination from "../components/Pagination";
 
 const User = () => {
   const [uname, setUname] = useState("");
@@ -262,25 +263,13 @@ const User = () => {
               );
             })}
           </div>
-          <div className="flex justify-center items-center space-x-2 mt-4 mb-4">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-              className="px-3 py-1 rounded bg-gray-200 text-sm hover:bg-gray-300 disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <p className="text-sm">
-              Page {currentPage} of {totalPages}
-            </p>
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
-              className="px-3 py-1 rounded bg-gray-200 text-sm hover:bg-gray-300 disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPrev={() => setCurrentPage((prev) => prev - 1)}
+            onNext={() => setCurrentPage((prev) => prev + 1)}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
     </div>
