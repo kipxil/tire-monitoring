@@ -75,7 +75,7 @@ const ActionTyreManager = () => {
     };
 
     try {
-      console.log(updatedData);
+      // console.log(updatedData);
       await apiFetch(`/action/${selectedAction.id}`, {
         method: "PUT",
         body: JSON.stringify(updatedData),
