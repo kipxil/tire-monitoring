@@ -62,7 +62,7 @@ const Inspect = () => {
       return;
     }
     const selected = tyres.find(
-      (t) => t.tyre?.stockTyre?.id.toString() === selectedTyreId
+      (t) => t.tyre?.id.toString() === selectedTyreId
     );
     if (selected) {
       setFormData({
@@ -156,7 +156,7 @@ const Inspect = () => {
                     (entry.isDone === false && entry.tyre.isScrap === false)
                 )
                 .map((entry) => ({
-                  value: entry.tyre.stockTyre.id.toString(),
+                  value: entry.tyre.id.toString(),
                   label: entry.tyre.stockTyre.serialNumber,
                   raw: entry, // simpan raw data jika diperlukan
                 }))}
@@ -168,7 +168,7 @@ const Inspect = () => {
                       (entry.isDone === false && entry.tyre.isScrap === false)
                   )
                   .map((entry) => ({
-                    value: entry.tyre.stockTyre.id.toString(),
+                    value: entry.tyre.id.toString(),
                     label: entry.tyre.stockTyre.serialNumber,
                   }))
                   .find((opt) => opt.value === selectedTyreId) || null

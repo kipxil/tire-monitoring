@@ -92,11 +92,11 @@ const UpdateTyre = () => {
     if (!unit) return;
 
     // Ambil semua stockTyreId dari ban yang sedang terpasang di unit
-    const installedStockTyreIds = unit.tyres.map((t) => t.tyre?.stockTyreId);
+    const installedStockTyreIds = unit.tyres.map((t) => t.tyre?.id);
 
     // Filter ban di master list yang id-nya cocok
     const filtered = serialNumberLepasMaster.filter((ban) =>
-      installedStockTyreIds.includes(ban.stockTyre.id)
+      installedStockTyreIds.includes(ban.id)
     );
 
     setSerialNumberLepasList(filtered);
@@ -363,13 +363,13 @@ const UpdateTyre = () => {
               </label>
               <Select
                 options={serialNumberPasangList.map((pasang) => ({
-                  value: pasang.stockTyre.id,
+                  value: pasang.id,
                   label: pasang.stockTyre.serialNumber,
                 }))}
                 value={
                   serialNumberPasangList
                     .map((pasang) => ({
-                      value: pasang.stockTyre.id,
+                      value: pasang.id,
                       label: pasang.stockTyre.serialNumber,
                     }))
                     .find(

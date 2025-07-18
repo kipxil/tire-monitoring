@@ -71,7 +71,7 @@ const AddUnit = () => {
 
   const getAvailableBans = (currentIndex) => {
     const used = selectedBans.filter((_, i) => i !== currentIndex);
-    return banList.filter((ban) => !used.includes(String(ban.stockTyre.id)));
+    return banList.filter((ban) => !used.includes(String(ban.id)));
   };
 
   const handleTireCountChange = (e) => {
@@ -262,13 +262,13 @@ const AddUnit = () => {
                   <Select
                     className="w-full"
                     options={getAvailableBans(index).map((ban) => ({
-                      value: ban.stockTyre.id.toString(),
+                      value: ban.id.toString(),
                       label: ban.stockTyre.serialNumber,
                     }))}
                     value={
                       getAvailableBans(index)
                         .map((ban) => ({
-                          value: ban.stockTyre.id.toString(),
+                          value: ban.id.toString(),
                           label: ban.stockTyre.serialNumber,
                         }))
                         .find((opt) => opt.value === selectedBans[index]) ||
