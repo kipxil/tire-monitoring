@@ -1,2 +1,2 @@
-export const BASE_URL = "https://tire-app.primajaya.co.id/api";
+export const BASE_URL = ""; //ganti dengan API_URL
 export const API_KEY = "halodek";
