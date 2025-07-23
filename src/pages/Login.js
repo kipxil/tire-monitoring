@@ -119,7 +119,7 @@ const Login = ({ onLogin }) => {
           </form>
 
           <p className="text-xs text-center text-gray-400 mt-8">
-            ©2025 PT. Prima Jaya Persada Nusantara. All Rights Reserved.
+            ©2025 PT. Prima Jaya Persada Nusantara. All Rights Reserved. v.1.0
           </p>
         </div>
       </div>
